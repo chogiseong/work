@@ -1,0 +1,107 @@
+1. SUDS
+
+    1-1. 3.6 TA struct, 파라미터 추가 기술
+
+          struct 완
+
+          parameter 의 경우 IVDS는 아예 표기를 안했고 OTA는 굉장히 적던데 어떻게 하면 되는지 다시 여쭤보기
+
+    1-2. doxygen으로 출력된 html이 충분한 정보를 제공하지 못하기 때문에 이용하지 않고 있음.
+
+    1-3. description controlflow 추가 기입 controlflow에는 입력데이터 함수 수행 로직 출력데이터 등이 기술
+
+          익일 오전 진행 후 리뷰요청
+
+    1-4. external, internal 구분 할 것
+
+          external 함수 따로 기입해야하는지 여쭤보기
+          저번에는 internal만 기입하라고 하셨었음.
+
+    1-5. onBatteryStateOfChargeStateChanged, onPanicStateChanged, resquest, onMTRequestReceived SUDS 기술
+
+          완
+
+2. 대리님의 숙제
+
+    2-1. 에러 찾기
+
+        data에다가  secV.getString을 넣는데
+        이게 아니라 value에다가 getString을 해야 값을 갖고올 수 있음
+        여기에서 값을 못갖고와서 타긴 타는데 empty라고 나오는 것.
+        value는 참조연산자니까 내부에서 값을 넣으면 밖에서도 바뀌니까 value에 data 집어넣고
+        getSecuritydata를 실행한 getprovisioningdata로 돌아가 보면
+        secv empty()가 비어있지 않을때 실행되는 value = v.getString()이 있는데
+        값을 집어넣지 않아서 그 부분은 아예 타지 않은 것.
+
+    2-2. endian swap
+
+        ps. cpp파일 터미널에서 빌드
+
+        vi endiantest.cpp
+        파일만들고
+
+        g++ -std=c++11 endiantest.cpp
+        빌드
+
+        ./a.out
+        결과출력
+
+        터미널에서 c++ 빌드하는 방법
+
+        숫자를 다루기 위해 캐릭터를 사용한다면 unsigned char ( 0 ~ 255 ), signed char ( -127 ~ 127 ) 중 쓰임새에 맞게 구분하여 사용. 이 바이트오더 변환 과정에선 unsigned 사용.
+        빅 엔디언은 사람이 숫자를 쓰는 방법과 같이 큰 단위의 바이트가 앞에 오는 방법이고
+        리틀 엔디언은 반대로 작은 단위의 바이트가 앞에 오는 방법이다.
+
+        swap을 하려면 자료형에 크기에 맞게 변환을 해주면 된다.
+        예시로 넣은 8비트 크기의 int형 데이터를 int 크기만큼 반복해서 값을 확인하고 크기만큼 반대로 저장 후 변환 값을 리턴.
+
+    2-3. 리틀 빅 엔디언 변환 되는지 코드 넣어서 확인해보기
+
+        echo CCU_TEST_MCI4 > /appdata/.tele/test/testPipeMgr
+
+        0x12345678 다른 변환 방식
+
+        이 16진수를 32비트의 이진수로 바꾸면 / 0001 0010 / 0011 0100 / 0101 0110 / 0111 1000 /이 된다.
+        8비트 / 1바이트
+        목표는 바이트가 저장되는 순서를 역순으로 바꾸는 것.
+        좌에서 우로 1바이트씩 값을 밀어내도록 shift 연산시 왼쪽에 0000 0000 빈값으로 채워지고 우측으로 밀림.
+        shift right 연산으로 1바이트씩 밀었을때 끝자리가 78, 56, 34, 12로 되니까 이 점을 이용해서
+        이 부분만 배열에 담아 변환하는 방법. 그렇기때문에 8씩 끊는 것.
+
+
+    2-4. 채널 예제
+
+        상속
+        다형성
+        다이나믹캐스팅
+
+        Channel
+        channelId  = 100;
+        channelNum;
+
+        TVChannel
+        channelId
+        channelNum =200;
+        TVchannel;
+        Brodcastname
+
+        RadioChannel
+        channelId
+        channelNum = 300;
+        Radiochannel;
+        RadioCompanyname
+
+        ChannelManager
+        vectort<Channel*> channels;
+
+        모든 값 프린트 또는 모든값 출력
+        save("channeltype", number)
+        save("number", TVchannel, Brodcastname)
+        save("number", Radiochannel, RadioCompanyname)
+        delete(channeltype, number);
+
+        저장시
+        channelId 와 brodcast 는 동일값이 존재하면 안됨.
+        이미 가지고 있다고 cout 으로 출력 필요
+
+CCU

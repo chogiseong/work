@@ -1,0 +1,67 @@
+1. SADS PL님에게 문의 드릴 것
+
+      TMGR 정적 다이어그램 HttpWakeupAcker, HCCSServer 어디에 (완료)
+      MSM 정적 다이어그램 MSMeventHandler 어디  , 다이어그램 제작 필요 (완료)
+
+      동적설계 Internal component 부분 제작 완료, 리뷰 (완료)
+      각종 모듈 이름 수정, HCCS 정적설계에 어떻게 넣어야 하는지 (8 vehiclesignalmodel, 9 hwindow,  32 hlocation) (완료)
+      addevent, preConditionCheck 함수 기술 방법에 대해 (완료)
+      Digital Key Information transmission service 기능 구동 방법 다이어그램 제작 완료, 리뷰 (완료)
+
+      디스크립션 관련 문의(완료)
+
+SWC_TA
+
+1) Remote Start and Climate on
+2) Remote Stop and Climate off
+3) Remote Door Lock
+4) Remote Door UnLock
+5) Remote Light Only control
+6) Remote Horn & Light control
+7) Find the car
+8) Remote Window Control (TBD)
+9) Remote Air Cleaning Control (TBD)
+10) Vehicle Condition Check
+11) Vehicle's Current status updateSADS_DynamicView_CCS_EV_RemoteRCO
+12) Battery Discharge Alert Service
+13) Fleet Management
+14) Vehicle Alarm Notification
+15) DVRS service
+16) Panic Notification service
+17) Rear seat occupation alert
+18) Engine Idle time 2 level
+19) Remote WaitingTime Alert
+20) Remote Tail/Hazard Control & Alarm
+21) Battery SOC system emergency cut off alarm
+22) HDMap information MO service
+23) HDMap information MT service
+24) Digital Key Information transmission service
+25) (Green Car) Remote Immediate Charging control
+26) (Green Car) Remote Immediate Climate control
+27) (Green Car) Remote Charging cap control
+28) (Green Car) Vehicle Condition Check
+29) (Green Car) Vehicle's current status update
+30) (Green Car) Vehicle status SMS notification
+31) (Green Car) Battery status alert notification
+32) (Green Car) Find my car
+33 (Grren Car) Smartphone alarm of Charging completed (TBD)
+
+SWC_TMGR
+
+1) Provisioning table sync - after booting
+2) Provisioning table sync - exception logic for someip get
+3) Provisioning table sync - after receive event
+4) Data Connection Setup
+5) Send HTTP
+6) Receive Wakeup
+7) Send SMS
+8) Receive SMS
+
+SWC_MSM
+
+1) Data Connection
+
+addevent
+preConditionCheck
+
+3. 익주부터 화, 목 CE1 ccNF 2.7, ccNF 2.8 빌드 테스트

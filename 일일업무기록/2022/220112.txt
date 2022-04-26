@@ -1,0 +1,33 @@
+
+2021/12/28 01:13:43.064015     858693 059 CCU1 TMGR HCON log info V 1 [HModem.cpp:setVoLTEMode                  00111 HModem::setVoLTEMode()]
+2021/12/28 01:13:43.064039     858693 060 CCU1 TMGR HCON log info V 1 [HModemImpl.cpp:setVoLTEMode              00352 HModemImpl::setVoLTEMode() setVoLTEMode : 1]
+2021/12/28 01:13:43.064064     858693 061 CCU1 TMGR HCON log info V 1 [MsmGDBusClient.cpp:setVoLTEMode          00965 MsmGDBusClient::setVoLTEMode() : 1]
+
+2021/12/28 01:16:09.557775    2318688 237 CCU1 TMGR TMGR log info V 1 [TestMain.cpp:handleEventLooper           02621 [test] GET_VOLTE]
+2021/12/28 01:16:09.557799    2318688 146 CCU1 TMGR HCON log info V 1 [HModem.cpp:getVoLTEMode                  00105 HModem::getVoLTEMode()]
+2021/12/28 01:16:09.557822    2318688 147 CCU1 TMGR HCON log info V 1 [HModemImpl.cpp:getVoLTEMode              00340 .]
+2021/12/28 01:16:09.557846    2318689 148 CCU1 TMGR HCON log info V 1 [MsmGDBusClient.cpp:getVoLTEMode          00930 MsmGDBusClient::getVoLTEMode()]
+2021/12/28 01:16:09.558204    2318708 149 CCU1 TMGR HCON log info V 1 [MsmGDBusClient.cpp:getVoLTEMode          00955 MsmGDBusClient::getVoLTEMode() _getVoLTEMode: ]
+2021/12/28 01:16:09.558235    2318718 150 CCU1 TMGR HCON log info V 1 [HModemImpl.cpp:getVoLTEMode              00343 HModem::getVoLTEMode() getVoLTEMode]
+
+2021/12/28 01:18:23.647207    3667389 198 CCU1 msm- msm- log info V 1 [MsmGDBusServer.cpp:operator()            00416 method_name is GetVoLTEMode]
+2021/12/28 01:18:23.647231    3667389 199 CCU1 msm- msm- log info V 1 [MsmGDBusStubImpl.cpp:GetVoLTEMode        00507 .]
+2021/12/28 01:18:23.647255    3667390 200 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:GetVoLTEMode    00729 GetVoLTEMode() - start]
+2021/12/28 01:18:23.647549    3667390 201 CCU1 msm- msm- log info V 1 [MsmGDBusStubImpl.cpp:GetVoLTEMode        00510 GetVoLTEMode]
+
+2021/12/28 01:13:20.508623     507139 217 CCU1 msm- msm- log info V 1 [MsmGDBusServer.cpp:operator()            00421 method_name is SetVoLTEMode]
+2021/12/28 01:13:20.508647     507139 218 CCU1 msm- msm- log info V 1 [MsmGDBusStubImpl.cpp:SetVoLTEMode        00516 .]
+2021/12/28 01:13:20.850752     507139 219 CCU1 msm- msm- log info V 1 [MsmGDBusStubImpl.cpp:SetVoLTEMode        00519  SetVoLTEMode::1]
+
+
+echo SET_VOLTE_ON > /appdata/.tele/test/testPipeMgr
+echo GET_VOLTE > /appdata/.tele/test/testPipeMgr
+
+pnc sms
+
+dlt-receive -a 0 |grep ModemManagerConsumer
+
+
+#if (CCNF_VER_MAJ > 2) && (CCNF_VER_MIN >= 1)
+
+reboot

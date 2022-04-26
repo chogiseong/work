@@ -1,0 +1,410 @@
+#include "HSystemClient.hpp"
+
+using namespace std;
+using namespace ccnf;
+using namespace ccnf::machine;
+
+guint timerCheckItem1 = 0;
+#define TIMER_CHECK_ITEM_1 1
+#define TIMER_WAITING_TIME_FOR_CHECK_PNC 1
+
+/**
+ * @brief constructor
+ */
+HSystemClient::HSystemClient() {
+    pthread_mutex_init(&m_Mutex, NULL);
+    MSG_HIGH("HSystemClient::constructor()",0,0,0);
+}
+
+/**
+ * @brief destroyer
+ */
+HSystemClient::~HSystemClient() {
+    MSG_HIGH("HSystemClient::destructor()",0,0,0);
+    pthread_mutex_destroy(&m_Mutex);
+}
+
+/**
+ * @brief get singleton instance
+ * @return singleton instance
+ */
+HSystemClient & HSystemClient::getInstance() {
+    static HSystemClient s_instance;
+    return s_instance;
+}
+
+/**
+ * @brief create proxy
+ */
+void HSystemClient::createProxy() {
+
+    mpHVehiclePowerClient = HVehiclePowerStatus::getInstance();
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        setEventListener();
+    }
+    mHHardwire = ccnf::machine::HHardwire::getInstance();
+    if (mHHardwire != nullptr)
+    {
+        MSG_LOW("mHHardwire is not null",0,0,0);
+    }
+
+    MSG_LOW("createProxy()", 0, 0, 0);
+    accStatusSync();
+    ignStatusSync();
+    ign3StatusSync();
+
+    mpHEthNetworkControlClient = ccnf::system::network_manager::HEthNMControl::getInstance();
+    if (mpHEthNetworkControlClient != nullptr)
+    {
+        mpHEthNetworkControlClient->setEventListener(this);
+    }
+
+    mPncOnOffFlag = false;
+    mPncCount = 0;
+    mRetryCount = 0;
+    mHPartialNetworkControl = ccnf::system::network_manager::HPartialNetworkControl::getInstance();
+    if (mHPartialNetworkControl != nullptr) {
+
+        MSG_LOW("mHPartialNetworkControl set listener()", 0, 0, 0);
+        mHPartialNetworkControl->setEventListener(this);
+
+        std::vector< ccnf::system::network_manager::PN_EVENTS > subscribeEvents;
+        subscribeEvents.push_back(ccnf::system::network_manager::PN_EVENTS::EXTERNAL_PNBIT_SETTING);
+        subscribeEvents.push_back(ccnf::system::network_manager::PN_EVENTS::INTERNAL_PNBIT_SETTING);
+        mHPartialNetworkControl->subscribeEvents(subscribeEvents);
+    }
+}
+
+/**
+ * @brief set event listener
+ */
+void HSystemClient::setEventListener() {
+    MSG_LOW("setEventListener()", 0, 0, 0);
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->setEventListener(this);
+
+        std::vector<ccnf::machine::HVehiclePowerEventType> subscribedevents;
+        subscribedevents.push_back(ccnf::machine::HVehiclePowerEventType::ACC_STATE);
+        subscribedevents.push_back(ccnf::machine::HVehiclePowerEventType::IGN1_STATE);
+        subscribedevents.push_back(ccnf::machine::HVehiclePowerEventType::IGN3_STATE);
+
+        mpHVehiclePowerClient->subscribeEvents(subscribedevents);
+    }
+}
+
+void HSystemClient::rptBATAdcValue(const ccnf::HUInt16& adc_val){
+    //MSG_LOW("rptBATAdcValue()is %d",adc_val);
+}
+
+void HSystemClient::accStatusSync(){
+    HBool accStatus = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isACCOn(accStatus);
+        MSG_LOW("+++accStatus+++ is %d",accStatus);
+    }
+}
+
+void HSystemClient::ignStatusSync(){
+    HBool ignStatus = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isIGN1On(ignStatus);
+        MSG_LOW("+++ignStatus+++ is %d",ignStatus);
+    }
+}
+
+void HSystemClient::ign3StatusSync(){
+    HBool ig3Status = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isIGN3On(ig3Status);
+        MSG_LOW("+++ign3Status+++ is %d",ig3Status);
+    }
+}
+
+
+bool HSystemClient::isAccOn(){
+    HBool accStatus = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isACCOn(accStatus);
+        MSG_LOW("isAccOn() is %d",accStatus);
+    }
+    return accStatus;
+}
+bool HSystemClient::isIgnOn(){
+    HBool ignStatus = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isIGN1On(ignStatus);
+        MSG_LOW("isIgnOn() is %d",ignStatus);
+    }
+    return ignStatus;
+}
+bool HSystemClient::isIgn3On(){
+    HBool ig3Status = false;
+    if (mpHVehiclePowerClient != nullptr)
+    {
+        mpHVehiclePowerClient->isIGN3On(ig3Status);
+        MSG_LOW("isIgn3On() is %d",ig3Status);
+    }
+    return ig3Status;
+}
+
+void HSystemClient::resetDCU(ccnf::HBool reset)
+{
+    if(mHHardwire != nullptr)
+    {
+        MSG_LOW("call mHHardwire->resetDCU() reset:%d", reset);
+        mHHardwire->resetDCU(reset);
+    }
+}
+
+void HSystemClient::checkCcicDcuWakeUpStatus()
+{
+    if(mHHardwire != nullptr)
+    {
+        HBool isDcuWakeUp = false;
+        HBool isCcICWakeUp = false;
+        mHHardwire->isDcuWakeUp(isDcuWakeUp);
+        mHHardwire->isCcICWakeUp(isCcICWakeUp);
+        MSG_LOW("isDcuWakeUp:%d isCcICWakeUp:%d", isDcuWakeUp, isCcICWakeUp );
+    }
+    else
+    {
+        MSG_LOW("mHHardwire is null",0,0,0);
+    }
+}
+
+// Listner
+void HSystemClient::onACCStateChanged(const HBool& on){
+    if(on == true)
+    {
+        MSG_LOW("++++ACC_ON++++",0,0,0);
+    }
+    else
+    {
+        MSG_LOW("++++ACC_OFF+++",0,0,0);
+    }
+}
+
+void HSystemClient::onIGN1StateChanged(const HBool& on){
+    if(on == true)
+    {
+        MSG_LOW("++++IGN1_ON++++ ",0,0,0);
+    }
+    else
+    {
+        MSG_LOW("++++IGN1_OFF+++",0,0,0);
+    }
+}
+
+void HSystemClient::onIGN3StateChanged (const HBool &on){
+    if(on == true)
+    {
+        MSG_LOW("++++IGN3_ON++++",0,0,0);
+    }
+    else
+    {
+        MSG_LOW("++++IGN3_OFF+++",0,0,0);
+    }
+
+}
+
+void HSystemClient::onPowerStateAllChanged(const ccnf::machine::HPowerStatusAll& status){
+    MSG_LOW("onPowerStateAllChanged() is adc: %d acc: %d ign1: %d ign2: %d",status.bat_adc_val,status.acc_state,status.ign1_state,status.ign2_state);
+}
+
+ccnf::system::network_manager::HEthNMState HSystemClient::getNetworkState()
+{
+    ccnf::system::network_manager::HEthNMState state = mpHEthNetworkControlClient->getNetworkState();
+    MSG_LOW("getNetworkState() : %d",static_cast<int>(state));
+    return state;
+}
+void HSystemClient::onNMStateChanged(const ccnf::system::network_manager::HEthNMState state)
+{
+    MSG_LOW("onNMStateChanged() %d",static_cast<int>(state));
+
+	if ((mHEthNMState != ccnf::system::network_manager::HEthNMState::REPEAT_MESSAGE) &&
+        (mHEthNMState != ccnf::system::network_manager::HEthNMState::REPEAT_MESSAGE_BY_NODE_DETECT) &&
+        (mHEthNMState != ccnf::system::network_manager::HEthNMState::NORMAL_OPERATION) &&
+        (mHEthNMState != ccnf::system::network_manager::HEthNMState::READY_SLEEP))
+    {
+        // previsous inactive to current active nm, someip disconnected case, restart timer
+        if ((state == ccnf::system::network_manager::HEthNMState::REPEAT_MESSAGE) ||
+            (state == ccnf::system::network_manager::HEthNMState::REPEAT_MESSAGE_BY_NODE_DETECT) ||
+            (state == ccnf::system::network_manager::HEthNMState::NORMAL_OPERATION) ||
+            (state == ccnf::system::network_manager::HEthNMState::READY_SLEEP)) // if NM active
+        {
+            MSG_LOW("onNMStateChanged() inactive to active mode case, NM tick initialized to 0");
+            DataBuffer::instance().initNMTick();
+        }
+    }
+
+    mHEthNMState = state;
+}
+
+
+void
+HSystemClient::onInternalPnClusterChanged (const std::vector< ccnf::system::network_manager::HPnSelectiveSleepECU> &pnCluster) {
+    MSG_LOW("onInternalPnClusterChanged(): change state of Pn Cluster");
+
+    bool ret = false;
+    ret = checkUpdatePncluster(pnCluster);
+
+    // retry check for getting pnclusterList in HPartialNetworkControl
+    if (ret == false) {
+        MSG_LOW("fail to update so get pnclusterlist from get function");
+        std::vector< ccnf::system::network_manager::HPnSelectiveSleepECU> getPnClusterList;
+        mHPartialNetworkControl->getInternalPnCluster(getPnClusterList);
+        if (getPnClusterList.size() > 0) {
+            ret = checkUpdatePncluster(getPnClusterList);
+        }
+    }
+
+    if (ret) {
+        mPnUpdateFlag = true;
+    } else {
+        mPnUpdateFlag = false;
+    }
+}
+
+
+bool
+HSystemClient::checkUpdatePncluster(const std::vector< ccnf::system::network_manager::HPnSelectiveSleepECU> &pnCluster) {
+    // check
+    bool findCCICFlag = false;
+    bool findPRK2Flag = false;
+    bool findDVRSFlag = false;
+
+    MSG_LOW("cluster count is %d", pnCluster.size());
+    for(int i = 0 ; i < pnCluster.size(); i++) {
+        MSG_LOW("check cluster %d", pnCluster[i]);
+        if (pnCluster[i] ==  ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_CCIC) {
+            findCCICFlag = true;
+        }
+        if (pnCluster[i] ==  ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_ADAS_PRK2) {
+            findPRK2Flag = true;
+        }
+        if (pnCluster[i] ==  ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_DVRS) {
+            findDVRSFlag = true;
+        }
+    }
+
+    bool ret = false;
+    if (mPncOnOffFlag && findCCICFlag && findPRK2Flag && findDVRSFlag) {
+        ret = true;
+    } else if (mPncOnOffFlag== false && findCCICFlag == false && findPRK2Flag == false && findDVRSFlag == false ) {
+        ret = true;
+    } else {
+        ret = false;
+    }
+
+
+    if (ret) {
+        mPnUpdateFlag = true;
+        MSG_LOW("success to update findCCICFlag: %d, findPRK2Flag: %d, findDVRSFlag: %d pncOnOffFlag: %d", findCCICFlag, findPRK2Flag, findDVRSFlag, mPncOnOffFlag);
+    } else {
+        MSG_LOW("fail to update findCCICFlag: %d, findPRK2Flag: %d, findDVRSFlag: %d pncOnOffFlag: %d", findCCICFlag, findPRK2Flag, findDVRSFlag, mPncOnOffFlag);
+    }
+
+    return ret;
+}
+
+void
+HSystemClient::onExternalPnClusterChanged (const std::vector< ccnf::system::network_manager::HPnSelectiveSleepECU
+> &pnCluster) {
+    MSG_LOW("onExternalPnClusterChanged(): change state of Pn Cluster");
+}
+
+void
+HSystemClient::setPnCluster(bool isOn) {
+
+    std::vector< ccnf::system::network_manager::HPnSelectiveSleepECU > pnCluster;
+    pnCluster.push_back(ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_CCIC);
+    pnCluster.push_back(ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_ADAS_PRK2);
+    pnCluster.push_back(ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_DVRS);
+    ccnf::system::network_manager::PNBitSetterAPP appName =  ccnf::system::network_manager::PNBitSetterAPP::CCS;
+
+    mPncOnOffFlag = false;
+    if (isOn) {
+       MSG_LOW("setPnCluster is On ");
+       mPncOnOffFlag = true;
+       mHPartialNetworkControl->setPnCluster (pnCluster, appName);
+    } else {
+       MSG_LOW("setPnCluster is Off ");
+       mPncOnOffFlag = false;
+       mHPartialNetworkControl-> unsetPnCluster (pnCluster, appName);
+    }
+
+    if(timerCheckItem1){
+        MSG_HIGH("call g_source_remove(timer_source2)");
+        g_source_remove(timerCheckItem1);
+        timerCheckItem1=0;
+    }
+
+    timerCheckItem1 = g_timeout_add_seconds(TIMER_WAITING_TIME_FOR_CHECK_PNC, timerCallback,
+                                                    GINT_TO_POINTER(TIMER_CHECK_ITEM_1));
+}
+
+void
+HSystemClient::increasePNCCount()
+{
+    std::unique_lock<std::mutex> lock(pnccount_mutex);
+    mPncCount++;
+    if(mPncCount == 1) {
+        setPnCluster(true);
+    }
+}
+
+void
+HSystemClient::decreasePNCCount()
+{
+    std::unique_lock<std::mutex> lock(pnccount_mutex);
+    mPncCount--;
+    if(mPncCount == 0) {
+        setPnCluster(false);
+    } else if (mPncCount < 0) {
+        mPncCount = 0;
+    }
+}
+
+bool
+HSystemClient::isUpdatePncCluster() {
+    return mPnUpdateFlag;
+}
+
+
+gboolean
+HSystemClient::timerCallback(gpointer value)
+{
+    std::int32_t getValue= GPOINTER_TO_INT(value);
+    MSG_HIGH(". getValue: %d",getValue);
+
+    if (getValue == TIMER_CHECK_ITEM_1)
+    {
+        g_source_remove(timerCheckItem1);
+        timerCheckItem1=0;
+
+        MSG_HIGH("timerCallback TIMER_CHECK_ITEM_1",0,0,0);
+        if (HSystemClient::getInstance().isUpdatePncCluster() == false)
+        {
+            MSG_HIGH("retry check update: %d",HSystemClient::getInstance().getRetryCount());
+            if (HSystemClient::getInstance().getRetryCount() < 3)
+            {
+                HSystemClient::getInstance().inCreaseRetryCount();
+                bool isOnOffFlag = HSystemClient::getInstance().isPncOnOff();
+                HSystemClient::getInstance().setPnCluster(isOnOffFlag);
+            } else {
+                MSG_LOW("stop timer: count of retry is %d", HSystemClient::getInstance().getRetryCount());
+                HSystemClient::getInstance().setRetryCount(0);
+            }
+        } else {
+            MSG_LOW("stop timer: success to update pncbit");
+        }
+    }
+     return true;
+}

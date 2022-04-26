@@ -1,0 +1,46 @@
+1. Static, Dynamic 수정
+
+    1-1. TeleManager, MSM SRS 채우기
+
+        김석환 책임님께 추후 말씀드릴 것
+        TeleManager 일부 SRS 부재
+        MSM 전체 SRS 부재
+        SRS 직접 만들어도 괜찮은지
+
+    1-2. TeleManager, MSM 다이어그램과 동기화
+
+        50%
+
+    1-3. TeleManager, MSM Dynamic 동기화
+
+        보류
+
+2. note
+
+swc_msm, msmGDBus, HCCSServiceGroup bool, svcGroup binService, isDataAvailable, c/s, client, n/a
+삭제
+
+Telemanager SRS 부재
+
+MSM SWArchitecture design ID, SRS 부재
+
+TeleManager, MSM Static 다이어그램 동기화
+
+TeleManager, MSM 내부 컴포넌트 확인, unit component 제거, purpose로 이동
+
+TeleApp Dynamic 다이어그램 response 함수 표기
+
+14번 미완료
+
+TeleManager
+ServiceGroupAttribute는 vector 이다.
+
+3. 사무용품 구매 링크
+
+    2.1 랜 to usb 케이블 http://www.officeplus.com/prod/item/item.jsp?itemCode=D68728
+
+    2.2 다이어리 http://www.officeplus.com/prod/item/item.jsp?itemCode=EF4113
+
+    2.3 모니터 받침 http://www.officeplus.com/prod/item/item.jsp?itemCode=FT6997
+
+    2.4 라벨링 http://www.officeplus.com/prod/item/item.jsp?itemCode=AN6792

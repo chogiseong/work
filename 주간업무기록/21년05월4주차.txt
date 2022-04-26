@@ -1,0 +1,31 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+1. SADS Static, Dynamic Design 수정
+
+    1-1. SWC_TA SRS essential 태그 추가 및 관련 SRS 등록
+
+    1-2. SWC_TA ccNF stub SWC_TA에 명시
+
+    1-3. SWC_TA SADS Static, Dynamic Design 최종 완료
+
+    1-4. SWC_TMGR 최종 리뷰 수정사항 적용 완료
+
+    1-5. SWC_MSM 초안 작성 시작
+
+2. 이슈 머지
+
+    2-1. CMakelist.txt install 경로 추가
+
+    2-2. Hlog tag 모비스 브렌치에 Telemanger, msm, connectivity, middlemsm master tag 머지
+
+          msm은 ccnf 2.6, ccnf 2.7 또한 머지
+
+    2-3. Telemanager, msm Hlog -> DLT 수정 머지
+
+21년 5월 17일(월)부터 21년 5월 27일(목)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.

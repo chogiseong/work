@@ -1,0 +1,22 @@
+1. 빌드 방법 숙지
+
+PC 빌드 후 bin(바이너리) 파일과 lib(라이브러리) 파일을 minicom에 scp 해줘야한다. (부분빌드)
+전체 빌드 시 build_.../tmp/deploy/images/s32... 로 들어가 .ext4파일과 img파일을 업데이트 해주면된다.
+오전에 실행했던 빌드는 부분 빌드.
+jw1/build_s32v234ccu/tmp/work/aarch64-fsl-linux/teleapp/package/usr/ 경로에 있는 bin, lib를
+scp ./* root@10.0.6.0:/usr/bin/
+scp ./* root@10.0.6.0:/usr/lib/
+text busy 시 systemctl stop teleapp 등 해당 기능을 정지해주면 된다.
+
+2. CE_Provisioning_Scenario 숙지
+
+3. Teleapp의 DIgitalKeyUdpReceiveThread를 msm의 UdpReceiveThread로 바꾼다.
+
+Beyond Compare 로 Teleapp의 DIgitalKeyUdpSendThread,  msm의 UdpSendThread를 비교하여 어떤 함수를 제외, 추가 했는지 확인한다.
+그 후 DIgitalKeyUdpReceiveThread를 위 조건과 같게 UdpReceiveThread로 바꾼다.
+따로 이벤트를 호출해주지 않기 때문에 로그로는 확인 불가능. (빌드는 확인)
+
+4. ccnf_connectivity_lib
+
++ 알아보기
+git clean

@@ -1,0 +1,78 @@
+1. 품확 대응을 위한 각 버전 (m rel) 빌드 해놓을 것. <진행중
+
+gn7 SX2
+
+jw1 rs4
+
+
+2. get vin 하는 시점 확인. 흐름 파악
+
+TeleAppCommon
+
+차량에서 획득한 VIN 정보를 획득하는 API
+
+HResult GDbusHighCanClient::getVin(std::string &strVinData) {
+#if !defined (TARGET_CCU)
+    strVinData = HDiagnosis::getInstance()->getVehicleIdentificationNumber();
+#endif
+    return HResult::OK;
+}
+
+//? ccNF 2.8 API 문서에 HDiagnosis에 getVehicleIdentificationNumber가 없음.
+
+이걸
+
+void ECallServiceBase::handleIgnChnageEvent(bool fIgnStatus)
+여기서 사용
+
+//? handleIgnChnageEvent는 TeleApp RCS, SAS, VRM 각 서비스에서 전반적으로 사용
+//? 근데 getVehicleIdentificationNumber는 ECallServiceBase에만 사용되고 있다.
+
+SASManager::getInstance().addEvent(EVENT_POWER_CHANGED_IGN,
+                                           [value](HANDLE_E_FUNC_DATA pData){
+            auto o = reinterpret_cast<ServiceBase*>(pData);
+            o->handleIgnChnageEvent(value);
+        });
+
+        VRMManager::getInstance().addEvent(EVENT_POWER_CHANGED_IGN,
+                                           [value](HANDLE_E_FUNC_DATA pData){
+            auto o = reinterpret_cast<ServiceBase*>(pData);
+            o->handleIgnChnageEvent(value);
+        });
+        RCSManager::getInstance().addEvent(EVENT_POWER_CHANGED_IGN,
+                                           [value](HANDLE_E_FUNC_DATA pData){
+            auto o = reinterpret_cast<ServiceBase*>(pData);
+            o->handleIgnChnageEvent(value);
+        });
+
+createproxy 까지 올라감.
+
+getVehicleIdentificationNumber를 사용하는 getVIN은
+RSAServiceBase에도 사용되는데
+string mVin = "KMATMSTEST0000006";
+result = GDbusHighCanClient::getInstance().getVin(mVin); // vin
+if(mVin.empty()||(result != HResult::OK))
+    {
+        mVin = "KMATMSTEST0000006";
+    }
+기본값이 하드코딩되어있음.
+RSAServiceBase::handleEvent 에서부터 호출
+
+TeleManager
+
+tmgr에서 사용하는 것은 전부 데베에 저장되어있는 VIN을 사용.
+
+secureFile에선
+bool DataBuffer::getProvisioningData(const std::string& category, const std::string& key, std::string& value)
+category(데베종류) key(데베컬럼) value(값) 을 통해서 vin 값을 가져온다.
+key가 key_CCU_VEhicleVIN, key_VehicleVIN 일때 getCCU_VIN 함.
+
+
+
+getvin 시점.
+
+vin이 바뀌는 순간.
+
+3. ccnf 3.0 대응 코드 머지요청 0
+
+4. 중간보고서 수정 0

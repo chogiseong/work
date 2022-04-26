@@ -1,0 +1,1 @@
+1. fidl code generator 환경 설정

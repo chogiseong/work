@@ -1,0 +1,36 @@
+///////////////////////////////////////////////////////////////////
+
+작성 주의사항
+
+SUDS 표기 방식 통일할것
+
+control flow에 불필요한 함수 기재하지말것
+
+called, calling function에 SADS에 존재하는 필요 함수만 작성할것
+
+위 사항에 최대한 맞게 하고 소스 코드 기반으로 작성할것
+
+SADS에 추가 시 꼼꼼하게 검토할것
+
+///////////////////////////////////////////////////////////////////
+
+SADS에 추가해야할 함수
+
+handleevent, executeservice
+
+addMainEvent
+
+preconditoncheck
+
+start hccsserver
+
+getprovisioningstatus 파라미터 변경
+
+request, response는 표기 안하기로 했었는데 여쭤보기
+
+delegate함수는 전부 controlflow, precondition 알아보기
+
+resetDCU는 외부함수인가 아닌가 알아보기
+
+
+request response는 unit list에 기술 안하기로 되어있었음

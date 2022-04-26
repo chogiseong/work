@@ -1,0 +1,122 @@
+업무 내용 : MT(Mobile Terminated)(포탈에서 단말 서비스 호출) 서비스 원격문열기 기능 흐름
+MO(Mobile Oriented)(단말에서 센터 서비스 호출)는 추후에
+
+
+- 1. 부팅 후 TeleApp 로그 시작
+
+    1.1 HCON(커넥티비티 라이브러리)를 불러온 후
+        Mar 02 04:33:42 s32v234ccu TeleApp[1412]: [2021-03-02 04:33:42.229] [HLOG] [info] ccNF internal logger has been created
+        위 로그와 함께 TeleApp 로그가 시작됩니다.
+
+
+- 2. 메인 핸들러 ready
+
+    2.1 TeleAppMainHandler.cpp는
+        Mar 02 04:33:42 s32v234ccu TeleApp[1412]: [2021-03-02 04:33:42.242] [TAPP] [info]  (null)                                   main                 00077 Start TeleApp=======Ver:0.1.0========= 6.710
+        Mar 02 04:33:42 s32v234ccu TeleApp[1412]: [2021-03-02 04:33:42.242] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp TeleAppMainHandler   00108 Constructor TeleAppMainHandler
+        TeleApp 버전 이후 바로 호출됩니다.
+
+    2.2 Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.805] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp handleEvent          00093 handleEvent(EVENT_REMOTE_RDO_EXCUTE)
+        Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.805] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp executeService       00546 executeService is 2
+        Apr 08 02:24:10 s32v234ccu TeleApp[1460]: isDoorLocked
+        executeService함수로 인해 생성된 로그
+
+
+- 3. RCS Manager에 원격문열기 서비스 등록
+
+    3.1 RCSManager.hpp에 선언된 RCSManager.cpp 함수에 의해 각 이벤트가 호출되며 그  RCSDoorLockUnlockService는
+        Apr 08 01:50:41 s32v234ccu TeleApp[1460]: [2021-04-08 01:50:40.992] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00198 [RCSDoorLockUnlockService_Init] Service thread start
+        최초로 Service thread start 로그가 찍히며 시작됩니다.
+
+
+- 4. onReady 됨 (문열기 서비스 onReady 까지 불려져야 서비스 등록이 정상적으로 된 것입니다.)
+
+      4.1 RCSWinCurtainCtrlService.cpp 같은 경우
+          void RCSWinCurtainCtrlService::onReady()
+          {
+              MSG_LOW(".",0,0,0);
+          }
+          이런 형식으로 onReady가 찍히게 되어있지만
+          RCSDoorLockUnlockService.cpp 내에서 onReady를 찾을 수 없었습니다.
+
+      4.2 void RCSDoorLockUnlockServiceBase::sendReadyNotiToSubHandler(){
+          RCSManager::getInstance().addEvent(EVENT_CHECK_SERVICE_HANDLER_READY_STATUS);
+          }
+          sendReadyNotiToSubHandler를 통해 준비 상태가 되어 eventQhandler에 할당 됩니다.
+
+
+- 5. sms 받음(이부분은 msm 및 TeleManager 영역)
+
+     5.1 Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.385] [TMGR] [info] TeleManagerMainHandler.cpp:handleEventInit 00186 SmsSendManager_complete
+         TeleAppMainHandler -> TimerManager -> handleEventInit, TeleManager의 SmsSendManager, SmsRecvManager를 통해 sms를 전달하고 받습니다.
+
+     5.2 Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.383] [TMGR] [info] TeleManagerMainHandler.cpp:handleEventInit 00181 SmsRecvManager_complete
+         Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.384] [TMGR] [info] SmsSendManager.cpp:SmsSendManager        00011 SmsSendManager
+
+         Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.385] [TMGR] [info] TeleManagerMainHandler.cpp:handleEventInit 00186 SmsSendManager_complete
+         Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.402] [TMGR] [info] SmsSendManager.cpp:handleEventInit       00036 handleEventInit
+         Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.383] [TMGR] [info] TeleManagerMainHandler.cpp:handleEventInit 00181 SmsRecvManager_complete
+         Apr 08 01:50:40 s32v234ccu TeleManager[1394]: [2021-04-08 01:50:40.390] [TMGR] [info] SmsRecvManager.cpp:handleEventInit       00035 handleEventInit
+
+
+- 6. 받은 sms를 왜 센터에서 보냈는지 TeleManager에서 센터에 http request를 보내고 결과 url을 받아오는 상황(이부분은 모두 TeleManager 영역)
+
+     6.1 Apr 08 02:24:22 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:22.973] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSDoorLockUnlockService.cpp sendHTTPRequest      00030 RCSDoorLockUnlockService_sendHTTPRequest_KOREA+++++++++++++++++++ Tid=8lmSpxT8RKiFeh5YNTFkyw@v3
+         sms는 RCSDoorLockUnlockService가 이벤트큐에 할당되어 스레드 중 하나로 돌아가면서 요청된 것입니다. http는 정보 확인을 위해 RCSDoorLockUnlockService에서 요청한 것입니다.
+
+
+- 7. 센터에서 url 이 내려와서 원격 문열기 서비스 리스너 호출됨
+
+     7.1 rdoCenterEventArrivedHandle 함수에 의해 생성된
+         Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.778] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp rdoCenterEventArrivedHandle 00240 HTTP Receive : from TeleManager
+
+         void RCSDoorLockUnlockServiceBase::sendResponse(int tStatus, std::string tReason)
+          {
+              if(tStatus >= STATUS_CODE_NO_CONTENT){
+                  MSG_LOW("vcrm Error Log for RCS Service",0,0,0);
+                  #if !defined (TARGET_CCU)
+                  VcrmLogUtil::getInstance().CopyErrorLog(0x03);
+                  VcrmLogUtil::getInstance().CopyErrorLog(0xFF);
+                  #endif
+              }
+              sendHTTPRequest(tStatus,tReason);
+          }
+        Status 코드가 없거나 TARGET_CCU가 정의되지 않았을 때 HTTP request 하는 함수
+
+
+- 8. 서비스 precondition 체크 부분 실행(사양서 등에 정의된 서비스 실행 조건 체크)
+
+     8.1 Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.786] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp handleEvent          00093 handleEvent(EVENT_REMOTE_RDO_PRECONDITION_CHECK)
+         Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.801] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp preConditionCheck    00262 isDisplayVehicleMoving 0
+
+
+- 9. micom 으로 ccnf api 혹은 raw api 통해서 문열기 요청
+
+     9.1 requestRdoToMicom 함수를 통해 로그가 찍히게 됩니다. 각각 getInstance로 라이브러리를 사용합니다.
+         Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.835] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp requestRdoToMicom    00641 Request to Micom : Door Unlock : requestDoorLock(false)
+         Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.836] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp requestRdoToMicom    00643 requestRdoToMicom() type:2 result:0
+
+     9.2 Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.835] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp requestRdoToMicom    00641 Request to Micom : Door Unlock : requestDoorLock(false)
+         Apr 08 02:24:10 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:10.836] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp requestRdoToMicom    00643 requestRdoToMicom() type:2 result:0
+
+
+- 10. 결과를 센터로 보내는 부분, 종료
+
+      10.1 void RCSDoorLockUnlockServiceBase::sendSuccess(){
+           killAllTimer();
+
+          setResponseUri(URI_RESPONSE);
+          if(isBody()){
+              statusCode = STATUS_CODE_OK;
+              statusReason = REASON_PHRASE_OK;
+          }
+          else{
+              statusCode = STATUS_CODE_NO_CONTENT;
+              statusReason = REASON_PHRASE_NO_CONTENT;
+          }
+          makeAndAddEvent(EVENT_REMOTE_RDO_SEND_RESPONSE, [=](HANDLE_E_FUNC_DATA pData){sendResponse(statusCode,statusReason);});
+          }
+          sendSuccess함수 실행 시 killAllTimer함수가 같이 실행되며 로그가 나옵니다.
+          Apr 08 02:24:23 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:23.708] [TAPP] [error]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp killTimer            00205 Timer TeleAppMainTimerId(57) is not used. skip~~
+          Apr 08 02:24:23 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:23.708] [TAPP] [error]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp killTimer            00205 Timer TeleAppMainTimerId(62) is not used. skip~~
+          Apr 08 02:24:22 s32v234ccu TeleApp[1460]: [2021-04-08 02:24:22.972] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDoorLockUnlockServiceBase.cpp setResponseUri       00429 setResponseUri is /response

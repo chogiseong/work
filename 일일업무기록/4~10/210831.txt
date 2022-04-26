@@ -1,0 +1,100 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+onCCUModemStatus()
+
+TeleApp-connectivity-msm
+
+MsmGDBusClient의 onNotifyCCUModemStatus에서 이터레이터를 통해 읽히는 onCCUModemStatus.
+onNotifyCCUModemStatus는 같은 cpp onSignal에서 호출되어
+onSignal은 같은 cpp gbus_handle_signal_call에서 호출
+gbus_handle_signal_call는 signalSubscribe에서 호출.
+signalSubscribe에서 g_dbus_connection_signal_subscribe(glib 신호 받는 함수)실행
+
+이 신호는 g_dbus_connection_emit_signal 함수로 발생하게 되는데
+
+MSM의 MsmGDBusServer의 notifyCCUModemStatus 함수에서 실행되며
+notifyCCUModemStatus는 NetworkInformationConsumer의 setCCUModemStatus에서 호출.
+setCCUModemStatus는 ModemManagerConsumer의 subscribe에서 ('3'), DCU changed를 받아 실행됩니다.
+subscribe는 ModemManagerConsumer의 handleEvent에서 실행됩니다.
+
+%%%
+신호 emit 시 방출되는 값 중 signal_name 값이 있는데, 이 값은 시그널을 어디에 방출할 건지 지정하는 값입니다. 이 값이 notifyCCUModemStatus로 되어있으니
+해당 mObjectPath(path of remote object), mInterfaceName(D-bus interface to emit signal)에 notifyCCUModemStatus로 신호가 방출된다.
+그걸 subscribe가 받는 형식.
+%%%
+
+GDbusMsmsClient의 onCCUModemStatus는
+TeleApp 의 GDbusMsmClient에 선언 되며
+상수 CCUModemStatus를 받아
+DataBuffer의 setCCUModemStatus(CCUModemStatus) 실행
+CE차종에서만 실행되는 부분이며 CCUModemStatus 값을 비교해
+CE_DCU_CHANGED 를 addEvent 합니다.
+그렇게되면
+CommonManager CCUGeneralMOProvisionBase의 handleEvent() case CE_DCU_CHANGED 부분을 타며
+DataBuffer의 setProvDBValue - GDbusTelemanagerClient의 setProvisioningData를 하게됩니다.
+
+GDbusTelemanagerClient의 setProvisioningData는
+하드코딩된 setProvDBValue의 data를
+mpHCCSClient가 널이 아닐때
+connectivity의 setProvisoningData(하드코딩된값) 하게되며
+그 결과를 return합니다.
+이때 setProvisioningData는 connectivity HCCSClient의 setProvisioningData를타고
+connectivity HCCSClient의 setProvisioningData는 Impl setProvisioningData로 값을 넘겨주고
+connectivity Impl setProvisioningData에서는 HCCSGDBus setProvisoningData를 리턴합니다.
+connectivity HCCSGDBus의 setProvisoningData는 받은 값을 확인해서 empty()면 에러.
+아니라면 GVariant라는 GDbus parameters에 값을 넣고 result에 parameters를 넣습니다.
+이때 error가 nullptr가 아니라면 error를 g_error_free
+result가 nullptr가 아니라면  g_variant_unref(참조해제)
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+onWakeUpReceived()
+
+TeleApp-connectivity-TeleManager
+
+%%%
+TeleManager의 HCCSServer notifyOnWakeUpReceived에서 emit되며
+%%%
+
+notifyOnWakeUpReceived는
+TeleManager의 MsmGDBus onNotifyIncoming168Message
+MsmGDbus의 onNotifyIncoming168Message는 onSignal - gbus_handle_signal_call - signalSubscribe - onSetSignalSubscribe - start
+
+onWakeUpReceived()는 connectivity의 HCCSGDBus에서 registerOnWakeUpReceivedEvent()에서 불리고
+registerOnWakeUpReceivedEvent()는 같은 cpp의 subscribeSignal에서 불리고
+subscribeSignal()는 같은 cpp의 _hccs_subscribeSignal에서 불리고
+_hccs_subscribeSignal는 같은 cpp의 start()에서 불립니다.
+start는 G libarary를 사용하여 객체 생성시 전달하는 GMainContext, 메인루프 GMainLoop, HCCSGDBUS 등을 상속 받는 스레드에 할당됩니다.
+registerOnWakeUpReceivedEvent에서 mWakeUpListenerVector[i]->onWakeUpReceived 형태로 불려지며
+mWakeUpListenerVector는 IHWakeUPListener 포인터입니다.
+GDbusTelemanagerClient가 IHWakeUPListener의 자식이므로 GDbusTelemanagerClient의 onWakeUpReceived가 호출되며
+
+그렇게 실행된 onWakeUpReceived는
+상수 connectivity의 HSystemBootREason reason을 받아
+DataBuffer의 setCCUBootReason(reson) 실행
+만약 reason이 HSystemBootReason의 MODE_168H 과 같다면
+EVENT_REMOTE_MODEM_WAIT_OFF를 addEvent합니다.
+
+EVENT_REMOTE_MODEM_WAIT_OFF case는 RCSManager RCSWaitingAlertServiceBase 에서
+saveModemWaitOffToDB(), DataBuffer의 setRCSAvailable() 등을 실행하고 makeAndAddEvent(EVENT_REMOTE_WAITINGALERT_START) 합니다.
+차례대로 enum 을 실행하며... executeService에 도달하면
+makeAndAddEvent 람다로 sendResponse를 실행, sendHTTPRequest 실행.
+bool sendHTTPRequest는 무조건 true를 반환하게 되어있습니다.
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+D-bus
+동시 실행 중인 여러 프로그램간의 통신을 가능케 하는 SW 버스.
+
+g_dbus_connection_emit_signal 필요요소
+
+신호대상, 개체 경로, 방출할 Dbus 인터페이스, 방출할 신호 이름, 파라미터를 통과하지 않을때의 GVariant 파라미터, error를위한 location, true나 error 가 세팅된 반환값.
+
+g_dbus_connection_signal_subscribe 필요요소
+
+보낸곳, 일치하거나 일치시킬 인터페이스 이름, 일치하거나 일치시킬 DBus 신호 이름, 개체 경로, 문자열 인수 내용, 콜백, 사용자데이터, subscribe가 제거되거나 NULL일 시 사용자데이터를 free하는 function, subscribe 식별자(unsubscribe에 사용)
+
+
+람다
+[&] 모든 외부 변수를 참조 타입으로 사용
+[=] 모든 외부 변수의 상수 자체를 복사해서 사용

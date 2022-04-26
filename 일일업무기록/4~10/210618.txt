@@ -1,0 +1,26 @@
+1. 빌드테스트 메모대로
+
+    JW1 27
+    JW1 28
+    JW1 29
+
+    RS4 27
+    RS4 28 - 배포현황에 없음
+    RS4 29
+
+    완료
+
+    배포현황에 없는 버전
+    CE1_26, CE1_29, RS4_28
+
+2. TmDbLog 설명
+
+    cmakelist에 pkg check module을 통해 HUTIL HUtil ccnf 라이브러리를 사용하고
+    include directories, link directories, set을 통해 HUtil libarary 받아옴
+    set을 통해 TmDbLog 헤더, 소스 사용함
+    bb파일에도 library 사용 선언을 해준다.
+
+    코드
+
+    #define을 통해 사용될 로그 종류 (에러 인포 등) 선언
+    getInstance -> print 로 print 실행

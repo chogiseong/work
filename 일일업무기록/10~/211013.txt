@@ -1,0 +1,7 @@
+1. getValue 함수 실행 후 convertRegion 함수 주석 추가.
+
+    TeleApp 머지완료, TeleManager, MSM 머지 대기
+
+2. 2.8 미만 버전 전처리 전부 제거 및 최적화
+
+    TeleApp 머지완료, 나머지 대기

@@ -1,0 +1,5 @@
+TMGR
+
+DataBuffer getVin
+
+데이터베이스 category -> table -> value 로 VIN 찾아서 사용 (이미 저장되어있는 VIN 사용하기 때문에 TMGR단에선 해결 불가)

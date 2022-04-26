@@ -1,0 +1,65 @@
+1. tmdb::참조디비 후 prameter, value 선택 get, set으로 데베
+
+우편 주소
+
+우편번호 16491, 경기도 수원시 팔달구 권광로 146 벽산그랜드코아 5층 502-1(행복주택 공급담당자)
+
+추가 제출 서류
+
+. 국민연금 가입증명서(※ ‘전체이력’으로 발급)
+. 건강보험자격득실확인서(※ ‘전체이력’으로 발급)
+. 공고일 재직 중인 직장의 사업자등록증(고유번호증) 사본 또는 법인등기부등본
+※ 해당서류로 직장소재지 확인 불가시 재직증명서(재직증명서 제출 불가한
+직종의 경우 근로계약서·위촉증명서 등) 추가제출
+※ 해당 기업에 소속되지 않는 경우 근로계약서·위촉증명서 등 1년 이상
+근무(예정) 기간 소명 자료 추가제출
+. 혼인관계증명서(자녀수에 따른 거주기간 인정받고자 하는 경우)
+. 공고일 현재 주택청약종합저축(청약저축 포함) 미가입자는 입주전까지
+본인 또는 배우자가 주택청약종합저축통장 사본 제출
+- 입주 전까지 미제출 시 입주가 불가하며, 당첨 취소 및 계약 해지 처리됨
+‧ 산업단지 입주확인서 사본
+(해당 서류로 확인이 어려운 경우 사업자등록증 사본 또는 법인등기부등
+본, 재직증명서 등 추가서류를 제출받아 확인)
+
+==========================과제================================
+
+해결~
+
+급한거 아님.
+이미다함.
+
+.bb 에서 정의한 값을 CMAKEList 에서 가져와 사용한다.
+그렇게 되면 code 에서 사용할수 있다.
+
+bb
+EXTRA_OECMAKE += "-DCCNF_VER_MAJ=${CCNF_VER_MAJ}"
+EXTRA_OECMAKE += "-DCCNF_VER_MIN=${CCNF_VER_MIN}"
+
+CMAKElist
+add_definitions(-DCCNF_VER_MAJ=${CCNF_VER_MAJ})
+add_definitions(-DCCNF_VER_MIN=${CCNF_VER_MIN})
+
+Code
+#if (CCNF_VER_MAJ == 2) && (CCNF_VER_MIN >=3)
+
+
+과제
+~/work_source/repo1/sources/meta-telematics/TeleManager/CCU/src-gen
+
+before
+src-gen/v2
+src-gen/v3
+
+after  이걸로 맞추기
+src-gen/4.0/v2
+src-gen/4.0/v3
+
+src-gen/9.0/v2
+src-gen/9.0/v3
+
+생성위치
+~/work_source/repo1/build_s32v234ccu/tmp/work/aarch64-fsl-linux/telemanager/telemanager-1.0/CMakeFiles/TeleManager.dir/CCU/src-gen
+
+
+
+=============================================================================================================================================

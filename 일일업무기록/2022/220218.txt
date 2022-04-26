@@ -1,0 +1,88 @@
+DEV-CCUG1-9776-DT074224_msm_coverity_merge
+
+DEV-CCUG1-9776-DT074224_tmgr_coverity_merge
+
+DEV-CCUG1-9776-DT074224_tapp_coverity_merge
+
+if ((unsigned)mDCUMaxContextCnt < mConMgrData.mApnXmlList.size())
+    {
+        mContentContextCnt = mDCUMaxContextCnt;
+    }
+    else
+    {
+        mContentContextCnt = mConMgrData.mApnXmlList.size();
+    }
+
+    for (std::size_t i=0; i < mContentContextCnt; i++)
+
+    for (std::size_t i=0; i < mContentContextCnt; i++)
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+index의 범위 초과 가능성
+
+2. 정당화 사유 :
+상위 로직에서 nSelectedContextItemIndex가
+(std::size_t i=0; i < mContentContextCnt; i++)
+만큼 반복하는 i이고, 이때 mContentContextCnt가 string vector mApnXmlList.size()라서 범위를 벗어날 수 없습니다.
+정당화 요청 드리겠습니다.
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+index의 범위 초과 가능성
+
+2. 정당화 사유 :
+상위 로직에서 buffer가 하기와 같이 정의되어있고
+static std::array<char, 1330U> bufferStorage;
+auto* buffer = bufferStorage.data();
+snprintf에서 bufferStorage.size()를 사용하고 있기 때문에 범위를 벗어날 수 없습니다.
+정당화 요청 드리겠습니다.
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+nullcheck 없 할당된 메모리 사용
+
+2. 정당화 사유 :
+memset(buf, '\0', _item[i].getLength() + 1)
+해당 코드의 memset이 메모리 초기화를 위해 사용되기 때문에 제대로 정상 동작됩니다. 정당화 요청 드리겠습니다.
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+const_cast의 const 제거
+
+2. 정당화 사유 :
+캐스트 연산자 const_cast가 상수성 제거를 위해 사용되는 것이기 때문에 문제가 없으며 정상 동작 합니다.
+정당화 요청 드리겠습니다.
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+main 함수의 모든 코드가 try-catch block으로 지정 되지 않아 예상치 못한 종료가 수행 될 수 있음
+
+2. 정당화 사유 :
+GC_set_find_leak(1); 해당 함수가 제품에 탑재되어 있는 것 확인했습니다.
+정당화 요청 드리겠습니다.
+
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+연산 = 실행 시 초기화 되지 않은 값 사용
+
+2. 정당화 사유 :
+하기와 같은 코드로 초기화 후 실행되게 수정 진행했습니다.
+정당화 요청 드리겠습니다.
+const T& callback) : callback(NULL)
+
+[인포뱅크] 조기성 연구원 (모비스 담당자 : [CCU AP SW셀] 성기영 책임)
+
+1. 이슈로 잡힌 이유 :
+PIPE_DIR 이 가르키는 유형이 const 되어 있음
+
+2. 정당화 사유 :
+수정 진행 후 정상 동장 확인했습니다.
+정당화 요청 드리겠습니다.

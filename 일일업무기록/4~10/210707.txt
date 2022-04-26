@@ -1,0 +1,9 @@
+1. SUDS JIRA 문서 작성 시 SUDS 1차 리뷰 요청 시작
+
+2. 빌드 루틴 CE1 2.8, master
+
+  master, 2.7 빌드완료.
+
+  2.8 ccnf-vehicle 쪽 빌드 에러
+
+3. 고도 초기값 머지

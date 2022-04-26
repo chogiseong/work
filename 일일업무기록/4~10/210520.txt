@@ -1,0 +1,46 @@
+1. 양병훈 위원님 리뷰사항 수정 -> SWC_TA 완료
+
+    SADS Static Design, Dynamic Design SWC_TA 최종 완료
+
+2. CE1 빌드 테스트
+
+    소나투스 에러 발생
+
+    error: Cannot fetch CCU_GEN1_0_SONATUS/CCU_GEN1.0_SONATUS.meta_sonatus (GitError: --force-sync not enabled; cannot overwrite a local work tree. If you're comfortable with the possibility of losing the work tree's git metadata, use `repo sync --force-sync sources/meta-sonatus` to proceed.)
+    Fetching project CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest
+    Fetching projects:  58% (14/24)  Exception in thread Thread-16:
+    Traceback (most recent call last):
+      File "/usr/lib/python2.7/threading.py", line 801, in __bootstrap_inner
+        self.run()
+      File "/usr/lib/python2.7/threading.py", line 754, in run
+        self.__target(*self.__args, **self.__kwargs)
+      File "/home/cgs/work_source/ccu_ce1/.repo/repo/subcmds/sync.py", line 270, in _FetchProjectList
+        success = self._FetchHelper(opt, project, *args, **kwargs)
+      File "/home/cgs/work_source/ccu_ce1/.repo/repo/subcmds/sync.py", line 314, in _FetchHelper
+        prune=opt.prune)
+      File "/home/cgs/work_source/ccu_ce1/.repo/repo/project.py", line 1227, in Sync_NetworkHalf
+        self._InitGitDir(force_sync=force_sync)
+      File "/home/cgs/work_source/ccu_ce1/.repo/repo/project.py", line 2264, in _InitGitDir
+        raise e
+    GitError: --force-sync not enabled; cannot overwrite a local work tree. If you're comfortable with the possibility of losing the work tree's git metadata, use `repo sync --force-sync sources/meta-sonatus` to proceed.
+
+    Fetching projects:  70% (17/24)
+    error: Exited sync due to fetch errors
+
+3. SADS Static Design, Dynamic Design SWC_TMGR, SWC_MSM 작업
+
+    PL님에게 보고 후 진행
+
+    Dynamic Design 1~3번 (Provisioning table sync)관련 부분에선 provisioning 관련 함수를 사용 하지만 4~8번에서는 사용되는 함수가
+    addEvent 하나밖에 없고, getLocation은 다이어그램에 나와있지 않은 상황입니다.
+    그런데 SWC_TA에선 addEvent를 Internal Unit으로 표현했으니 Internal로 넣고 따로 명시는 하지 않는 방향으로
+    그리고 getLocation은 제거하는 방향으로 가는게 맞을지
+    addEvent를 Internal로 바꾼다면 SWC_TA처럼 addEvent되는 ENUM 같은 값들에 대해 서술하는게 맞을지
+
+    SWC_TMGR Internal Unit List 생성, 책임님께 Description 여쭤보기
+    Internal Unit Diagram 생성 (미완), PL님께 addEvent()안에 있는게 enum이 아니라 함수인 것 같은데 어떻게 표현하는게 맞는지 여쭤보기
+    동기화 완료, 필요없는 것 소거 완료
+
+    동기화 후 리뷰요청까지
+
+    SWC_MSM 수정 보류

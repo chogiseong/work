@@ -1,0 +1,17 @@
+1. SWC_MSM 초안 보충
+
+    다이어그램 분할 고려
+
+    Internal Unit flow 다이어그램 Dynamic 명시
+
+    기존 다이어그램에 병합 진행 중
+
+    Internal Unit Component 제작 고려
+
+    Internal Unit Diagram, Relationship table 제작 완료
+
+    방향 잘못된 것 맞았음.
+
+    direction 수정 고려
+
+2. 사무용품 신청

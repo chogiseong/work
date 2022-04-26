@@ -1,0 +1,33 @@
+1. SWC_MSM Dynamic Diagram 분할
+
+    purpose 기능 별
+    분할 완료. 양병훈 위원님께 리뷰 요청
+    SRS 성기영책임님과 고려
+
+2. DLT 로그 건 개발 현황
+
+    HCCSLog 라이브러리 선언 후 빌드 완료.
+
+    bb파일에 DEPEND 를 통해 CCNF 라이브러리를 불러와야 했음.
+
+    다른 cpp에 로그 넣고 확인해보기
+
+    TMDBLOG grade, tmsz 사용안함 에러
+
+    TMDBLOG_I_... 정의되어있지 않다.
+
+    TMDBLOG 변수명 정의가 상이해서 발생한 에러였음.
+
+3. 이슈
+
+    DBus (y) -> y 로 바꾸고 빌드 확인 이슈
+
+    빌드 확인 완료
+
+    PL님 테이블에서 통신확인
+
+    #include <HLog.h>
+    #include <log_c.h>
+    #include "HCCSLog.h"
+
+    TMDBLOG_V_MSG("", "test",0,0,0);

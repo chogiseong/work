@@ -1,0 +1,48 @@
+1. 금일 완료되는 SUDS, SADS 리뷰 수정 사항 반영
+
+    금주 내 SADS, SUDS 끝내고 이슈해결, 대리님 과제 진행
+
+2. CCU general provisioning, base 코드 리뷰
+
+    MO 일시 iss로 (http) ccu provisioning resquest
+    ccu provisioning msg 받고
+    result 주고
+    ack 받음
+
+    MT 일시 avnt로 부터 ccu provisioning table update (bool)
+    ccs 서버로 provisioning resquest
+    ccu provisioning msg 받고
+    result 주고
+    ack 받음
+
+    CE 차종 코드 리뷰
+
+    preconditioncheck 전제조건 체크
+
+    bool preconditionCheckMO()
+    기본 true
+    databuffer에서 isaccon 가 false면 return false
+    그외에
+    ccu modem status를 가져온다.cn
+    activated가 아니면 return false
+    provision status 0 선언 후 get provisionStatus_CE(provisionstatus)해봐서
+    mProvStatusFromAvnt(AVNT)가 3인데 실제 provisionstatus는 4라면 preRDRShell, enrolled 라면 int로 정적캐스팅 후 다시 집어넣음.
+
+    // 사양서의 CCU는 modemstatus가 activated이고 avnt의 ccs 개통 상태가 preRDRShell에서 enrolled로 변경되었을 경우
+    // 설정된 프로비저닝 테이블 유무에 관계없이 서비스 설정을 위한 provisionrequest메시지를 ccs서버로 전송해야한다.
+    // 부분의 구현. request를 진행하지 않는 것으로 봐서 구현이 진행되지 않은 것 같다.
+
+    그 외에
+    provisionstatus 3 이거나 4 이고 AVNT 값과 같다면 return false 이미 프로비져닝 체크가 된 상태이기떄문
+    두개가 틀리다면 AVNT에다가 값 집어넣음
+    그 외에 상황은 databuffer setProvDBValue 초기화 및 return false
+
+    bool CCUGeneralProvisioningBase::preconditionCheckMT()
+    기본 false
+    databuffer에서 modemstatus 가져옴.
+    activated 아니면 provisionstatus 0 선언, GDbusRaw getprovisionstatus_CE(provisionstatus)해서 avnt에 int 변환 후 넣는다.
+    만약 3이거나 4면 provisionTableupdate 0 선언 후 getCCUprovisionTableUpdate_CE(provisionTableUpdate) 테이블업데이트 넣고
+    1일 시 return true
+    그 외 상황 return false
+
+    void CCUGeneralProvisioningBase::onCCSRequestFinished(

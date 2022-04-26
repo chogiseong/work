@@ -1,0 +1,8 @@
+1. CMakeList 수정 gn7 에 적용한 방법대로
+
+2. mqtt 로 바꿔보기
+
+
+
+
+source setupbuild.sh GN7 PROTO master 0.31.0 master KOR B.01 B0204 VA 0D0002 0

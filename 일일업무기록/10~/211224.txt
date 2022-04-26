@@ -1,0 +1,22 @@
+Stack guard적용은 지난번에 리스팅 해주신 모듈에 대해 아래와 같이 각 개발자가 직접 적용할 예정입니다.
+Build error없이 적용되는 것은 확인 하였는데 따로 최종 정상 적용 여부에 대한 확인이 가능할지 문의 드립니다.
+l  TARGET_LDFLAGS_append_pn-${PN} += " -Wl,-z,relro,-z,now"
+
+l  TARGET_CFLAGS_append_pn-${PN} += " -fPIE -fstack-protector-all -D_FORTIFY_SOURCE=2"
+
+l  TARGET_CXXFLAGS_append_pn-${PN} += " -fPIE -fstack-protector-all -D_FORTIFY_SOURCE=2"
+
+l  TARGET_CPPFLAGS_append_pn-${PN} += " -fPIE -fstack-protector-all -D_FORTIFY_SOURCE=2"
+
+Stack guard 적용여부는 checksec 스크립트를 이용해 확인할 수 있습니다.
+제어기에 빌드된 이미지 설치 후 첨부한 스크립트를 실행하여 적용 여부를 확인해주시기 바랍니다.
+
+- 전체 프로세스 검사: $ ./checksec_v2.2 -pa
+
+- 단일 파일 검사 : $ ./checksec_v2.2 --file [점검 파일]
+
+- 단일 디렉토리 안의 모든 파일 검사 : $ ./checksec_v2.2 --dir [점검 디렉토리]
+
+- 단일 디렉토리 안의 모든 파일 검사 후 csv로 출력 : $ ./checksec_v2.2 --output csv --dir [점검 디렉토리] | tee [파일명].csv
+
+메모리보호와 관련하여 자세한 사항은 다음 컨플루언스 페이지를 참고하시기 바랍니다.

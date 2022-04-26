@@ -1,0 +1,108 @@
+1. 빌드 루틴
+
+    JW1_26~master
+    RS4_26~master
+
+2. 코드 분석
+
+=====================================================================================================================================================
+
+2. 재귀함수 - 반복문을 통한 구현은 i변수 사용, result는 어디에 사용되는지 등 직접해석해야 하지만 재귀함수를 사용하면 해당 알고리즘 논리를 바로 코드로 전환 가능(가독성이 있다.)
+
+  함수 내에서 자기 자신을 다시 return해가며 전달받은 값을 -1 해서 특정 상황에 달했을때 return 을 선언 해주면 구현 가능
+
+3. map - list, vector보다 탐색 속도가 빠름(이진트리) 단점은 자동정렬, 해쉬맵이 아니라는 점 키값 쌍이며 이터레이터(반복자) 사용
+
+  map 선언 시 < 키 자료형, 밸류 자료형 > 쓰고 맵이름.insert(make_pair(키값, 밸류)), 맵이름[키값] = 밸류 둘다 가능
+  맵이름.erase(키값), 맵이름.erase(맵이름.find(키값)) 둘다 가능
+  맵이름.empty() 이건 bool 이라 !맵이름.empty() 등 사용 가능 ex) if(!m.empty()) cout << "m size: " << m.size() << '\n';
+  키값을 통해 맵이름.find로 찾을 수 있고 맵이름.count로 키값에 해당하는 원소 갯수를 반환할 수 있음
+  begin, end
+  for(auto it = m.begin(); it != m.end(); it++){
+		cout << "key: " << it->first << " " << "value: " << it->second << '\n';
+	}
+  키값 쌍이기 때문에 auto 사용
+  위처럼 키값을 갖고오고 싶으면 탐색에 사용되는 변수 이터레이터 ->first 밸류를 갖고오고 싶으면 ->second 이런식으로 사용해야함
+
+3-1. unordered_map map보다 빠른 탐색 가능 해쉬테이블로 구현되었으며 시간복잡도는 O(1)
+
+  중복된 데이터를 허용하지 않고 map에 비해 데이터 많을 시 월등히 좋은 성능
+  key가 유사하다면 해시 충돌로 성능 저하 가능
+
+4. return 함수의 실행을 끝낸다. void에서는 반환 값 없이 단독으로 사용. void ex) return; normal ex) return 반환값;
+
+  함수 실행 도중 강제로 수행 종료 가능
+
+5. call by value
+
+  값을 복사해 인자로 전달 복사된 인자는 값이 변해도 외부 변수 값은 변하지 않음 ex) void func_by_value(int a, int b)
+
+6. call by reference
+
+  호출 시 인자로 전달되는 변수의 레퍼런스를 전달하여 인자 값 변경 시 외부 변수 값도 변 ex) void func_by_reference(int & a, int & b)
+
+7. 스마트 포인터 smart pointer
+
+  new 로 동적할당했다면 delete로 해제해야 한다. 스마트포인터는 사용이 끝난 메모리를 자동 해제 해준다.
+
+8. 유니크, 쉐어드 포인터
+
+  메모리 사용 후 해제하지 않는 경우 memory leak 발생, 해제된 메모리를 다시 참조하는 경우(두번해제하는 double free 버그 등)
+  이와 같은 버그는 소유권이 명확하지 않아서 발생.
+  이 포인터 외에는 객체 소멸을 시킬 수 없다 라는게 유니크포인터. ex) delete data 는 가능, delete data2 는 불가능
+  std::unique_ptr<A> pa(new A()); == A* pa = new A();
+  pa->some(); 이런식으로 포인터처럼 사용하면 된다.
+
+9. try, throw, catch
+
+  예외처리 구문으로 try는 예외가 발생할 가능성 있는 코드를, throw는 발생한 오류에 대한 정보를 전달, catch는 그 예외에 대해 핸들러가 처리할 내용을 담은 코드
+
+10. 벡터
+
+  벡터 생성 시 heap 메모리 동적 할당 배열에 비해 성능 떨어지지만 메모리 효율, 예외처리가 쉬움
+  vector<자료형> 변수명	백터 생성
+  vector<자료형> 변수명(숫자)	숫자만큼 백터 생성 후 0으로 초기화
+  vector<자료형> 변수명 = { 변수1, 변수2, 변수3... }	백터 생성 후 오른쪽 변수 값으로 초기화
+  vector<자료형> 변수명[] = {, } 	백터 배열(2차원 백터)선언 및 초기화(열은 고정, 행은 가변)
+  vector<vector<자료형> 변수명	 2차원 백터 생성(열과 행 모두 가변)
+  vector<자료형>변수명.assign(범위, 초기화할 값)	 백터의 범위 내에서 해당 값으로 초기화
+
+  기본적으로 push_back()은 복사생성자 호출, insert하게 된다면 모든 값을 새로운 메모리에 복사 후 해당 자리에 값을 넣게 되는데 오버헤드가 커져서 성능저하 가능
+  따라서 emplace_back 사용
+  size는 백터 생성 크기이고 capacity는 최대할당크기 최대할당크기를 생성크기가 넘기면 재할당 (re allocate) 발생 발생 시 모든 값들을 새로운 메모리공간에 복사하고 기존 벡터 파괴한다.
+  따라서 reserve() 사용, shrink_to_fit() 사용
+  삽입 삭제가 빈번히 일어날 경우 vector 보단 list, deque 사용하는게 낫다.
+
+10. 스레드
+
+  스레드는 리턴이 없어서 포인터로 전달해야한다.
+
+10. 스레드풀
+
+  스레드를 위한 직업소개소, 여러개 스레드 대기중이었다가 일이 들어오면 대기중이던 스레드가 이를 받아서 실행
+  처리해야하는 작업들을 큐에 추가하면 된다. push하면 큐 맨뒤에 들어감 pop을 하면 맨 앞이 사라짐
+  스레드를 보관하는 벡터(동적할당배열) worker들이 돌아갈거고 어떻게 저장하냐 하면
+  스레드 수를 알 수 있을 벡터 크기 저장한 변수, 소비자 생산자 패턴 구현을 위한뮤텍스, condition_variable 스레드 종료를위한 bool
+
+  ThreadPool::ThreadPool 선언 시 벡터 크기만큼 스레드 생성, threadPool에 정의된 workerthread 함수 실행.
+  .wait으로 자기 자신을 받아서 .empty() 해봤을때 stop_all
+
+  worker thread, threadpool에
+
+=====================================================================================================================================================
+
+    EventQThread.hpp 분석
+
+    이벤트큐쓰레드는 스레드풀이다. 컨디션 버라이어블, 덱, 펑셔널, 뮤텍스, tmthread를 include 받고 있으며
+    각각 bool bWaitNow로 멈춘다.그 외에 덱 m_q, cv m_cv, mutext m_mutex 등이 있고
+    template void addEvent를 사용한다. args를 받아서 유니크락 뮤텍스 lock(m_mutext)로 선점해주고 m_q.emplace_back으로 덱에 밀어넣는다.
+    그 후 스레드가 bWaitNow 일때 (멈춰있을때) notify() (안에 notify_one 이 있다.)로 스레드 하나 잡아준다.
+
+    tmthread를 include받기 때문에 tmthread함수도 몇개 쓴다. onEnd 등
+    bool popEvent는 덱이 비어있으면 empty(), false, 받은 DataType &d가 (참조에의한호출) front()면 popfront(), return true하는 이벤트 종료 시키는 부분
+    이 부분에서 값에의한 호출 했으면 값이 변하지 않는건가...?
+
+    echo DATABUFFER_SP_DATA > /appdata/.tele/test/testPipeMgr
+    echo DATABUFFER_GP_DATA > /appdata/.tele/test/testPipeMgr
+
+    echo REGION_TEST_CGS > /appdata/.tele/test/testPipeMgr

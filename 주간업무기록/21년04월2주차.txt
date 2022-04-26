@@ -1,0 +1,14 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+RCSDoorLockUnlockService 소스 코드 분석, 로그 분석
+윈도우 AD join, 보안 프로그램 설치, 기본 툴 설치 (AD join 실패)
+mgit Zira, BitBucket 계정 활성화
+모비스 기본 툴 설치, 메신저 설치
+ccnf 2.7 빌드 숙지
+RCSDataStatusControlService 소스 코드 분석
+21년 4월 12일(월)부터 21년 4월 15일(목)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.

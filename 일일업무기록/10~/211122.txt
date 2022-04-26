@@ -1,0 +1,110 @@
+1. msm에 암복호화 적용
+
+목적:
+MSM 에 암호화 적용이 필요하다
+
+암호화 할 내용
+MSISDN, IMEI, USIM, EID
+
+참고사항
+CCU_CE 일때만 아래 함수 들이 동작해야됨.
+
+아래 함수에서 암호화 구현 필요
+void setMSISDNToDB(std::string msisdn);
+std::string getMSISDNFromDB();
+void setIMEIToDB(std::string imei);
+std::string getIMEIFromDB();
+void setUSIMToDB(std::string usim);
+std::string getUSIMFromDB();
+void setEIDToDB(std::string eid);
+std::string getEIDFromDB();
+
+
+
+1. 먼저 TEST 커맨드에서 암호화가 제대로 동작하는지 확인 필요!
+ - 1번 다하면 코드리뷰 받기
+
+2. 그다음 위 함수들에 적용해보기
+
+3. 피쳐 추가.
+
+===========================================================================================================
+linux git 설정
+===========================================================================================================
+
+ 패키지 설치
+$ sudo apt-get update
+$ sudo apt-get install lib32z1 lib32ncurses5 lib32stdc++6 isc-dhcp-server nfs-kernel-server minicom resolvconf gcc-multilib gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev xterm make xsltproc docbook-utils fop dblatex xmlto realpath openjdk-8-jdk qemu-user
+
+$ mkdir ~/bin
+$ PATH=~/bin:$PATH
+$ chmod a+x ~/bin/repo
+$ /bin/bash -l
+
+
+$ sudo vi /etc/hosts
+127.0.0.1       localhost
+127.0.1.1       hckim
+10.230.15.204 mgit.mobis.co.kr
+172.16.0.184 igate.infobank.net
+39.117.41.38 hr.infobank.net
+
+4. GIT 환경 설정
+
+repo init 전에 mgit.mobis.co.kr 접속하여 ssh-key 등록
+$ ssh-keygen -t rsa (엔터 연타)(중간에 y도 해줘야함)
+$ cat ~/.ssh/id_rsa.pub 결과를 http://mgit.mobis.co.kr -> bitbucket 선택 후 오른쪽 상단 사용자 버튼 선택 > Manage Account > SSH keys > Add Key 에 등록
+                                                                                     > profile > DT_043906 넣어줘야함
+ *   ID / PASS 는 기존 프로젝트와 동일하게 M사번 / password-1 or MobisDT계정 뒤 세자리 (ex. Mobis906) 임
+
+ *   접속 테스트 : 모든 프로젝트 이름이 출력되어야 함
+
+
+vi 아래 내용 입력후 저장
+$ vi ~/.ssh/config
+Host mgit.mobis.co.kr
+User DT_032555   <- 자신의 DT 계정에서 DT 다음에 _ 추가해줌
+
+6. gitconfig설정
+$ vi ~/.gitconfig
+
+(아래 구문 입력 후 저장)
+
+[user]
+       email = DT041719@mobis.co.kr
+       name = DT041719
+[color]
+       ui = auto
+[commit]
+       template = ~/.git_template
+[core]
+       editor = vim
+       whitespace = cr-at-eol
+[url "https://mgit.mobis.co.kr/bitbucket/scm/"]
+        insteadOf = ssh://git@mgit.mobis.co.kr:7999/
+        insteadOf = ssh://mgit.mobis.co.kr:7999/
+[credential]
+        helper = store
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+7.[Optional] Git Template File 추가
+
+추후 commit 올릴 때 Template 생성됨.
+
+$ vi ~/.git_template           (아래 구문 입력 후 저장)
+
+[CCU][차종][JIRA_ID/ISV_ID] Commit Title
+- 이슈 내용 :
+- 원인 / 대책 :
+- 변경점 :
+- 영향도 :
+- 테스트 방법 :
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+$ PATH=~/bin:$PATH
+
+$ chmod a+x ~/bin/repo
+
+$ /bin/bash -l

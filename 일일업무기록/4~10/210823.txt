@@ -1,0 +1,90 @@
+1. 대리님 숙제
+
+    1-1. 채널 예제
+
+        상속
+        다형성
+        다이나믹캐스팅
+
+        Channel
+        channelId  = 100;
+        channelNum;
+
+        TVChannel
+        channelId
+        channelNum =200;
+        TVchannel;
+        Brodcastname
+
+        RadioChannel
+        channelId
+        channelNum = 300;
+        Radiochannel;
+        RadioCompanyname
+
+        ChannelManager
+        vectort<Channel*> channels;
+
+        모든 값 프린트 또는 모든값 출력
+        save("channeltype", number)
+        save("number", TVchannel, Brodcastname)
+        save("number", Radiochannel, RadioCompanyname)
+        delete(channeltype, number);
+
+        저장시
+        channelId 와 brodcast 는 동일값이 존재하면 안됨.
+        이미 가지고 있다고 cout 으로 출력 필요
+
+        추가사항
+
+        virtual 사용 이유 = 그래야 오버라이딩이 가능해짐. 사용안하면 함수 사용 시 부모함수에서 막힘. virtual은 중간다리 같은 역할
+
+        vector에 객체 담고 파라미터 받아서 객체 생성 후 벡터에 저장하는 방식으로 구현할 것
+
+        파라미터 dynamic_cast 사용해서 타입별로 저장
+
+        print시 vector에서 객체를 꺼낸 후 함수 객체 함수를 호출하여 출력할것
+
+
+    1-2. GDB 스터디
+
+        1. 디버그 모드로 TeleApp 빌드.
+            - break 포인트 잡기 예제에 있음.
+            - 메일 참조
+
+        bb파일에 디버그 모드 넣고 빌드까진 완료
+
+        무슨 버전으로 보드에 넣어야 하는지 여쭤볼 필요 있음.
+
+        2. HDMReceiveServiceBase.cpp
+            - 375번 라인 잡기
+
+        3. 잡히는지 확인
+
+2. 양병훈 위원님 리뷰
+
+    왠만해선 오늘 내로 수정 후 리뷰 요청 드릴 것
+
+    onccsignalchanged
+
+   electric bodycan highcan 등 포괄적으로 포함하는 것이 있을것이다.
+
+   sads 리뷰 후 suds를
+
+   addEvent 26152
+
+   eventqthread에 대해서 자세하게 기술할 필요가 있을까
+
+   suds에서는 sads함수가 다 들어가있는지, called, calling function이 누락없이 들어가있는지, 추적성이 어느정도 부여가 되고있는지
+
+   부모클래스에 선언되어있는
+   prototype
+
+   SADS
+
+
+   CE SADS 동적 마지막부분 끝내고 내일 오전 까지 EventQThread 제거
+
+   26152 외부 라이브러리 제거
+
+   261641 제거

@@ -1,0 +1,58 @@
+1. 흐름분석
+
+      ce provisioning 사양서의 내용은 CCUGeneralProvisioningBase::preconditionCheckMO 에 있다. 이 함수는
+
+      handleEvent에서 불리며 EVENT_PROVISION_CE_REQUEST_MO enum이 와야 동작한다. 이 enum을 CommonManager::getinstance().addEvent() 에 넣으려면
+
+      EVENT_PROVISION_CE_READY enum이 나와야하고 이것은 TeleAppMainHandler의 handleEvent에서 넣어진다.
+
+      메인핸들러에서도 MAIN_HANDLE_E_CHECK_ALL_READY_STATUS enum이 들어간 케이스에 동작하는데, 이 enum은
+
+      ManagerBase의 makeSureAllServicesAreReady()함수에서 넣어지고 이 함수는 m_AreAllServicesReady bool이 true일때 실행되는데
+
+      ServiceListBase의 areAllServicesREady 함수 실행결과를 m_AreAllServicesReady에 넣는다.
+
+      areAllServicesReady() 함수에선 iter (이터레이터)를 통해 mHandleServiceList의 처음부터 끝까지 service_id, servicebase 주소값 쌍으로 이뤄진 element를 찾는다.
+
+      못찾았다면 element.second(서비스베이스 주소값)을 checkReadyStatus() 한다.
+
+      //
+
+      이러한 절차를 거쳐 EVENT_PROVISION_CE_READY를 받았따면
+
+      GDbusRaw에서 getCCUprovisionTableUpdate_CE를 한다.
+
+      결과값에 mp_Ethcoummunicator getCCSignal을 넣는데 이떄 vector signalIDs에 push_back 한 HU_CCUProvisioningTableUpdate를 넣는다.
+
+      그 후 sendHTTPRequest(curProvHttpMsgID(현재), 콜백이벤트)
+
+      현재의 기능에 맞게 넣고
+
+      mreq에 모든것을 집어넣는다. 그 후 GDbusTeleMAnagerClient에 request(mReq)
+
+      connectivity에 HCCSClient로 가서 기능을 실행한다. onCCSRequestFinished 또한 여기서 가는 것.
+
+      onCCSRequestFinished에서 콜백이벤트를 addEvent한다. 그리고 다시 이 과정이 반복.
+
+      //
+
+      setCCU01_MO를 타게되면
+
+      jsonCCUInfo[KEY_IMEI] 등 IMEI, USIM, EID를 가져오게된다. 이 때 각각 getDeviceIdentifier, getCCID, getEID 등 함수 실행.
+
+      connectivity까지 가게되고,GDbusMsmClient 등 커넥티비티의 GetEID를 통해 Glib 함수를 각각 실행하여 값을 가져오게 된다.
+
+
+
+      
+
+
+2. 양병훈 위원 리뷰 수정
+
+3. 대리님과제
+
+4. 빌드
+
+  rs4 2.9 완료
+
+  jw1 2.9 브랜치가 없음

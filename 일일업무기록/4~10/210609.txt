@@ -1,0 +1,33 @@
+1. 사무용품 신청
+
+2. 저널로그 DLT로그로 뜨게 변환하기
+
+    scp ./* ccu_mobis@10.0.6.0:/download
+
+    mount -o remount, rw /
+
+    bb, cmakelist, pro 파일 수정 사항
+
+    DLT_ENABLE 을 정의하는 방향으로 수정 적용
+
+    1673 2021/06/09 11:04:23.139266 5.3251 0 CCU1 TMGR HCON 1379 log error verbose 1 TmDbDatabase.cpp:Database 00027 TmDbDatabase passed
+
+    정상적으로 DLT로그가 작성되는 것을 확인할 수 있다.
+
+    TMDBLOG
+
+3. (y)
+
+    mount -o remount, rw /
+
+    scp ./* root@10.0.6.0:/usr/bin
+    scp ./* root@10.0.6.0:/usr/lib
+
+    telemanager, msm fail
+
+    테스트커맨드
+
+    echo "SVN1" > /appdata/.tele/test/testPipeApp
+
+    rs4 ccNF 2.8 sonatus 0.61.2 버전 빌드 후 재시도
+    

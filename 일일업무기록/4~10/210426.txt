@@ -1,0 +1,50 @@
+1. rs4 2.7, ce1 2.7 / jw1 2.8, rs4 2.8, ce1 2.8 빌드
+
+    ce1 2.8 teleapp 빌드 에러
+
+    vi /home/cgs/work_source/ce1_2_8/build_s32v234ccu/tmp/work/aarch64-fsl-linux/teleapp/git/others/TeleAppCommon/src/CommonAPI/GDbusRaw.cpp
+
+  work_source/ce1_2_8/build_s32v234ccu$ vi tmp/work/aarch64-fsl-linux/ccnf-hvehicle/package/usr/include/HEthDBIdentifiers.h
+  이넘클래스 IBU_RrStRmndAlrmSta 부재
+
+    jw1 2.8 빌드 완료
+
+    rs4 2.8 빌드 완료
+
+
+2. 사양서 draw.io 검토
+
+    조건
+    1. 입출력 데이터 정합성 (Data Flow Diagram, Relationship Table 간 연관성, 추적성 부여) Vehicle data, gps data
+
+        2.6.1.2 다이어그램 수정 해야 하는지
+
+    2. Relationship Table 가독성 개선
+
+        완료
+
+    3. 데이터 명칭 일관성 개선 (SWC_TA와 CCNF Stub 간 입출력 데이터, CCNF Stub과 외부 컴포넌트 간 입출력 데이터)
+
+        보류
+
+    4. Unit List Component 개선 (외부 컴포넌트, 인터페이스 단위 함수 기술) 기술한 내용은 sub components 목록 이므로 위치 변경
+
+        모든 컴포넌트 TeleApp 내부 존재 확인, purpose로 전부 이동, 외부 컴포넌트
+
+    5. SWC_TA 컴포넌트 명칭 및 개수 일관성 검토 (SWC_TA의 sub components 정합성)
+
+        완료
+
+    6. Internal Design of Component - Optional (2.8.1.5 참고) dynamic 컴포넌트 구성은 외부 컴포넌트와 SWC_TA간 구분 및 SWC_TA의 서브 컴포넌트간 구분 되어야 한다.
+
+        다이어그램 제작해야 하는지
+
+SWC_TA 주황색으로 묶기
+
+GPS data 릴레이션 테이블에서 찾거나 실제 사용 함수 표기
+
+vehicle.general. 2.6.2.3 테이블 첫번쨰 두번쨰
+
+화살표 전부 만들기 데이터플로우다이어그램 ccnf~ SWC_TA
+ccnf 로 가는거 40
+ccnf 로 오는거 40

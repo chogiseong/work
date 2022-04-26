@@ -1,0 +1,60 @@
+///////////////////////////////////////////////////////////////////
+
+GDB 스터디
+1. 디버그 모드로 TeleApp 빌드.
+    - break 포인트 잡기 예제에 있음.
+    - 메일 참조
+
+2. HDMReceiveServiceBase.cpp
+    - 375번 라인 잡기
+
+3. 잡히는지 확인
+
+///////////////////////////////////////////////////////////////////
+
+작성 주의사항
+
+SUDS 표기 방식 통일할것
+
+control flow에 불필요한 함수 기재하지말것
+
+called, calling function에 SADS에 존재하는 필요 함수만 작성할것
+
+위 사항에 최대한 맞게 하고 소스 코드 기반으로 작성할것
+
+SADS에 추가 시 꼼꼼하게 검토할것
+
+///////////////////////////////////////////////////////////////////
+
+SUDS 변경점 및 문의사항
+
+SADS에 추가해야할 함수
+
+onCCSRequestFinished는 한 함수를 오버라이딩해서 전부가 쓰는게 아닌 각각 다른함수
+
+handleevent, CE에서 넘기는걸로
+
+executeservice 각 서비스 베이스에 있으니 획그걸 표기하도록 하고 다이어그램 추가
+
+addMainEvent 메인 핸들러나 매니저베이스 등 중추에 있으니 그걸 표기, 다이어그램 추가
+
+preconditoncheck 각 서비스 베이스에 있으니 그걸 표기하도록 한다.
+
+start hccsserver에 있는걸 표기, 다이어그램 추가.
+
+getprovisioningstatus 파라미터 변경
+
+request, response는 표기 안하기로 했었는데 여쭤보기
+
+delegate함수는 전부 controlflow, precondition 알아보기
+
+resetDCU는 외부함수인가 아닌가 알아보기
+
+전 과정을 끝낸 후 SADS Dynamic Diagram 작성(월요 오전)
+
+request response는 unit list에 기술 안하기로 되어있었음
+
+
+///////////////////////////////////////////////////////////////////
+
+MainEventThread의 handleEvent()가 TeleAppMainHandler addMainEvent() 하며 TMThread를 상속받은 EventQthread에 start()함.

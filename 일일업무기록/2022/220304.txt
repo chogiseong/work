@@ -1,0 +1,11 @@
+1736489
+1736651
+1737232
+1737424
+1737819
+
+ 1737251, 1737879
+ 512 388
+
+ buf = (char*) malloc(_item[i].getLength() + 1);
+ memset(buf, '\0', _item[i].getLength() + 1);

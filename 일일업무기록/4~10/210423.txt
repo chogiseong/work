@@ -1,0 +1,28 @@
+1. 사양서 수정
+
+    1.1 사양서 경로
+
+          Confluence -> CCU GEN1 사양서 -> SoftwarePhase -> AP_SADS -> static, dynamic
+
+    1.2 수정 사항
+
+          사양서 수정 Dynamic 1 ~ 10
+
+          Dynamic에 있지만 실제 소스에 없는 함수
+          setSignal
+          requestTeleVehicleStatus
+          onAlarmStateChanged -> bAlarmOccurCheck
+
+2. 사무용품 구매 링크
+
+      2.1 랜 to usb 케이블 http://www.officeplus.com/prod/item/item.jsp?itemCode=D68728
+
+      2.2 다이어리 http://www.officeplus.com/prod/item/item.jsp?itemCode=EF4113
+
+      2.3 모니터 받침 http://www.officeplus.com/prod/item/item.jsp?itemCode=FT6997
+
+3. ccNF_2.7 빌드 현황
+
+      3.1 JW1 빌드 완료
+
+      3.2 RS4 msm 빌드 중

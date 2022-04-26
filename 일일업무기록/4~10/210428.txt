@@ -1,0 +1,48 @@
+1. Static, Dynamic Architecture 수정 사항
+
+    SWC_TA 주황색으로 묶기
+    완료
+
+    GPS data 릴레이션 테이블에서 찾거나 실제 사용 함수 표기, vehicle.general. 2.6.2.3 테이블 첫번째 두번째 처럼 비슷한 Type으로 표기, 화살표 전부 만들기 데이터플로우다이어그램 ccnf~ SWC_TA
+    완료
+
+    IVDS로 부터 오는 on~ 함수 relationship table에 추가
+    완료
+
+    internal design of component - Optional + component diagram 여부
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Static, Dynamic Architecture 대거 수정 사항
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+diagram과 ralationship table 완전 동기화, 대신 relationship 테이블에 선언 필요 없는 것 제거 후 동기화.
+(is... 경로 반대, request... 경로 맞음, get... 경로 맞음)
+PL님 relationship table 제외 후 가능
+
+diagram상 함수 우측 괄호 포함 변수명 명시
+완료
+
+session lock, http request 등 추상적인 명시 전부 relationship table 과 동기화
+PL님 relationship table 제외 후 가능
+
+TMGR, MSM relationship table 동기화
+PL님 relationship table 제외 후 가능
+
+SRS -> AP SRS -> SW Functional Request -> 3.6 CCS 에서 선언된 SRS 찾아 전부 relationship table에 명시
+보류
+
+relationship table 에 있는 msm 함수 전체 부재
+
+relationship table 에 있는 telemanager 함수 전체 부재
+
+두 모듈 전부 Dynamic에 집어 넣어야
+
+SRS 상위에 명시되어 있는 추상적인 SRS 로 사용해도 되는건지
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+신호선이 송신, 수신 신호선 분리되어있고 신호 입출력하는 포트에
+수신신호가 RX (Receive)
+송신신호가 TX (Transmitt)
+
+2. 해외 향지 gps 이슈 머지

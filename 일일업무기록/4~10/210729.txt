@@ -1,0 +1,279 @@
+1. CE 차종 provisioning 코드리뷰
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CE 차종 코드 리뷰
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+생성자, 소멸자
+
+CCUGeneralProvisioningBase::CCUGeneralProvisioningBase()
+mp_Instance는 CCUGeneralProvisioningBase의 포인터. 생성자에서 this로 초기화.
+mSvcID = SVC_ID_CMM_CCU_GENERAL_PROVISIONING 고정.
+mServiceName = "CCUGeneralProvisioningBase" 고정.
+
+선언부 protected에 생성자 소멸자 선언 후 public get instance를 통해 자신을 리턴시키는 형식의(get instance는 자기 자신의주소 리턴)
+싱글톤 패턴을 사용하고 있으며 이는 지속적으로 자원을 관리하기 위함이다.
+
+service ready 시 onready함수가 호출된다고 되어있지만 onready함수를 호출하는 곳은 없다.(잘모르겠음)
+
+onready 함수는 provisioning 변수를 초기화하는 clearProvisioning 함수를 호출하는데
+
+이때 clearHTTPReq(true)를 실행한다.
+이 함수는 mpHCCSClient가 nullptr 면 에러를 , 아니라면 request cancel를 하는 GDbusTeleMAnagerClient에 requestCancelToSend(mReq)를 실행하고
+HTTP request를 전부 초기화한다. bool을 받는데 bool이 true면 m_TID 또한 초기화하고 false일시 이부분은 스킵한다.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CCUGeneralProvisioningBase::sendReadyNotiToSubHandler()
+
+CommonManager의 addEvent를 실행시키며 특정 enum을 보내어
+uniquelock으로 eventQThr료ead 덱 후위에 삽입 (emplace back)하고 notify()함수를 실행한다. 하지만 onready와 같이 호출되지 않는다.(잘모르겠음)
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+addEvent()에 대해
+
+condition variable은 다른 스레드가 공유 변수 수정 후 condition variable로 통지 전까지 하나, 여러 스레드를 대기하도록 하는데 사용할 수 있는 동기화 기법이다.
+뮤텍스와 연계동작 하기때문에 스레드에 안전하다.
+
+notify함수는 eventQThread내에서 이미 뮤텍스 할당받고 wait중인 대기스레드가 있기때문에 notify_one을 통해 스레드하나를 깨우고 할당시킵니다.
+
+변수를 수정하려는 스레드는 uniquelock, 변경, unlock 후 condition variable를 통해 변경 사실을 대기중인 스레드들에게 알린 후 notify_one, notify_all을 호출한다.
+여기서 uniquelock이란 lock guard와 같이 생성시 lock, 소멸시 unlock되는 mutex지만 uniquelock은 생성시에 안걸로 특정 시점에서 lock을 걸 수도 있는 종류이다.
+lock을 하는 이유는 실행동안 다른 기능의 자원 점유를 막기 위함 인듯 하다.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CCUGeneralProvisioningBase::changeProvRunState(ProvRunState eRunState)
+
+provrunstate enum을 받아 그 값에 따라 함수를 실행시켜주는 함수.
+clear일시 clearProvisioning
+start일시 GDbusLifcycleClient setProvSessionState_on("CCUGeneralProvisioningBase"), changeProvRunningState(true);
+finish일시 clearProvisioning, changeProvRunningState(false), GDbusLifecycleClient::getInstance()->setProvSessionState_off("CCUGeneralProvisioningBase");
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CCUGeneralProvisioningBase::changeProvisioningRunningState(bool bOn)
+
+bool 받아서 true면 running상태로, 그외엔 mRunState 를 running상태면 setServiceState(IDLE_S)게으른상태로
+setServiceState는 serviceBase꺼며 CCUGeneralProvisioningBase가 ServiceBase를 상속받는 클래스니 사용 가능
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CCUGeneralProvisioningBase::sendHTTPRequest(ProvHttpMsgID curProvHttpMsgID, HANDLE_E_TYPE eHttpCallbackEvent)
+
+telemanager로 HTTP request를 보내는 함수
+
+bResult는 기본 true
+jsonvalueheader, body, writer 선언
+clearHTTPReq(false) 실행,
+bResult에 bool setHTTPdata 삽임.
+
+    setHTTPData
+
+    bResult 기본 true
+    curProvHttpMsgID를 받아 각각
+    ccu_01_mo, mt, 03_mo, mt 함수에 01일시 body, 03일시 header, body 전부 넣고 실행
+
+    또 이 각 함수는
+
+        bool CCUGeneralProvisioningBase::setCCU01_MO(Json::Value *jsonValueBody)
+        bool CCUGeneralProvisioningBase::setCCU01_MT(Json::Value *jsonValueBody)
+
+            bResult 기본 true
+            jsonCCUInfo에 DataBuffer의 IMEI(단말기고유식별번호)를 받고 , USIM 값도 받는다.
+            eid에 DataBuffer의 EID도 받아오는데 만약 이때 eid를 비교해봐서 0이아니면 jsonCCUInfo에 eid를 집어넣는다.(맞으면 이라는 뜻인듯)
+            그외에는 가져온 jsonValueBody에 지금까지 받아온 정보가 저장되어있는 jsonCCUInfo를 넣고 return true.
+
+        bool CCUGeneralProvisioningBase::setCCU03_MO(Json::Value *jsonValueHeader, Json::Value *jsonValueBody)
+        bool CCUGeneralProvisioningBase::setCCU03_MT(Json::Value *jsonValueHeader, Json::Value *jsonValueBody)
+
+            bResult 기본 true
+            jsonCCUProvision에 ccuProvisioningResult updatelist를 넣고 그걸 jsonValueBody에 넣는다.
+            return bResult.
+
+    그 외 다른 경우엔 false
+
+그래서 결국 m_TID 에 값이 있고 m_eProvPRocess 가 PROV_PROCESS_ACTIVE_RESULT 라면 m_ReqInfo.tid = m_TID를 넣는다.
+
+그 후 위에서 측정한 bResult가 true일시
+
+header와 body에 각각 값 넣고
+
+DataBuffer에 isDataAvailable 해봤는데 false라면 bResult 는 false.
+
+그 외에 mReq에 필요 정보 싹다 넣고 그외에 정보도 전부 넣는다. mReq는 HCCSRequest.
+벡터 vStrKeyList에 m_jsonReqHEader.getMemberNames를 넣고
+반복문으로 mReq에 넣는다.
+
+hResult에 GDbusTeleMAnagerClient의 request(mReq)를 하고 request 요청
+hResult가 ok 아니면 bResult는 false.
+
+return bResult.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CCUGeneralProvisioningBase::getCCU01_MO()
+bool CCUGeneralProvisioningBase::getCCU01_MT()
+
+    bResult 기본 true
+    bResult = checkMandatory(m_jsonHttpResBody, KEY_CCU_PROVISION)(필수적인 요소 체크)
+    했을 때 true일시 bResult = converProvisionMsg()
+
+    또 이 함수 convertProvisionMsg()란
+    jsonData를 CCUProvisioningResult structure로 변환을 해주는 함수이다.
+
+    그 외 상황에선 missed fail 로그를 출력하고
+    return bResult.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CCUGeneralProvisioningBase::onCCSRequestFinished(const HCCSRequest& req, const HCCSResponse& resp)
+
+만약에 m_CurProvHttpMsgID가 GPI_MIN 과 같으면 provisioning progress end already. 그런데 GPI_MIN은 clearProvisioning때에도 넣어준다.(잘모르겠음)
+
+nStatusCode 에 getResponseCode() 한다.(잘모르겠음)
+
+이 함수 또한 CCU_01_MO, MT료 등 등 각각 다른데
+MO 일 시 Mosvcrunning false, acconretrycase false
+MT 일 시 Mtsvcrunning false 등 러닝상태를 false로 해준다.
+
+getprovteststatus 상태를 체크해서 ok거나 no content
+
+    MO거나 MT 체크
+    MO면 setMOserviceresultneedretruTodB(false)
+    MT면 setMTServiceResultNeedRetryToDB(false);
+
+    DB에 저장하는 함수
+
+    bResult true.
+
+    m_TID resp.getTID() 해서 넣음
+    bodyDAta 벡터 선언 및 body type 선언
+    resp.getBodyData에 넣음
+
+        만약 resp.getBodyData에 넣은 type이 JSON이면
+        같이 넣은 bodyData 시작~끝까지 로그찍고
+        result에 parshingDataToJson(bodyData, m_jsonHttpResBody)
+
+        만약 JSON이 아니면 bResult에 getHTTPDataOnOK (provisioningresult 저장함수)
+        bResult가 true이고 m_eHTTPCallbackEvent가 min~max 라면 addEvent(callbackEvent).
+        그 외에 fail이유를 로그로 찍는다.
+
+상태가 ok 거나 no content인 상황이 아니라면
+MO, MT 체크해서
+DB 저장함수 후
+어떤 에러인지 getHTTPDataError(nStatusCode), getHTTPDataCommonError(nSTatusCode) 등 해본다. 그 외엔 그외의 상황이라고 로그를 찍는다.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CCUGeneralProvisioningBase::isNeedEvent(HANDLE_E_DATA_T eventData)
+
+HANDLE_E_DATA_T를 받고 기본적으로는 false
+
+받은 값의 nEvent가 provision, provisionETC min~ max인지 체크해서 그 사이면 bRet true.
+그 외 상황에선 각각 상황마다 case가 있고 //아직 구현이 되지 않은 것 같다.
+EVENT_PROVISION_STATUS_CHANGED case에서
+bRet = true.
+
+return bRet
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CCUGeneralProvisioningBase::handleEventCallbackFunction (HANDLE_E_FUNC pFunc)
+
+받은 값이 널이 아니면 받은 값을 그것에서 void 포인터로 캐스팅하고 return true. 널이면 널이라고 로그.
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void CCUGeneralProvisioningBase::handleEvent(HANDLE_E_DATA_T eventData)
+
+HANDLE_E_DATA_T를 받아서 그 값에 따라 함수 실행
+
+MO, MT 체크 후 EVENT_PROVISION_CE_REQUEST_MO, MT 를 각각 addEvent 한다.
+
+받은 이벤트 데이터가 EVENT_PROVISION_CE_REQUEST_MO일 시
+여러가지 케이스(러닝중, retrycase, 등 확인 후 changeProvRunState(prov_RS_START), sendHTTPREQUEST(MO)
+
+RESULT_MO일 시
+sendHTTPRequest(EVENT_PROVISION_END)
+
+REQUEST_MT일 시
+여러가지 케이스(MO와 같음)확인 후 changeProvRunState(PROV_RS_START), sendHTTPREQUEST(MT)
+
+rESULT_MT일 시
+sendHTTPRequest
+
+DCUCHANGED
+ProvDBValue 초기화, provstatus from dcu 가져옴
+
+EVENT_PROVISION_END일 시
+changeProvRunState(PROV_RS_CLEAR), finish일시
+
+POWERCHANGEDACC일 시
+REQUEST_MO, MT
+
+마지막으로 m_eProvEventBefore에 이벤트 nEvent 값을 넣고 종료
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+preconditioncheck 전제조건 체크
+
+bool preconditionCheckMO()
+
+기본 true
+databuffer에서 isaccon 가 false면 return false
+그외에
+ccu modem status를 가져온다.cn
+activated가 아니면 return false
+provision status 0 선언 후 get provisionStatus_CE(provisionstatus)해봐서
+mProvStatusFromAvnt(AVNT)가 3인데 실제 provisionstatus는 4라면 preRDRShell, enrolled 라면 int로 정적캐스팅 후 다시 집어넣음.
+
+// 사양서의 CCU는 modemstatus가 activated이고 avnt의 ccs 개통 상태가 preRDRShell에서 enrolled로 변경되었을 경우
+// 설정된 프로비저닝 테이블 유무에 관계없이 서비스 설정을 위한 provisionrequest메시지를 ccs서버로 전송해야한다.
+// 부분의 구현. request를 진행하지 않는 것으로 봐서 구현이 진행되지 않은 것 같다.
+
+그 외에
+provisionstatus 3 이거나 4 이고 AVNT 값과 같다면 return false 이미 프로비져닝 체크가 된 상태이기떄문
+두개가 틀리다면 AVNT에다가 값 집어넣음
+그 외에 상황은 databuffer setProvDBValue 초기화 및 return false
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+bool CCUGeneralProvisioningBase::preconditionCheckMT()
+
+기본 false
+databuffer에서 modemstatus 가져옴.
+activated 아니면 provisionstatus 0 선언, GDbusRaw getprovisionstatus_CE(provisionstatus)해서 avnt에 int 변환 후 넣는다.
+만약 3이거나 4면 provisionTableupdate 0 선언 후 getCCUprovisionTableUpdate_CE(provisionTableUpdate) 테이블업데이트 넣고
+1일 시 return true
+그 외 상황 return false
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+외부에서 CCUGeneralProvisioningBase호출하는경우
+
+CommonManager executeEventINIT
+
+TeleAppMainHandler executeEventINIT -> TestMain run -> CCUGeneralProvisioningBase sendHTTPRequest, testCommandSaveProvisioningMsg
+
+GDbusRaw handleCCSignalChanged -> CCUGeneralProvisioningBase setOfflineStatus
+순서로
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+2. 양병훈 위원님 리뷰
+
+    CE 받음, 보류
+
+3. 대리님 숙제
+
+    virtual 사용 이유 = 그래야 오버라이딩이 가능해짐. 사용안하면 함수 사용 시 부모함수에서 막힘. virtual은 중간다리 같은 역할
+
+    vector에 객체 담고 파라미터 받아서 객체 생성 후 벡터에 저장하는 방식으로 구현할 것
+
+    파라미터 dynamic_cast 사용해서 타입별로 저장
+
+    print시 vector에서 객체를 꺼낸 후 함수 객체 함수를 호출하여 출력할것

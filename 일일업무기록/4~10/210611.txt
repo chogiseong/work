@@ -1,0 +1,21 @@
+1. tmdb dlt log rcs 쪽에서 찍어보기
+
+    테스트 끝난 후 바로 CCU보드에 넣어서 해보기
+
+    eventqthread에서 tmdb dlt로그 테스트 하기
+
+
+2. rs4 2.8 빌드, (y) 보드 넣어서 확인해보기
+
+    rs4 ccNF 2.8 sonatus 0.61.2 버전 빌드 완료
+
+
+3. 빌드 루틴
+
+    오늘부터 하루에 JW1 월, RS4 화, JW1 수, RS4 목, CE1 금 이 루틴으로 빌드
+    버전은 2.7, 2.8 버전으로
+    보드에 2.8 넣어서 죽는지, 로그 잘 찍히는지 확인
+
+4. teleapp servicebase 이슈
+
+    아침에 before, after 로그 다시 확인

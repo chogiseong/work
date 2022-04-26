@@ -1,0 +1,21 @@
+1. 이슈 해결 및 개발
+
+2. (y) -> y ccu, dcu, mobile 시그널 로그
+
+3139 2021/06/08 14:35:48.238973 7.2432 81 CCU1 CCSM TAPP 1508 log info verbose 1 /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00669 addUri:/rc/door/on
+3140 2021/06/08 14:35:48.238980 7.2433 32 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00237 setMTRequestListener(): /rc/door/on
+3141 2021/06/08 14:35:48.238984 7.2433 33 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00240 setMTRequestListener()nullnot: /rc/door/on
+3142 2021/06/08 14:35:48.238987 7.2433 82 CCU1 CCSM TAPP 1508 log info verbose 1 /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00669 addUri:/rc/door/off
+3143 2021/06/08 14:35:48.238991 7.2434 34 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00237 setMTRequestListener(): /rc/door/off
+3144 2021/06/08 14:35:48.238994 7.2434 35 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00240 setMTRequestListener()nullnot: /rc/door/off
+3558 2021/06/08 14:35:48.366371 7.3768 209 CCU1 CCSM TAPP 1508 log info verbose 1 /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00669 addUri:/rc/chargeportdoor
+3559 2021/06/08 14:35:48.366373 7.3769 88 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00237 setMTRequestListener(): /rc/chargeportdoor
+3560 2021/06/08 14:35:48.366375 7.3769 89 CCU1 CCSM HCON 1508 log info verbose 1 HCCSClientImpl.cpp:setMTRequestListener 00240 setMTRequestListener()nullnot: /rc/chargeportdoor
+
+3. DLT 로그
+
+    저널 로그까지 찍히는 건 확인.
+
+    define(DLT_ENABLE) 관련하여 수정이 필요할 것 같다. (CMAKE)
+
+    log.h 참고

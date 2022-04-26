@@ -1,0 +1,55 @@
+* minicom root 가서 find -name 어플이름
+usr/bin 에 어플 바이너리 존재
+
+1. 간단한 이슈 해결하기
+
+아래 메일의 표 확인시 해외향지의 경우 PRE-RDR(BASIC/SHELL) 상태에서 센터 통신이 필요한 경우가 있습니다.
+이때 센터 프로토콜 헤더에 정의된 GPS 정보는 미전송 되어야 한다고 합니다.
+검토 부탁드립니다.
+
+/home/cgs/work_source/jw1_2_6/sources/meta-telematics/TeleManager/src/utils/mof/MofUtils.cpp
+line 440
+
+//CGS
+if (model::Region::KR != ConfLoad::instance().region())
+    {
+        MSG_LOW("region not KR");
+        bool active = false;
+        std::int32_t status;
+        DataBuffer::instance().getProvisioningResult(active, status);
+        if (status == 2 || status == 3)
+        {
+            MSG_LOW("status 2 or 3 /GPS blocked");
+        }
+        else
+        {
+            MSG_LOW("status 1 or 4 /GPS sended");
+            Coord location;
+            if (DataBuffer::instance().getLocation(location))
+            {
+                o->putHeader(KEY_ALT, std::to_string(location.alt).c_str());
+                o->putHeader(KEY_LAT, std::to_string(location.lat).c_str());
+                o->putHeader(KEY_LON, std::to_string(location.lon).c_str());
+                o->putHeader(KEY_TYPE, std::to_string(location.type).c_str());
+                MSG_LOW("lon:%s,lat:%s,alt:%s", std::to_string(location.lon).c_str(), std::to_string(location.lat).c_str(),
+                        std::to_string(location.alt).c_str());
+            }
+        }
+    }
+    else
+    {
+        MSG_LOW("region KR");
+        Coord location;
+        if (DataBuffer::instance().getLocation(location))
+        {
+            o->putHeader(KEY_ALT, std::to_string(location.alt).c_str());
+            o->putHeader(KEY_LAT, std::to_string(location.lat).c_str());
+            o->putHeader(KEY_LON, std::to_string(location.lon).c_str());
+            o->putHeader(KEY_TYPE, std::to_string(location.type).c_str());
+            MSG_LOW("lon:%s,lat:%s,alt:%s", std::to_string(location.lon).c_str(),std::to_string(location.lat).c_str(),
+                    std::to_string(location.alt).c_str());
+        }
+    }
+
+2. CCS 플로우 자료 수정
+confluence -> CCU GEN1 사양서 -> Engineering Work Products -> SoftwarePhase -> SADS -> Static, Dynamic .6

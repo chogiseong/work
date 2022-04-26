@@ -1,0 +1,12 @@
+hmodem.h
+onBootREasonReceived 추가 및 구현
+
+IHBootReasonListener::onBootReasonReceived
+HModem::setEventListener
+
+msm, connectivity 바이너리 넣고 테스트커맨드 후 로그 찍히는지 까지.
+테스트 커맨드 작성까지.
+
+빌드에러
+
+변영환연구원님 메일

@@ -1,0 +1,135 @@
+1. PL님께 메일
+
+안녕하십니까!
+IVI 개발 3팀 조기성입니다.
+
+Static Design, Dynamic Design 수정 중 문의 사항이 있어서 메일 남깁니다.
+
+[Issue 1]
+Dynamic Design 다이어그램에 정의된 함수를 Static Design Relationship Table에 새로 명시하거나
+Static Design Relationship Table에 SRS가 없는 함수를 정의할 때 SRS를 새로 생성해야 하는 부분이 있는데
+
+양병훈님과 통화에 의하면 SRS 문서는 검수가 완료된 상태라서 삭제 및 추가가 조심스럽다고 합니다.
+따라서 제가 독자적으로 추가하는 것은 어렵고 김석환 책임님께 문의를 드려야 할 것 같습니다.
+
+
+
+[Issue 2]
+또한 현재 Static Design Relationship Table, Dynamic Design 다이어그램에 불일치 항목을 다수 발견했습니다.
+
+양병훈님에 의하면 아래와 같이 Dynamic Design 다이어그램에 명시되는 description 수준의 함수적 표현은 체크를 하지 않는답니다.
+따라서 Static Design Relationship Table에 존재하지만 Dynamic Design 다이어그램에 존재하지 않는 함수들만
+다이어그램에 명시하려고 하는데 명시하지 않아도 되는 함수를 알려주시면 제거 하겠습니다.
+
+조기성  [IT협력사/개발(5.ERP)][사원] :
+  안녕하십니까!
+인포뱅크 IVI 개발 3팀 조기성입니다.
+
+Static, Dynamic Design 수정 중 문의 사항이 있어서 메시지 남깁니다.
+
+먼저 현재 Dynamic Design 다이어그램에 함수 외 표현이 몇 가지 존재하고 있습니다.
+ex) 1번 requestEngineControl 함수 밑 Check Engine State per 1 sec, kill Timer, make response json body data 등
+이런 경우 각각 사용되는 함수를 명시해야 하거나 삭제해야 하는 건지 허용이 되는 것인지 문의 드리고 싶습니다.
+
+감사합니다.
+조기성 드림.
+양병훈  [기타협력사/휴인시스텍][위원] :
+  현재는 동적 / 정적 설계 컴포넌트와 함수 불일치 여부 정도까지만 확인하고 있습니다. internal logic 에 관한 description 까지는 체크하고 있지 않습니다.
+조기성  [IT협력사/개발(5.ERP)][사원] :
+  확인했습니다. 감사합니다.
+
+Relationship table에 존재하지만 동적설계에 존재하지 않는 함수
+
+      teleapp relationship table
+
+      getAlarmState
+      ispanic
+      isHoodOpened
+      isBulbOpened
+      requestSteeringWheelHeating
+      requestSideMirrorAndRearWindowHeating
+      requesetCurtainControl
+      setHost
+      setServicePath
+      getResponseCode
+
+      telemanager relationship table
+
+      setLocationMapMatchingEventListener
+      getPhoneNumber
+      onNotifyReceiveMessage
+      onNotifyIncoming168HMessage
+      getCallCenterNumberAttribute
+      getSMSCenterNumberAttributed
+      getPrivacyOfflineModeAttribute
+      setSMSCenterNumberAttribute
+
+      msm relationship table
+
+      resetDCU
+      getContext
+      AddContext
+      getStatusAttribute
+      getAccessPointNameAttribute
+      Activate
+      getReceiveMessageAddedEvent
+      getSendMessageResultEvent
+      GetAllReceiveMessages
+      getAirplaneModeAttribute
+      getIMEIAttribute
+      getVoLTEModeAttribute
+      getDataNetRegStatusAttribute
+      getMCCAttribute
+      getSystemBootReasonAttribute
+
+동적설계에 존재하지만 Relationship table에 존재하지 않는 함수
+
+      TeleApp
+
+      addEvent (x)
+      onMTRequestReceived (x)
+      setSignal
+      requestTeleVehicleStatus
+      makeBatteryWarningAlertSignal
+      getFleetInterval
+      makeSVN2LocStatus
+      HEthCCSignalID::DVRS_Rec_Crash_Prk
+      makeLocReport
+      makeRoaRequest
+      makeVehicleStatusInfoBody
+      requestSetTailLamp
+      requestSetHazardLamp
+      checkTailHazardLampState
+      onCloudRequestFinished
+      onVehicleSignalChanged
+      sendData
+      sendMCIVersionToCenter
+      sendHTTPRequest
+      downloadMCIfromCDN
+      sendMCIDataToHDM
+      activateCharging
+      getChargingState
+      activateAirConditioning
+      getBlowerSpeed
+      checkSchedRmtFcnState
+      makeVehicleEVBatWarnNoti
+      requestGN3Control
+      getDrvDistance
+      setAlarmTime
+      checkActualChargeTime
+
+      TeleManager
+
+      getAllProvisioningTable
+      getProvisioningStatusAttribute
+      setProvisioningdata
+      setProvisioningStatus
+      setTimeStamp
+      saveProvisioningMsg
+      getTimeStampAttribute
+
+      MSM
+
+      addEvent (x)
+
+3. 사무용품 결제 완료

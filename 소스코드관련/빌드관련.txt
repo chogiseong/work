@@ -1,0 +1,256 @@
+==============================================================================================================================================
+
+bb파일 EXTERNALSRC 빌드 설정
+
+# USE EXTERNALSRC version
+EXTERNALSRC = "${COREBASE}/../meta-telematics/TeleApp"
+
+# USE GIT SRC DOWNLOAD version
+# 20210128 update 2.0.3 for security (DAC, SMACK .service file) P2 car
+# 20210215 update 2.0.5 fix Issues of HKMC INFOTAINMENT QA Team.
+# 20210216 update 2.0.5.1 temp ccnf 2.6 dependency applied
+# 20210305 update 2.0.7 deleted temp ccnf 2.6 branch. applied ccnf 2.6 dependency to master branch and PRD-CCU-dev branch.
+# 20210315 update 2.0.9 CodeSonar issue fix (particial)
+# 20210318 update 2.0.10 CodeSonar issue fixed (fully)
+# 20210329 update 2.0.11 update RS4/JW1 issue fix(SQA,HKMC) and CE1 (build error)
+# 20210407 update 2.0.13 sync with p1_release and ccnf2.6
+# 20210413 update 2.0.14 sync with p1_release and ccnf2.6
+# 20210422 update 2.0.15 sync with ccnf2.6
+PV = "2.0.15"
+SRC_URI = "git://bitbucket.mobis.co.kr:7999/avn_premium6/Mobis.source.apps.telematics.TeleApp.git;tag=${PV};protocol=ssh;branch=PRD-CCU-dev"
+S = "${WORKDIR}/git"
+.
+.
+.
+# USE EXTERNALSRC version
+   install -m 644 ${EXTERNALSRC}/CCU/teleapp.service ${D}/${systemd_unitdir}/system
+# USE GIT SRC DOWNLOAD version
+#    install -m 644 ${WORKDIR}/git/CCU/teleapp.service ${D}/${systemd_unitdir}/system
+#    echo workdir is ${WORKDIR}
+    #install -d ${D}/home/nvidia/.tele/vcrm_log/tmp
+    #install -m 0644 ${EXTERNALSRC}/DONOT.DELETE ${D}/home/nvidia/.tele/vcrm_log/tmp/DONOT.DELETE
+    #install -d ${D}/usr/share/teleringtone
+    #install -m 0644 ${EXTERNALSRC}/teleringtone/* ${D}/usr/share/teleringtone
+}
+
+==============================================================================================================================================
+
+bb파일 GIT 빌드 설정
+
+# USE EXTERNALSRC version
+# EXTERNALSRC = "${COREBASE}/../meta-telematics/TeleApp"
+
+# USE GIT SRC DOWNLOAD version
+# 20210128 update 2.0.3 for security (DAC, SMACK .service file) P2 car
+# 20210215 update 2.0.5 fix Issues of HKMC INFOTAINMENT QA Team.
+# 20210216 update 2.0.5.1 temp ccnf 2.6 dependency applied
+# 20210305 update 2.0.7 deleted temp ccnf 2.6 branch. applied ccnf 2.6 dependency to master branch and PRD-CCU-dev branch.
+# 20210315 update 2.0.9 CodeSonar issue fix (particial)
+# 20210318 update 2.0.10 CodeSonar issue fixed (fully)
+# 20210329 update 2.0.11 update RS4/JW1 issue fix(SQA,HKMC) and CE1 (build error)
+# 20210407 update 2.0.13 sync with p1_release and ccnf2.6
+# 20210413 update 2.0.14 sync with p1_release and ccnf2.6
+# 20210422 update 2.0.15 sync with ccnf2.6
+# 20210430 update 2.0.18 sync with ccnf2.6 and ccnf2.7 branches
+# 20210510 update 2.0.19 sync with ccnf2.6 and ccnf2.7 branches
+# 20210510 update 2.0.20 added security db logic
+PV = "2.0.20"
+SRC_URI = "git://bitbucket.mobis.co.kr:7999/avn_premium6/Mobis.source.apps.telematics.TeleApp.git;tag=${PV};protocol=ssh;branch=PRD-CCU-dev"
+S = "${WORKDIR}/git"
+.
+.
+.
+# USE EXTERNALSRC version
+#   install -m 644 ${EXTERNALSRC}/CCU/teleapp.service ${D}/${systemd_unitdir}/system
+# USE GIT SRC DOWNLOAD version
+    install -m 644 ${WORKDIR}/git/CCU/teleapp.service ${D}/${systemd_unitdir}/system
+    echo workdir is ${WORKDIR}
+    #install -d ${D}/home/nvidia/.tele/vcrm_log/tmp
+    #install -m 0644 ${EXTERNALSRC}/DONOT.DELETE ${D}/home/nvidia/.tele/vcrm_log/tmp/DONOT.DELETE
+    #install -d ${D}/usr/share/teleringtone
+    #install -m 0644 ${EXTERNALSRC}/teleringtone/* ${D}/usr/share/teleringtone
+}
+
+==============================================================================================================================================
+
+소스다운로드
+
+######################repo init 절대 혼용 금지######################
+
+기본
+
+repo init -u ssh://bitbucket.mobis.co.kr:7999/CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest -b master
+repo sync
+repo start master --all
+
+
+==============================================================================================================================================
+
+소스 최신으로 맞추는 방법
+
+repo sync 후 git status, git diff
+우리 변동사항이 아닌경우 해당 파일 가서 git pull 하고 진행 해도 무관
+
+==============================================================================================================================================
+
+깃브랜치
+
+git branch --all 모든 브랜치 확인
+git checkout 해당 빌드할 브랜치 지정
+git branch 로 확인
+
+==============================================================================================================================================
+
+빌드
+
+source nxp-setup-alb-mobis.sh -m s32v234ccu
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";
+
+RS4
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake msm
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake teleapp
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake telemanager
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-connectivity
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-middlemsm
+
+-c cleanall
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall ivds;bitbake -c cleanall ccnf-vehicle;bitbake -c cleanall ccnf-location;bitbake -c cleanall tmdb;bitbake -c cleanall teleapp;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall snt-install;bitbake -c cleanall ccnf-lifecycle;
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+JW1
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake msm
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake teleapp
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake telemanager
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-connectivity
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-middlemsm
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake tmdb
+
+-c cleanall
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall ivds;bitbake -c cleanall ccnf-vehicle;bitbake -c cleanall ccnf-location;bitbake -c cleanall tmdb;bitbake -c cleanall teleapp;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall snt-install;bitbake -c cleanall ccnf-lifecycle;bitbake -c cleanall ccnf-machine;bitbake -c cleanall ccnf-system
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+CE1
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake msm
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake teleapp
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake telemanager
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-connectivity
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake ccnf-middlemsm
+
+-c cleanall
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+==============================================================================================================================================
+
+모든파일 minicom으로 복사
+
+    scp ./* root@10.0.6.0:/download
+
+/home/cgs/work_source/jw1/sources/meta-telematics/TeleApp/others/TeleAppCommon/src/Common/Service/CE_ProvisionBase.cpp
+
+==============================================================================================================================================
+
+repo sync
+1. repo sync 하면 branch 는 master
+2. 내가 bitbake를 수정하고 repo sync 시 에러 발생.
+3. 그 이후 기존 소스 병합.
+
+==============================================================================================================================================
+
+CE1
+source nxp-setup-alb-mobis.sh -m s32v234ccu
+
+모듈빌드
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE"
+
+==============================================================================================================================================
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall ivds;bitbake -c cleanall ccnf-hvehicle;bitbake -c cleanall ccnf-hlocation;bitbake -c cleanall tmdb;bitbake -c cleanall teleapp;bitbake -c cleanall ccnf-connectivity-lib;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall snt-install;bitbake -c cleanall ccnf-hlifecycle;bitbake -c cleanall ccnf-hmachine;bitbake -c cleanall ccnf-hsystem
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake teleapp
+EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall ccnf-hvehicle
+
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall net
+
+==============================================================================================================================================
+
+강제 pull
+
+git fetch --all
+
+git reset --hard master
+
+git pull
+
+
+git fetch --all
+
+git reset --hard origin/master
+
+git pull origin master
+
+==============================================================================================================================================
+
+풀빌드 관련 swap memory 설정, 영구 설정
+
+free -m 스왑메모리 조회
+
+sudo fallocate -l 10G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo vi /etc/fstab
+
+/swapfile     swap     swap     defaults    0 0 입력
+
+sudo swapon -s
+sudo free -m
+
+스왑메모리 영구 설정
+
+ulimit 도 설정 해줘야 풀빌드 설정 완료.
+
+build local.conf 스레드 수 32? 8? 조정
+
+==============================================================================================================================================
+
+풀빌드 후 image 경로
+
+버전 폴더 / build / tmp / deploy / images / s32v234ccu /
+
+image 생성된 일시 확인으로 image 생성된 것 확인
+
+==============================================================================================================================================
+
+TeleApp clean all
+
+EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall ivds;bitbake -c cleanall ccnf-vehicle;bitbake -c cleanall ccnf-location;bitbake -c cleanall tmdb;bitbake -c cleanall teleapp;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall snt-install;bitbake -c cleanall ccnf-lifecycle;bitbake -c cleanall ccnf-machine;bitbake -c cleanall ccnf-system
+
+
+
+
+
+
+setupbuild.sh
+
+
+source sources/sbas-scripts/setupbuild.sh RS4 M master master master KOR B0534 B0512 VA 0A0607
+
+./sources/sbas-scripts/ap_build.sh CE1 ccnf_2.9 0.27.3 ccnf_2.9_ce1_proto2 KOR Test 10006 VA 0C0002 0 C.01 1 0
+
+
+
+
+git push origin HEAD:DEV-CCUG1-8873-DT074224_fidl_master_added_fleetmanager_2
+
+
+source setupbuild.sh -d CE1 MASTER master 0.31.0 master

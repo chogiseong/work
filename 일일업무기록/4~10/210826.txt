@@ -1,0 +1,6 @@
+1. 최근 리뷰 액셀 보면서 수정후 검토, 최대한 오전 중으로 끝낼 것.
+
+response
+request
+addcentereventarrived
+전부 HCCSServer라고 잘못표기되어있지만 수정불가

@@ -1,0 +1,71 @@
+현황
+
+수요일 오전중으로 SUDS 정합성 검사 후 양병훈 위원님꼐 리뷰 요청드릴 것
+
+SADS정합성 검사도 해야하는데, 이때 다이나믹 다이어그램과 스태틱 정합성 반드시 확인할 것. 변경된 부분이 많음
+
+SUDS 확인 후 software unit id 작성할 것
+
+handleEvent가 호출하는 함수
+sendHTTPResponse
+isDoorLocked
+getBlowerSpeed
+executeService
+addMainEvent
+preConditionCheck
+start
+saveProvState
+updateConditionValue
+sendReadyNotiToSubHandler
+preconditionCheckMO
+preconditionCheckMT
+sendHTTPRequest
+assembly
+divide
+notifyCenterEventArrived
+handleEventSendDataHTTP
+Activate
+getReceiveMessageAddedEvent
+getSendMessageResultEvent
+getAirplaneModeAttribute
+getIMEIAttribute
+getVoLTEModeAttribute
+getDataNetRegStatusAttribute
+getMCCAttribute
+getMNCAttribute
+getSystemBootReasonAttribute
+notifyReceiveMessage
+resetDCU
+isIgnOn
+checkCcicDcuWakeUpStatus
+RemoveReceiveMessages
+getEcallStatus
+getAirplaneMode
+ResetModem
+getBootReason
+notifyPSattachedStatusChanged
+notifyIpSettingsChanged
+notifyPhoneNumberUpdated
+notifySmsAuthNumberChanged
+
+
+
+
+
+
+과제!
+
+float, double 유효숫자란 무엇인가?
+유효숫자를 넘어가면 발생되는일?
+유효숫자 설명 할 수 있을 정도로 스터디
+
+float test1 = 123.45123 을
+string 으로 소수점 1자리 까지 표기하기
+
+함수로 구현
+bool floatToStirng(float f) {
+
+// 구현
+//
+
+}

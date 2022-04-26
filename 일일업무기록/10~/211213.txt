@@ -1,0 +1,60 @@
+pbk@pbk:/media/pbk/769A553C9A54FA57/DT032222/ccu/build_s32v234ccu$ EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake teleapp
+WARNING: You have included the meta-virtualization layer, but 'virtualization' has not been enabled in your DISTRO_FEATURES. Some bbappend files may not take effect. See the meta-virtualization README for details on enabling virtualization support.
+ERROR: /media/pbk/769A553C9A54FA57/DT032222/ccu/sources/meta-sonatus/recipes-install/systemd-networkd-setup/systemd-networkd-setup.bb: Error executing a python function in <code>:
+
+The stack trace of python calls that resulted in this exception/failure was:
+File: '<code>', lineno: 3, function: <module>
+     0001:__anon_22__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_conf_machine_include_arm_feature_arm_thumb_inc(d)
+     0002:__anon_25__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_classes_patch_bbclass(d)
+ *** 0003:__anon_683__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_classes_base_bbclass(d)
+     0004:__anon_64__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_meta_freescale_classes_fsl_dynamic_packagearch_bbclass(d)
+     0005:__anon_1323__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_meta_alb_classes_insane_bbclass(d)
+     0006:__anon_251__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_classes_package_bbclass(d)
+     0007:__anon_718__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_classes_package_rpm_bbclass(d)
+File: '/media/pbk/769A553C9A54FA57/DT032222/ccu/sources/poky/meta/classes/base.bbclass', lineno: 580, function: __anon_683__media_pbk_769A553C9A54FA57_DT032222_ccu_sources_poky_meta_classes_base_bbclass
+     0576:    needsrcrev = False
+     0577:    srcuri = d.getVar('SRC_URI')
+     0578:    for uri in srcuri.split():
+     0579:        (scheme, _ , path) = bb.fetch.decodeurl(uri)[:3]
+ *** 0580:
+     0581:        # HTTP/FTP use the wget fetcher
+     0582:        if scheme in ("http", "https", "ftpPREMIUM6"):
+     0583:            d.appendVarFlag('do_fetch', 'depends', ' wget-native:do_populate_sysroot')
+     0584:
+File: '/media/pbk/769A553C9A54FA57/DT032222/ccu/sources/poky/bitbake/lib/bb/fetch2/__init__.py', lineno: 368, function: decodeurl
+     0364:    """
+     0365:
+     0366:    m = re.compile('(?P<type>[^:]*)://((?P<user>[^/;]+)@)?(?P<location>[^;]+)(;(?P<parm>.*))?').match(url)
+     0367:    if not m:
+ *** 0368:        raise MalformedUrl(url)
+     0369:
+     0370:    type = m.group('type')
+     0371:    location = m.group('location')
+     0372:    if not location:
+Exception: bb.fetch2.MalformedUrl: The URL: 'if' is invalid and cannot be interpreted
+
+ERROR: Failed to parse recipe: /media/pbk/769A553C9A54FA57/DT032222/ccu/sources/meta-sonatus/recipes-install/systemd-networkd-setup/systemd-networkd-setup.bb
+
+
+#build
+alias bjw1='EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias brs4='EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias bce1='EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias build1='source nxp-setup-alb-mobis.sh -m s32v234ccu'
+alias build2='export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";'
+alias build12='source nxp-setup-alb-mobis.sh -m s32v234ccu && export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";'
+
+#repo
+alias repoin='repo init -u ssh://bitbucket.mobis.co.kr:7999/CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest -b master'
+alias reposy='repo sync'
+alias repoma='repo start master --all'
+alias repoauto='repo init -u ssh://bitbucket.mobis.co.kr:7999/CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest -b master && repo sync && repo start master --all && repo sync && repo sync && repo sync && repo sync && repo sync'
+
+#clean
+alias cjw1='EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+alias crs4='EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+alias cce1='EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+
+#git
+alias gitbr='git branch;git branch --all'
+alias gitch='git checkout'

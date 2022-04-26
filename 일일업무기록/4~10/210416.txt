@@ -1,0 +1,83 @@
+1. RCSDataStatusControlService 소스 코드 분석
+
+bool RCSDataStatusControlService::sendHTTPRequest(int mStatus, std::string mReason)
+
+Json::Value root, std::string jsonBody 를 정의한다. HResult 를 result로 정의하고 jsonBody는 초기화.
+벡터로 jsonBody 데이터를 저장하고 messageID 도 str 저장.
+RCSDataStatusControlServiceBase로 부터 각종 값 req
+결과는 GDbusTElemanagerClient::getInstance().request(req);
+.request는 클라이언트가 nullptr이면 반복 한다. 결국 result 에 eHResult 저장 후
+이 result가 ok 아니면 false, ok면 true return.
+
+
+void RCSDataStatusControlService::sendHTTPResponse(int tStatus, std::string tReason)
+
+Json::Value root, std::string InJsonHeaderData
+serviceBase의 구조체 RespInfo(response information)를 m_RespInfo 라고 저장. HTTP Msg Info 받는다.
+그 외에 필요한 변수를 정의하고 m_Host = HOST_SBS로 지정. MSG_HIGH로 Tid, m_Host, tStatus, tReason 등 로그 출력.
+InJsonHeaderData = tStatus, tReason 등 받은 값 + mDataSatusTid(RCSDataStatusControlServiceBase)를 makeHeader 한다.
+.parse 로 InJsonHeaderData + headerJson 파싱하여 bool fParsingRet 에 저장.
+이게 true면 rReason, rStatusTemp, rStatus에 headerJson에서 .get KEY_REASON, KEY_STATUS를 str으로 받고
+stoi(str 부호있는정수로 리턴) rStatusTemp 값도 받는다.
+그 후 RespInfo 구조체에 값을 대입, ServiceBase의 responseRecieved(m_RespInfo,m_Host,InJsonData).
+
+2. MO provisioning 사양서 정독
+
+CCU 전원 인가 시 CCU는 다음과 같이 동작한다.
+
+1. CCU는 DCU로 부터 모뎀 정보를 받는다.
+2. CCU는 DCU로 부터 받은 모뎀 정보를 보고 ccuModemStatus를 판단한다.
+3. CCU는 모뎀 정보, 상태값을 AVNT로 전송한다.
+4. CCU는 AVNT로 부터 CCS 개통 상태 정보를 받는다.
+5. CCU는 ccuModemStatus가 "Activated"고 AVNT의 CCS 개통 상태가 "enrolled"나 preRDshell이며 설정된 프로비저닝 테이블이 없을 경우 서비스 설정을위한 Provisioning Request 메시지를 CCS 서버로 전송한다.
+6. CCU는 서비스 설정을 위한 Provisioning Response 메시지를 CCS 서버로부터 수신한다.
+7. CCU는 서비스 설정 완료에 대한 Provisioning Result 메시지를 CCS 서버로 전송한다.
+8. CCS 서버는 ACK 메시지를 전송한다.
+
+AVNT의 CCS 개통상태가 변경되면, CCU는 아래와 같이 동작해야 한다.
+
+AVNT에서 주는 CCUProvisioningTableUpdate가 True면 CCU는 아래와 같이 동작해야 한다.
+
+서비스 개통 실패
+
+서비스 해지
+
+AVNT의 CCS개통상태가 변경되면 CCU는 아래와 같이 동작해야 한다.
+
+DCU 교체
+
+CCU 전원 인가 시 CCU는 아래와 같이 동작해야 한다.
+
+reference specification
+
+provisioning시나리오 관련하여 interface문서 및 tms센터 프로토콜을 참조하여 구현한다.
+
+단말은 CCU provisioning을 진행하기 위한 factory value를 가지고 있어야한다.
+
+단말은 CCU Provisioning table access에 대한 보안을 적용해야 한다.
+
+End condition
+
+ccu provisioning 성공 / 실패
+
+
+3. 빌드 방법, minicom
+
+mount -o remount, rw /
+
+rm /usr/lib/libTeleApp*
+scp ./tmp/work/aarch64-fsl-linux/teleapp/package/usr/lib/libTeleApp* root@10.0.6.0:/usr/lib/
+chmod 777 /usr/lib/libTeleApp*
+sync
+
+지금까지 내가 수정했던 코드는 external 소스코드로 최신버전. 태그 코드(zira 프로젝트 내 최신이 아닌 안정? 적인 태그 버전{태그 버전이 붙어있다.})를 찾으려면 build 내에 git 안에 가보면 있음. 그쪽에서 수정하는게 에러 방지도 가능 하고 빠르다.
+
+자신이 수정한 코드를 빠르게 반영하고 싶을 시 빌드할 때 bitbake 다음에 -fc compile을 붙이고 teleapp 등 빌드하면 빠르게 빌드 가능.
+
+-c cleanall 경로 전부 날리고 빌드.
+
+순서
+1. 태그 코드 수정
+2. PC 내부에서 빌드(-fc compile or -c cleanall 활용)
+3. Minicom 연결, ssh접속(랜선 연결 ssh는 보통 파일 업로드 다운로드 시 사용되며 디버그케이블은 말 그대로 디버그 시 사용된다. ssh 속도가 더 빠르며 그렇기 때문에 파일 업,다운로드에 사용되는 것)
+4. 파일 업데이트, 반영 후 로그 grep

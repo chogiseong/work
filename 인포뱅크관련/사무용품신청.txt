@@ -1,0 +1,146 @@
+항목 수정
+
+    [iMotors][IVI개발3팀]사무용품 신청
+
+    품명 상품코드 신청자 수량 링크 합계
+
+Office Plus 링크
+
+    http://www.officeplus.com/index_main_opa.jsp?site_code=OPA
+
+
+
+2차 사무용품 세부 사항
+
+    2.1 랜 to usb 케이블 http://www.officeplus.com/prod/item/item.jsp?itemCode=D68728 O
+
+    2.2 다이어리 http://www.officeplus.com/prod/item/item.jsp?itemCode=EF4113 O
+
+양지사 비닐 양장노트 대5호 16절 112매 YSN0204 (색상랜덤)
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=EF3738 EF3738 4,900
+
+    2.3 모니터 받침 http://www.officeplus.com/prod/item/item.jsp?itemCode=FT6997 O
+
+    2.4 라벨링 http://www.officeplus.com/prod/item/item.jsp?itemCode=AN6792 O
+
+아이라벨 라벨지 CL595 50매(권), A4, 95칸, 흰색모조지
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=EF1344 EF1344 15,000
+
+[로지텍] M185 무선 마우스 (그레이)
+    2.5 무선마우스 http://www.officeplus.com/prod/item/item.jsp?itemCode=CO3976 	CO3976 21,400원 O
+
+
+
+3차 사무용품 세부 사항
+
+    넥시 CAT.7 파인골드 랜선 S-FTP 고급 랜케이블 1.5M NX1067 http://www.officeplus.com/prod/item/item.jsp?itemCode=DT2781 DT2781 9,700원 O
+
+    파스텔 실리콘 얼음틀 12구 그레이*2개묶음 http://www.officeplus.com/prod/item/item.jsp?itemCode=IS8990 IS8990 20,000원
+
+    [로지텍] M185 무선 마우스 (그레이)
+        2.5 무선마우스 http://www.officeplus.com/prod/item/item.jsp?itemCode=CO3976 	CO3976 21,400원 O
+
+
+
+4차 사무용품 세부 사항품
+
+    usb 2개 (32g 1개, 128g 1개)
+    Sandisk Cruzer Force CZ71 32GB USB메모리 http://www.officeplus.com/prod/item/item.jsp?itemCode=D59753 D59753 8,700원 o
+
+    Sandisk Ultra Dual Drive USB 3.1 Type-C 128GB SDDDC2 http://www.officeplus.com/prod/item/item.jsp?itemCode=D62601 D62601 27,500원 o
+
+    파스텔 실리콘 얼음틀 15구 모던그레이*2개묶음 http://www.officeplus.com/prod/item/item.jsp?itemCode=IS8977 IS8977 30,000원 o
+
+
+
+5차 사무용품 세부 사항
+
+    [펠로우즈] 평면 기가 랜 케이블 3M http://www.officeplus.com/prod/item/item.jsp?itemCode=DP8652 DP8652 9,000원 0
+
+    [노트케이스] MOG-080 실버/USB-C타입랜젠더/USB 1Gbps 랜/USB-RJ45 http://www.officeplus.com/prod/item/item.jsp?itemCode=DP7444 DP7444 14,500원 0
+
+    다얼유 LM108 PRO 글러브 인체공학 버티컬 블루투스 마우스 http://www.officeplus.com/prod/item/item.jsp?itemCode=D83246 D83246 43,700 0
+
+
+
+6차 사무용품 세부 사항
+
+    [MADE J] C타입 가정용 충전기 M3-C http://www.officeplus.com/prod/item/item.jsp?itemCode=WX8212 WX8212 9,000원 0
+
+    로지텍 멀티 디바이스 블루투스 키보드 K375S http://www.officeplus.com/prod/item/item.jsp?itemCode=D62342  D62342 47,000원 0
+
+    [펠로우즈] 평면 기가 랜 케이블 3M http://www.officeplus.com/prod/item/item.jsp?itemCode=DP8652 DP8652 9,000원 2개 0
+
+
+
+7차 사무용품 세부 사항
+
+    라이녹스
+
+    MBF 고강도몰드 4호 10개 (흰색 대 1M 엠비에프) http://www.officeplus.com/prod/item/item.jsp?itemCode=D23033 	D23033 33,300원 0
+
+    삼성 박스테이프(투명)(아크릴타입) 48mm*40M http://www.officeplus.com/prod/item/item.jsp?itemCode=AR2871  AR2871  1,300원 0
+
+8차 사무용품 세부 사항
+
+    로지텍 무선 마우스 M221 (블랙) http://www.officeplus.com/prod/item/item.jsp?itemCode=DP8341 DP8341  32,000원
+
+    [펠로우즈] 평면 기가 랜 케이블 3M http://www.officeplus.com/prod/item/item.jsp?itemCode=DP8652 DP8652 9,000원 1개
+
+9차 사무용품 세부 사항
+
+    UGREEN USB3.0 AM-AF 금도금 연장 케이블 3m U-30127 http://www.officeplus.com/prod/item/item.jsp?itemCode=D75917 D75917 13,600 4
+
+    NEXI USB3.0 AM-AF 고급형 실드 연장케이블 1m NX-U30MF-010 NX642 http://www.officeplus.com/prod/item/item.jsp?itemCode=D69815 D69815 4,500 4
+
+    이지넷유비쿼터스 USB 3.1 Type C 변환 젠더 NEXT-1512TC http://www.officeplus.com/prod/item/item.jsp?itemCode=D60332 D60332 3,600 4
+
+10차 사무용품 세부 사항
+
+    삼성전자 SHS-100V/B 스테레오 헤드셋 (블랙) http://www.officeplus.com/prod/item/item.jsp?itemCode=D46627 D46627 24,300원 1
+
+    [IPTIME] A3000U/11ac USB무선랜카드 http://www.officeplus.com/prod/item/item.jsp?itemCode=DP9219 DP9219 36,100원 1
+
+    마하링크 USB2.0 Type A 고급형 몰딩 실드 연장케이블 5m ML-U2HF050 http://www.officeplus.com/prod/item/item.jsp?itemCode=D66793 D66793 8,400원 2
+
+    호박가위 소(160mm) SO4002 http://www.officeplus.com/prod/item/item.jsp?itemCode=DA0289 DA0289 1,800원 1
+
+    [세신]니퍼6"(160MM) http://www.officeplus.com/prod/item/item.jsp?itemCode=905709 905709 7,920원 1
+
+    무극사 3500 캠퍼스라이프 스프링노트 208*300 상철 75매 (랜덤배송) http://www.officeplus.com/prod/item/item.jsp?itemCode=EF3993 EF3993 3,600원 5
+
+2022 2월 사무용품 세부 사항
+
+    Ugreen 실리콘 케이블 정리 홀더 (블랙/4슬롯/2EA / U-30762 http://www.officeplus.com/prod/item/item.jsp?itemCode=DP9571 DP9571 11,000원 1
+
+    Sandisk Ultra Dual Drive Luxe Type C 64GB SDDDC4 http://www.officeplus.com/prod/item/item.jsp?itemCode=D80571 D80571 21,000원 1
+
+====================================================================================================================================================
+[비업무] IVI 개발 3팀 사무용품 집계 건
+
+안녕하십니까.
+iMotors IVI 개발 3팀 조기성입니다.
+
+22년 X월 사무용품 집계를 진행하겠습니다.
+하기 사이트에서 구매 희망 물품 확인하신 후
+링크, 수량, 필요 사유 회신 주시면 집계하여 제출하도록 하겠습니다.
+
+http://www.officeplus.com/index_main_opa.jsp?site_code=OPA
+
+사무용품 신청 마감일은 매달 12일, 25일이며, 신청 마감일 3일 전까지 신청 해주시면 감사하겠습니다.
+
+감사합니다.
+조기성 드림.
+====================================================================================================================================================
+[비업무] IVI 개발 3팀 사무용품 신청 건
+
+안녕하십니까.
+iMotors IVI 개발 3팀 조기성입니다.
+
+22년 2월 사무용품 집계를 완료했습니다.
+
+확인 부탁드리겠습니다.
+
+감사합니다.
+조기성 드림.
+====================================================================================================================================================

@@ -1,0 +1,21 @@
+1. (y) chsmack, chsmack -a "_" 적용 및 성공
+
+    mofUtil 성기영책임님이 주신 것 사용
+
+    JW1_27 mofutil 사용, DCU 통신 성공, 머지 완료
+
+2. CE1 TeleApp 이슈 해결
+
+    header에만 함수 정의 되어있고 구현이 되어있지 않은 경우,
+
+    구현도 되어있고 export 되어있는 경우
+
+    빌드 에러 중 undefined symbol, getinstance, 함수 떴을 시
+
+    그 부분을 #if !defined (TARGET_CCU_CE) / #endif 등으로 막아준다.
+
+3. 빌드루틴
+
+    RS4, JW1 빌드
+
+    RS4 2.7 TeleApp 만 빌드 실패

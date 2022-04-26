@@ -1,0 +1,69 @@
+1. CMakeList
+
+TMGR
+
+#set(SRC_GEN_PATH ./CCU/src-gen)
+set(SRC_VSOMEIP_COMMONAPI_PATH ./CCU/VSomeipCommonAPI)
+set(SRC_CCNF ./CCU/CCNF)
+FILE(GLOB_RECURSE SRC_VSOMEIP_COMMONAPI_CPP_FILES
+#    ${SRC_GEN_PATH}/*.cpp
+#    ${FIDL_ROOT_PATH}/*.cpp
+#    ${SRC_VSOMEIP_COMMONAPI_PATH}/*.cpp
+
+    ${SRC_VSOMEIP_COMMONAPI_PATH}/CCU/Cloud/*.cpp
+    ${SRC_VSOMEIP_COMMONAPI_PATH}/CCU/Vehicle/*.cpp
+    ${SRC_VSOMEIP_COMMONAPI_PATH}/CCIC/EngineeringMode/*.cpp
+    ${SRC_VSOMEIP_COMMONAPI_PATH}/CCIC/Lifecycle/*.cpp
+    ${SRC_VSOMEIP_COMMONAPI_PATH}/CCIC/ProvisioningTable/*.cpp
+    ${SRC_CCNF}/*.cpp
+
+    ${FIDL_ROOT_PATH}/v2/CCU/Cloud/*.cpp
+    ${FIDL_ROOT_PATH}/v2/CCU/Vehicle/*.cpp
+
+    ${FIDL_ROOT_PATH}/v3/Info/Cloud/*.cpp
+
+    .
+    .
+    .
+
+MSM
+
+set(SOURCE_PATH ./src)
+#set(SRC_GEN_PATH ./src-gen)
+FILE(GLOB_RECURSE CPP_FILES
+    ${SOURCE_PATH}/*.cpp
+#    ${SRC_GEN_PATH}/*.cpp
+#    ${FIDL_ROOT_PATH}
+
+    ${FIDL_ROOT_PATH}/v2/CCU/ExternalNetwork/*.cpp
+    ${FIDL_ROOT_PATH}/v2/DCU/Telephony/*.cpp
+    ${FIDL_ROOT_PATH}/v2/DCU/System/*.cpp
+
+    ${FIDL_ROOT_PATH}/v3/DCU/Telephony/*.cpp
+
+    .
+    .
+    .
+
+
+
+
+
+
+
+
+2. FIDL
+
+4.2
+CCU_ExternalNetwork
+DCU_Telephony_NetworkInformation
+
+9.0
+DCU_Telephony_Connection
+DCU_Telephony_Enginnering
+DCU_Telephony_MessageManager
+DCU_Telephony_ModemManager
+DCU_Telephony_SimManager
+Info_Cloud_Engineering
+Info_Cloud_ProvisioningTable
+Info_System_LifecycleProxy

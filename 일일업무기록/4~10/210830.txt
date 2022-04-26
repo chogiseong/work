@@ -1,0 +1,25 @@
+1. 양병훈 수석님 리뷰사항 반영 및 TMGR, MSM SUDS ID 기입. 오늘 내로 끝낼 것.
+
+    SUDS ID만 작성하면 전부 완료.
+
+2. PL님 숙제 진행. 자세하게 검토할 것.
+
+새로운 ccNF 리스너를 추가할 예정이다.
+기존에 구현된 리스너를 파악.
+아래 api를 검토해라.
+검토 후 새로운 api는 로컬에서 구현해보고 나중에 피드백을 받아야한다.
+
+화요일 오전까지
+onCCUModemStatus(), onWakeUpReceived() 관련하여 소스상 어떻게 구현되어 있는지 리뷰하기.
+어느 앱에서 구현되고 어느 앱이 api를 이용하게 되고 어떤 역할을 하는지 전체적인 관계 기술.
+
+//문의사항
+connectivity의 HModem HModemImpl에 선언 되며
+상수 CCUModemStatus를 받아
+만약 mHModemChangeListener가 널이 아닐때
+mHModemChangeListener->onCCUModemStatus(CCUModemStatus) 합니다.
+이때 mHModemChangeListener는 IHModemChangeMonitor의 포인터인데
+
+%%%
+class GDbusMsmClient가 IHModemChangeMonitor의 자식이니까 GDbusMsmClient의 onCCUModemStatus가 호출되게 됩니다.
+%%%

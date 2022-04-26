@@ -1,0 +1,29 @@
+1. 태그머지
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_master_tag
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_ccnf27_tag
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_ccnf26_tag
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_ccnf28_tag
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_ccnf27_tmdb_tag
+
+git push ccu HEAD:DEV-CCUG1-6885-DT074224_ccnf26_tmdb_tag
+
+tmdb는 master외 2.8, 2.7, 2.6 전부 같이 머지해줘야 한다.
+
+master를 했다고 해도 2.8 머지는 진행해야 한다.
+
+
+
+2. tmdb dlt log 출력 이슈
+
+3. SWC_TMGR, SWC_MSM 수정
+
+    SWC_MSM 동적 다이어그램 분리
+
+4. 매 주 수요일 전체빌드 루틴
+
+    젠킨스 배우기

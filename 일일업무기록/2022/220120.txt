@@ -1,0 +1,13 @@
+s32v234ccu:/# echo SET_VOLTE_ON > /appdata/.tele/test/testPipeMgr
+s32v234ccu:/# 2022/01/20 05:02:15.580650    1618246 123 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:SetVoLTEMode    00769 SetVoLTEMode() - success]
+2022/01/20 05:02:15.581268    1618246 124 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:SetVoLTEMode    00772 SetVoLTEMode() - success VoLTEMode NO ERROR]
+s32v234ccu:/# 
+s32v234ccu:/#
+s32v234ccu:/# echo GET_MOBILECOMM_ON > /appdata/.tele/test/testPipeMgr
+s32v234ccu:/# echo GET_VOLTE_ON > /appdata/.tele/test/testPipeMgr
+s32v234ccu:/# 2022/01/20 05:02:40.582940    1868255 151 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:GetMobileCommProtoType 00807 GetMobileCommProtoType() - start]
+2022/01/20 05:02:40.582988    1868255 152 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:GetMobileCommProtoType 00810 GetMobileCommProtoType() - success]
+s32v234ccu:/#
+s32v234ccu:/# echo GET_VOLTE_ON > /appdata/.tele/test/testPipeMgr
+s32v234ccu:/# 2022/01/20 05:02:53.123151    1993660 155 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:GetVoLTEMode    00792 GetVoLTEMode() - start]
+2022/01/20 05:02:53.123174    1993660 156 CCU1 msm- msm- log info V 1 [ModemManagerConsumer.cpp:GetVoLTEMode    00795 GetVoLTEMode() - success]

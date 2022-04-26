@@ -1,0 +1,231 @@
+d==============================================================================================================================================
+
+CCU, DCU 연결
+
+ccu 보드만 연결할 경우
+
+'-' 단자에 v_gnd 선 연결
+'+' 단자에 v_bat_01, a_acc, a_ign1 을 연결한다.
+
+dcu와 ccu를 연동해서 연결할 경우
+
+dcu 연결방법
+'-' 단자에 GND 연결
+'+' 단자에 ACC, b+ 연결
+
+ccu 연결방법
+'-' 단자에 GND 연결
+'+' 단자에 v_bat_01, a_acc 연결
+
+CCU_WAKE_UP 과 L_WK_DCU 전선연결
+
+2.2.3 ccu와 dcu 연결
+검은색 연결케이블로 좌측 밑 연결하면 셋팅끝.
+
+==============================================================================================================================================
+
+로그 출력 막기
+
+minicom 가동 시 로그가 출력되어 로그인에 방해를 받는 등의 상황에 사용
+
+iptables -t mangle -D drop 1
+
+==============================================================================================================================================
+
+파일 백업 시
+
+cp 파일이름 파일이름_backup 등으로 이름 붙여 카피
+
+==============================================================================================================================================
+
+ccNF p2 부터 적용된 root su 로그인
+
+ID : ccu_mobis
+PW : ccu_mobis1!
+
+로그인 후
+
+su
+
+PW 재입력
+
+==============================================================================================================================================
+
+모든파일 minicom으로 복사
+
+p1
+scp -r ./* root@10.0.6.0:/usr/bin/
+scp -r ./* root@10.0.6.0:/usr/lib/
+
+p2
+scp ./* ccu_mobis@10.0.6.0:/download
+
+==============================================================================================================================================
+
+minicom 권한 설정dede
+
+mount -o remount, rw /
+
+==============================================================================================================================================
+
+textbusy
+
+scp 진행 시 textbusy로 인해 진행이 불가능할 경우 사용
+
+systemctl stop teleapp
+
+==============================================================================================================================================
+
+
+프로세스 아이디
+
+ps -ef | grep Tele
+
+
+==============================================================================================================================================
+
+보드 버전 확인
+
+ver.sh
+
+==============================================================================================================================================
+
+테스트 커맨드, 로그 보는 방법 관련
+
+echo REGION_TEST_CGS > /appdata/.tele/test/testPipeMgr
+
+DCU는 is available 등으로 확인시 쉽게 확인 가능
+
+isDataAvailable 등 확인해서 status 1, svcGroup 1, 6등 맞아야함
+
+ex) getIsDataAvailableState() svcGroup:1 state:1
+
+그리고 센터통신 시 request 후 센터에서 받고 uri 읽어 오는 것 확인하면 됩니다.
+
+statusCode는 TMS 문서(웹문서) ETC에 표기되어 있습니다.
+
+==============================================================================================================================================
+
+dlt-receive 관련
+
+dlt-receive -a 0 |grep ModemManagerConsumer &
+
+dlt-receive -a 0 | egrep 'CCSM|TMGR|MSM' &
+
+등으로 실시간 로그 확인 가능
+
+==============================================================================================================================================
+
+ps 관련
+
+ps 현재 실행중인 프로세스 출력
+ps -ef 커널 외에 프로세스 전부 출력
+
+위 명령어로 PID 확인 후
+
+kill -9 or kill -15 + PID 로 종료 가능
+
+
+kill -15 2998
+
+==============================================================================================================================================
+
+개통DB 관련
+
+1034모뎀에 따른 setvin
+systemctl disable vimd 실행 후 reboot 후 아래 수행 뒤 다시 리붓
+echo "set_svinKM0RTEST020110601" > /appdata/.tele/test/testPipeMgr
+
+echo "REGION_TEST_CGS" > /appdata/.tele/test/testPipeMgr
+echo "DB_REGION_COMPARE_TEST" > /appdata/.tele/test/testPipeMgr
+echo "REGION_TEST_CGS" > /appdata/.tele/test/testPipeMgr
+
+echo "set_vinKM0RTEST020061501" > /appdata/.tele/test/testPipeMgr
+echo prov_acset > /appdata/.tele/test/testPipeApp
+
+==============================================================================================================================================
+
+풀빌드 소나투스, 스위치 버전 교환
+
+setupbuild.sh 커맨드 조작 관련
+
+source nxp-setup-alb-mobis.sh -m s32v234ccu
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE"
+export SNT_EXAMPLE=False;export SNT_VEHICLE_VERSION=GN7;export SNT_ESW_VERSION=VA;export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE SNT_VEHICLE_VERSION SNT_ESW_VERSION SNT_EXAMPLE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_STD_ETHDB_VER"
+EXT_VERSION=0 EXT_VEHICLE_TYPE=GN7 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 EXT_STD_ETHDB_VER="STD_DB_21_12_04" bitbake mobis-ccu-image
+
+sources/sbas-scripts/vehicle_cfgs/GN7.cfg
+
+MASTE master 0.33.0 master STD_DB_21_12_04 KOR A.01.01 A.01.01 VA 1A.01.01
+
+/sources/meta-mobis/recipes-mobis/images/switch_fw/last_switch_version
+
+snt version 확인
+/sources/meta-mobis/recipes-mobis/images/snt_version.Inc
+
+==============================================================================================================================================
+저널
+
+systemctl --root=/ mask systemd-journald.service
+systemctl --root=/ mask systemd-journald.socket
+systemctl --root=/ mask systemd-journald-audit.socket
+systemctl --root=/ mask systemd-journald-dev-log.socket
+systemctl --root=/ mask systemd-journal-flush.service
+
+==============================================================================================================================================
+
+Z모뎀 M보드 부터 적용된 파일 옮기는 방법
+
+보드에서 ctrl+a+s
+
+==============================================================================================================================================
+
+tar.gz 압축
+
+압축하기
+tar -zcvf test.tar.gz 경로
+
+압축해제
+tar -zxvf 경로
+
+==============================================================================================================================================
+
+ert port scp 연결
+
+PC IP setting : 10.0.128.0, 255.255.0.0
+ssh ccu_mobis@10.0.6.1 로 접근
+DLT Viewer는 안됨.
+
+==============================================================================================================================================
+
+[journal log 활성화]
+1. 사용자 Root 로 전환
+  su
+2. Rootfs rw 변경
+  mount –o remount,rw /
+3. journald 활성화
+  systemctl --root=/ unmask systemd-journald.service
+  systemctl --root=/ unmask systemd-journald.socket
+  systemctl --root=/ unmask systemd-journald-audit.socket
+  systemctl --root=/ unmask systemd-journald-dev-log.socket
+  systemctl --root=/ unmask systemd-journal-flush.service
+4.     리부트
+
+[journal log 비활성화]
+1.     사용자 Root 로 전환
+  su
+2.     Rootfs rw 변경
+  mount –o remount,rw /
+3.     journald 비활성화
+  systemctl --root=/ mask systemd-journald.service
+  systemctl --root=/ mask systemd-journald.socket
+  systemctl --root=/ mask systemd-journald-audit.socket
+  systemctl --root=/ mask systemd-journald-dev-log.socket
+  systemctl --root=/ mask systemd-journal-flush.service
+4.     리부트
+
+
+-tmdb security error 확인
+journalctl | grep Tele
+
+==============================================================================================================================================

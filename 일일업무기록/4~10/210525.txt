@@ -1,0 +1,31 @@
+1. 양병훈 위원님 리뷰 수정
+
+    TMGR, MSM
+
+    Static
+
+    (진행 중)외부컴포넌트로 부터 받는 함수 어디로 받는지
+    (완)기존 함수 정합성 검토
+    (완)MOF data 입출력
+
+    Dynamic
+
+    (완)Send, Incoming 을 주는 외부 컴포넌트 기술
+    (완)TeleManagerMainHandler와 ProvisioningTable 간 인터페이스 함수 기술
+    (완)CommonAPI::CallStatus::SUCCESS API 기술 여부 확인
+    (완)MOF 함수 기술
+    (완)end Message (1/2) 함수 기술 혹은 삭제
+
+    전체검토 필요한 부분
+    SWC_TMGR 함수 정합성 SWC_TA 참고해서 수정사항 반영하기
+
+    Send HTTP 검토
+    Receive WakeUp 검토
+    Send SMS 검토
+    Incoming SMS 추적성 확인
+
+    purpose component name 전부 작성
+    외부 함수 data flow diagram에 입출력 명시
+    Unit list of component 검토
+    internal unit diagram 검토
+    MOF함수 추적성 부여

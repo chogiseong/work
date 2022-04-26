@@ -1,0 +1,24 @@
+1. 양병훈 위원 리뷰사항 수정
+
+  4.6 SUDS 개편하기
+
+  called function = 불려진 함수
+
+  calling function = 이 함수를 호출
+
+  SADS 고쳐야할 함수들
+
+  getprovisioningstatusattribute
+  getTimeStampAttribute
+  getAllProvisioningTable
+  getProvisioningStatus
+
+  request, response teleapp에 선언
+
+  onccsrequestfinished는 telemanager에서 그냥 제외.
+
+  addcentereventarrived 또한 teleapp에 선언
+
+
+
+2. CE1 msm, tmgr 추가 확인하기

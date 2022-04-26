@@ -1,0 +1,98 @@
+
+
+dlt-receive -a 0 | egrep "statusCode|Start Tele|uri  |is dataa|is not data|MessageManage" &
+echo "acn" > /appdata/.tele/test/testPipeMgr
+
+
+1. 보드 REGION 01, DB REGION 01 상태에서 DB REGION 04로 설정하는 테스트 커맨드 실행 시
+
+-rw-r----- 1 usr_mobis_ccs grp_mobis_snt 45056 Dec 14 23:51 TeleManager.db
+
+2022/04/04 02:18:25.887879    4376515 109 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01553 getProvisioningData() : value = 01]
+2022/04/04 02:18:25.897032    4376628 110 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkAndRemoveRegion        00845 checkAndRemoveRegion region : 01, regionDB : 01]
+2022/04/04 02:18:25.897609    4376628 111 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00852 checkRegion region: 01, regionDB: 01]
+2022/04/04 02:18:25.898129    4376628 112 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00866 received region value and DB region value are equal]
+2022/04/04 02:18:25.898603    4376628 113 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00852 checkRegion region: 01, regionDB: 01]
+2022/04/04 02:18:25.899045    4376629 114 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00866 received region value and DB region value are equal]
+2022/04/04 02:18:25.899486    4376629 115 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00852 checkRegion region: 01, regionDB: 04]
+2022/04/04 02:18:25.899931    4376629 116 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00860 received region value and DB region value are not equal]
+2022/04/04 02:18:25.900377    4376629 117 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:deleteConfAndDB             00872 deleteConfAndDB start]
+2022/04/04 02:18:25.909616    4376754 118 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01373 setProvisioningData() start key:Region]
+2022/04/04 02:18:25.909699    4376754 119 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:isSecurityInfo            02710 SECDB TMGR: Data is not secure data talbe[Vehicle], Key[Region]]
+2022/04/04 02:18:25.932033    4376978 120 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01472 setProvisioningData() end key:Region]
+2022/04/04 02:18:25.932107    4376979 121 CCU1 TMGR TMGR log info V 1 [TestMain.cpp:handleEventLooper           02635 [test] DB_REGION_COMPARE_TEST]
+2022/04/04 02:18:26.148830    4379115 122 CCU1 TMGR TMGR log info V 1 [HCCSServer.cpp:getProvisioningStatus     01183 getProvisioningStatus()]
+
+-rw-r----- 1 usr_mobis_ccs grp_mobis_snt 20480 Apr  4 02:18 TeleManager.db
+
+DB, conf 삭제 확인, DB REGION 01 저장 확인
+
+2. 보드 REGION 04, DB REGION 01 상태에서 부팅 시
+
+671989      49429 031 CCU1 TMGR TMGR log info V 1 [ConfLoad.cpp:convertRegion               00779 region: 04, value: 04]
+672012      49429 032 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01532 getProvisioningData() : category = Vehicle, key = Region]
+672143      49429 033 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01534 getProvisioningData() : table = Vehicle]
+672173      49475 034 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01538 getProvisioningData() : table done]
+672198      49476 035 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01542 getProvisioningData() : select done]
+672222      49476 036 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:isSecurityInfo            02710 SECDB TMGR: Data is not secure data talbe[Vehicle], Key[Region]]
+672246      49476 037 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01553 getProvisioningData() : value = 01]
+672279      49528 038 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkAndRemoveRegion        00845 checkAndRemoveRegion region : 04, regionDB : 01]
+672305      49529 039 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00852 checkRegion region: 04, regionDB: 01]
+672341      49529 040 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00860 received region value and DB region value are not equal]
+672367      49529 041 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:deleteConfAndDB             00872 deleteConfAndDB start]
+672391      49778 042 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01373 setProvisioningData() start key:Region]
+672414      49779 043 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:isSecurityInfo            02710 SECDB TMGR: Data is not secure data talbe[Vehicle], Key[Region]]
+672462      50139 044 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01472 setProvisioningData() end key:Region]
+
+DB에 REGION 04 저장 확인
+
+3. 보드 REGION 04, 보드 DB, conf를 지우고 부팅 시
+
+2022/04/04 02:45:45.285891      51054 031 CCU1 TMGR TMGR log info V 1 [ConfLoad.cpp:convertRegion               00779 region: 04, value: 04]
+2022/04/04 02:45:45.285914      51056 032 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01532 getProvisioningData() : category = Vehicle, key = Region]
+2022/04/04 02:45:45.285939      51058 033 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01534 getProvisioningData() : table = Vehicle]
+2022/04/04 02:45:45.285963      51352 034 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01538 getProvisioningData() : table done]
+2022/04/04 02:45:45.285986      51366 035 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:getProvisioningData       01542 getProvisioningData() : select done]
+2022/04/04 02:45:45.286010      51483 036 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkAndRemoveRegion        00845 checkAndRemoveRegion region : 04, regionDB : ]
+2022/04/04 02:45:45.286034      51486 037 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00852 checkRegion region: 04, regionDB: ]
+2022/04/04 02:45:45.286058      51487 038 CCU1 TMGR TMGR log info V 1 [MofUtils.cpp:checkRegion                 00855 DB region value is empty]
+2022/04/04 02:45:45.286081      51488 039 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01373 setProvisioningData() start key:Region]
+2022/04/04 02:45:45.286105      51489 040 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:isSecurityInfo            02710 SECDB TMGR: Data is not secure data talbe[Vehicle], Key[Region]]
+2022/04/04 02:45:45.286177      51640 041 CCU1 TMGR TMGR log info V 1 [DataBuffer.cpp:setProvisioningData       01472 setProvisioningData() end key:Region]
+
+s32v234ccu:/appdata/.tele/db# ls
+TeleApp.db  TeleManager.db  TeleManager.db_origin  msm.db
+
+s32v234ccu:/appdata/.tele/.conf# ls
+mofgen2.EU.conf
+
+DB, conf 생성 완료, DB에 REGION 04 저장 확인
+
+[근태계] 조기성 - 22.04.08 승인 요청 건
+
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+하기와 같은 사유로 오후반차를 신청합니다.
+
+승인 요청드립니다.
+
+1. 일시 : 2022년 4월 12일 화요일
+2. 신청자 : 조기성
+3. 사유 : 사랑니 발치
+4. 연차 사용 일수 : 0.5 일
+
+감사합니다.
+
+
+source nxp-setup-alb-mobis.sh -m s32v234ccu
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE"
+export SNT_EXAMPLE=False;export SNT_VEHICLE_VERSION=GN7
+export SNT_ESW_VERSION=VA
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE SNT_VEHICLE_VERSION SNT_ESW_VERSION SNT_EXAMPLE"
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_STD_ETHDB_VER"
+EXT_VERSION=0 EXT_VEHICLE_TYPE=GN7 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 EXT_STD_ETHDB_VER="STD_DB_21_12_04"
+bitbake mobis-ccu-image

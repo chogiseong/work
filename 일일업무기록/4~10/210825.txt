@@ -1,0 +1,24 @@
+1. 양병훈 위원님께 최종본 드리기
+
+      SUDS 추적성을 전부 맞추기위해 SADS 동적 보면서 따라갈것.
+
+
+msm addEvent called
+
+GetContextsWrapper()
+
+AddContext()
+
+getReceiveMessageAddedEvent()
+
+getSendMessageResultEvent()
+
+GetAllReceiveMessages()
+
+SendMessage()
+
+/////////////////////////////////////////////
+
+msm addEvent calling
+
+RemoveReceiveMessages()

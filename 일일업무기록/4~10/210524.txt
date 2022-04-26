@@ -1,0 +1,16 @@
+1. connectivity, middlemsm, telemanager, msm 각각 경로 수정 머지
+
+    1. 모비스 브랜치로 Telemanager, msm, connectivity(middlemsm 포함) master 태그 머지
+        태그 머지는 mobis에
+
+    2. 모비스 브렌치로 msm 2.6
+    3. 모비스 브렌치로 msm 2.7
+
+
+    4. Telemanager, msm Hlog -> DLT 수정 머지
+        소스 머지니까 각 컴포넌트 브랜치에
+    하나의 지라 번호로 머지할 시 이슈로그에 머지 한 번에 관리하기.
+
+2. 양병훈 위원님한테 받은 수정사항 적용
+
+    1. Static Design, Dynamic Design 전체 변경 및 SWC_TA와 동기화

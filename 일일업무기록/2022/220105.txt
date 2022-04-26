@@ -1,0 +1,42 @@
+#build
+alias bjw1='EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias brs4='EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias bce1='EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake'
+alias build1='source nxp-setup-alb-mobis.sh -m s32v234ccu'
+alias build2='export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";'
+alias build12='source nxp-setup-alb-mobis.sh -m s32v234ccu && export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";'
+
+#repo
+alias repoin='repo init -u ssh://bitbucket.mobis.co.kr:7999/CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest -b master'
+alias reposy='repo sync'
+alias repoma='repo start master --all'
+alias repoauto='repo init -u ssh://bitbucket.mobis.co.kr:7999/CCU_GEN1_Mobis/CCU_GEN1_Mobis.manifest -b master && repo sync && repo start master --all && repo sync && repo sync && repo sync && repo sync && repo sync'
+
+#clean
+alias cjw1='EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+alias crs4='EXT_VERSION=0 EXT_VEHICLE_TYPE=RS4 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+alias cce1='EXT_VERSION=0 EXT_VEHICLE_TYPE=CE1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake -c cleanall teleapp;bitbake -c cleanall telemanager;bitbake -c cleanall msm;bitbake -c cleanall ccnf-connectivity;bitbake -c cleanall ccnf-middlemsm;bitbake -c cleanall tmdb'
+
+#git
+alias gitbr='git branch;git branch --all'
+alias gitch='git checkout'
+
+
+
+
+
+JW1 sop 빌드
+
+1. 기존방법 으로 진행
+
+1-1.
+source nxp-setup-alb-mobis.sh -m s32v234ccu
+export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VEHICLE_TYPE";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_MCU_VERSION";export BB_ENV_EXTRAWHITE="$BB_ENV_EXTRAWHITE EXT_ESW_TYPE";
+
+1-2. EXT_VERSION=0 EXT_VEHICLE_TYPE=JW1 EXT_ESW_TYPE=VA EXT_MCU_VERSION=0 bitbake mobis-ccu-image
+
+2. setupbuild.sh로 진행
+
+2-1. source setupbuild.sh JW1 으로 빌드 환경 선택
+
+2-2. bitbake mobis-ccu-image

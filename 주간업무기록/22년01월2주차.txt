@@ -1,0 +1,29 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+완료된 업무
+
+1. FIDL/ FIDL 9.0 누락 폴더 추가 완료.
+
+2. FIDL/ 2.11 이하 버전 FIDL 분리 및 브랜치 작업 진행 완료.
+
+3. TMGR/ PNC count 시점 변경 적용 완료.
+
+4. TAPP/ getTransactionID 로그 오류 수정 적용 완료.
+
+대기, 진행 중인 업무
+
+5. TMGR, MSM, connectivity/ getVoLTEMode, setVoLTEMode 머지 요청 중
+
+6. TAPP/ TeleApp bootReason 복수 값 처리 로직 개발 대기 중
+
+7. CE1 개통 DB 초기화 세팅 값 오류 수정 대기 중 (~17)
+
+8. CE1 GDBusRaw 위주로 코드 정리 진행 중
+
+9. RS4 P2 HDM 테스트 진행 중
+
+감사합니다.
+조기성 드림.

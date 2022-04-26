@@ -1,0 +1,11 @@
+1. CE1 Dynamic Diagram, CE1 Static 완성 후
+
+    양병훈 위원님에게 리뷰 요청
+
+    SUDS 3차리뷰 받고 수정
+
+    익일 리뷰사항 받고 SUDS, CE 재작업
+
+2. 빌드
+
+    CE1_master, CE1_27, CE1_29 완료

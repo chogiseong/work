@@ -1,0 +1,102 @@
+1. MQTT API 적용 건
+
+특징
+각각 피쳐
+#ifdef TARGET_CCS_2 가 들어감
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+GDbusTeleManagerClient.cpp
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+void convertUriToProtocolID(const string &uri, string &protocolID){
+
+uri, protocolID 받아서
+
+uri compare 후 /rc/start 등 이벤트면 protocolID에 해당 이벤트 삽입.
+... 등등 uri 받아서 protocolID 에 이벤트 삽입해주는 함수
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+addCenterEventArrived(){
+
+mpMQTTWrapper 가 널 이면 로그,
+아니면 convertUriToProtocolID 변환해주고
+
+mpMQTTWrapper->setMTRequestListener(this, strProtocolId);
+리스너 호출
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+createProxy() {
+
+mpMQTTWrapper = MQTTWrapper.getInstance() 해서
+널이면 로그
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+void GDbusTeleManagerClient::onMqttEventRecevied ( const MQTTRequest& req ) {
+
+req에서 protocolID 꺼내서
+
+uri 처럼 각 서비스 로직으로 보낸다.
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+GDBusTeleManagerClient.hpp
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+#ifdef TARGET_CCS_2
+,public IHMQTTWrapperListener
+#endif
+{
+     ............................
+
+     #ifdef TARGET_CCS_2
+         MQTTWrapper* mpMQTTWrapper;
+     #endif
+
+리스너, 멤버변수 추가
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+MQTTWrapper API 에 구현할 내용
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+MQTTWrapper.h
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+class IHMQTTWrapperListener {
+
+public:
+    virtual ~IHMTRequestListener();
+    virtual void onMqttEventRecevied(const MQTTRequest& req) = 0;
+}
+
+
+ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+
+진행 중
+
+2. boot reason 변경 검토
+
+안녕하세요, 김석환 입니다.
+
+기존에는 BootReason이 우선순위가 정해져서 단일 값으로 왔다.
+GN7 CCS 2.0 부터
+bit OR 연산을 통해 여러개를 받을 것이다. (0x0001 + 0x0010 = 0x0011)
+
+GDBus 쪽 공통으로 BootReason 처리하는 부분에서 (GDbusLifeCycle)
+bit parsing 하여,
+/*
+
+1. BootReason은 애초에 2개가 합쳐서 올라온다.
+
+2. getFirstBootReason 등의 함수를 통해 첫번째 및 두번쨰 BootReason을 갖고 전달. 끝.
+
+HInt32 GDbusLifecycleClient::getWakeupReasonFromDBusProperty() >>> void SASManager, RCSManager, VRMManager ::checkBootReason()
+
+*/
+복수의 부트리즌 값을 각각 RCS,VRM,SASManager 에 던지도록로직 변경
+
+진행 중
+
+3. GN7 bin 건
+
+진행 중

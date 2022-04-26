@@ -1,0 +1,43 @@
+
+2. rs4 2.8 빌드, (y) 보드 넣어서 확인해보기
+
+    rs4 ccNF 2.8 sonatus 0.61.2 버전 빌드 완료
+
+
+3. 빌드 루틴
+
+    오늘부터 하루에 JW1 월, RS4 화, JW1 수, RS4 목, CE1 금 이 루틴으로 빌드
+
+    rs4 2.8 빌드 전부 완료
+    rs4 2.7 빌드 전부 완료
+
+    jw1 2.8 빌드 전부 완료
+    jw1 2.7 빌드 전부 완료
+
+    jw1 2.8 보드 실패
+
+    git 빌드 external 빌드 전부 죽음
+
+    jw1만 밀고 다시 빌드 중(external)
+
+    fail 시 dlt, 저널 로그 저장 후 보고sdsd
+
+    안녕하십니까!
+    IVI 개발 3팀 조기성입니다.
+
+    아래 부트 시 Failed 되는 상황과
+
+    journal 로그와 dlt 로그입니다.
+
+    JW1 p2 ccnf 2.8 개발 브랜치 /
+    meta-mobis : ccnf_2.8
+    meta-sonatus : 0.26.1
+    meta-autoever : ccnf_2.8
+    버전으로 external 빌드 했습니다.
+
+    scp ccu_mobis@10.0.6.0:/download/bootlog ./
+
+
+4. teleapp servicebase 이슈
+
+    새로운 보드 before, after 로그 확인

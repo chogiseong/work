@@ -1,0 +1,49 @@
+1. 마지막 리뷰에 대해 리뷰 요청 했고, SUDS ID 에 대해서는 정합성이 전부 갖춰지면 작성할거라고 보고했습니다.
+
+2. onCCUModemStatus(), onWakeUpReceived() 함수 리뷰
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+onCCUModemStatus() 리스너
+
+TeleApp connectivity msm
+
+TeleApp 의 GDbusMsmClient에 선언
+상수 CCUModemStatus를 받아
+DataBuffer의 setCCUModemStatus(CCUModemStatus) 실행
+CE차종에서만 실행되는 부분이며 CCUModemStatus 값을 비교해
+DCU_CHANGED 를 addEvent 한다.
+
+connectivity의 HModemImpl에 선언
+상수 CCUModemStatus를 받아
+만약 mHModemChangeListener
+(
+IHMofemChangeMonitor* 이며,
+000 값이 바뀌면 notify되는 함수 들이 public으로 선언되어있음
+구현...
+이 변수는 setEventListener(IHModemChangeMonitor* listener)의 listener가 널이 아닐때
+mHModemChangeListener에 값을 집어넣는다.
+)
+가 널이 아닐때
+onCCUModemStatus(CCUModemStatus) 한다.
+
+connectivity의 MsmGDBusClient에서
+onNotifyCCUModemStatus(GVariant *parameters)
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+onWakeUpReceived() 리스너
+
+TeleApp connectivity TeleManager
+
+GDbusTelemanagerClient에 선언
+상수 connectivity의 HSystemBootREason reason을 받아
+DataBuffer의 setCCUBootReason(reson) 실행
+만약 reason이 HSystemBootReason의 MODE_168H 과 같다면
+EVENT_REMOTE_MODEM_WAIT_OFF를 addEvent한다.
+getBootReasonFromDCU 에서 mCcuBootReason에 state를 집어넣고
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////

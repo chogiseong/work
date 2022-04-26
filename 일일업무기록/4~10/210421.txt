@@ -1,0 +1,254 @@
+1. RCSDataStatusControlService 로그 흐름 분석
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp RCSDataStatusControlServiceBase 00015 RCSDataStatusControlServiceBase called
+
+    TeleAppCommon의 ServiceBase 생성자 호출됨.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp RCSDataStatusControlService 00010 RCSDataStatusControlService
+
+    TeleAppKr의 Service 생성자 호출됨.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/tss/datastatus
+
+    GDbusTeleManagerClient::addCenterEventArrived Mutex lock, DataMap insert, Mutex unlock.
+    HCCSClient가 널포인터 라면 널포인터라는 로그 출력
+    제대로 된 값이 있다면 mpHCCSClient->setMTRequestListener(this, strUri);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00221 [RCSDataStatusControlService_Init] Service thread start
+
+    RCSManager::executeEventINIT_1의 DL_LoadTeleService실행, ServiceSupportChker 정합성 검사.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TeleManagerMainHandler.cpp:handleEventSendDataHTTP 00274 msgID=RCSDataStatusControlService_202103180005149787460
+
+    TeleManagerMainHandler::handleEventSendDataHTTP
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:handleEventSendDataHTTP  00069 threadtest handleEventSendDataHTTP() start msgID=RCSDataStatusControlService_202103180005149787460
+
+    HttpManager::handleEventSendDataHTTP start. Mutex locker
+    jobQ.end 가 jobQ.find와 같다면 make_shared로 httpSender start(false)
+    정적 벡터 unsigned int8_t vOctetInBodyData(벡터v, 8진수Octet)선언
+    httpSender에 addEvent()(?), handleEventRequestHTTP()
+    jobQ에 emplace
+
+    같지 않으면 messageID 이미 존재 한다는 로그 출력하고
+    data -> callback 되었다면 값 초기화
+
+    (?)  make_shared() 함수를 사용하면 shared_ptr 인스턴스를 안전하게 생성할 수 있습니다.
+         make_shared() 함수는 전달받은 인수를 사용해 지정된 타입의 객체를 생성하고, 생성된 객체를 가리키는 shared_ptr을 반환합니다.
+
+         mutable = const 멤버변수 값 변경 가능
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:handleEventSendDataHTTP  00162 threadtest handleEventSendDataHTTP() end msgID=RCSDataStatusControlService_202103180005149787460
+
+    HttpManager::handleEventSendDataHTTP end.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp isNeedEvent          00087 .
+
+    eventData 받아서 eventType이 enum EVENT_REMOTE_MIN과 MAX 사이면 (eventType.hpp에 해당 eventType이 있다면) return true, return bRet
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp sendReadyNotiToSubHandler 00065 .
+
+    EVENT_CHECK_SERVICE_HANDLER_READY_STATUS를 Mutex unique_lock, 덱에 emplace_back, notify()로 스레드 할당.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp onReady              00103 .
+
+    init()
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp init                 00026 .
+
+    로그 출력(?)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp isNeedEvent          00087 .
+
+    eventData 받아서 eventType이 enum EVENT_REMOTE_MIN과 MAX 사이면 (eventType.hpp에 해당 eventType이 있다면) return true, return bRet
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp isNeedEvent          00087 .
+
+    eventData 받아서 eventType이 enum EVENT_REMOTE_MIN과 MAX 사이면 (eventType.hpp에 해당 eventType이 있다면) return true, return bRet
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp checkEventAndPush    00076 handleEvent case 1, state : 2
+
+    isNeedEvent(eventData) True면 서비스 상태를 svcState에 받아온다. 그리고 addEvent(eventData.nEvent, eventData.pFunc)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp handleEvent          00101 .
+    svcState에 따라서 여러가지 함수를 실행하는데 이때는
+    EVENT_REMOTE_DATA_STATUS_ALERT_START 값이기 때문에
+    setCurService에 DATA_STATUS_ALERT_SERVICE를 넣고
+    preConditionCheckMO 실행
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp preConditionCheckMO  00320 .
+    bool ret = true
+    HCCSAvailableService MAX
+    BOOT_MASTER가 정의되어 있다면 HInt32 wakeupReason에 getWakeupReasonFromDBusProperty
+    ->getWakeupReasonFromDBusProperty 01074 ++++reason++++ is 1
+    getWakeupReasonFromDBusProperty 01078 BOOT_NORMAL_ACC_ON(?)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp preConditionCheckMO  00326 BOOT_MASTER wakeupReason 1
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp preConditionCheckMO  00333 ProvisoningStatus ENROLLED!
+
+    HCCSProvisioningStatus 값이 ENROLLED라면 로그출력, HCCSAvailableService::AVAILABLE
+    다른 상태 체크 하고(이미 러닝 상태인지, wakeupReason이 다른 값인지, available 상태가 아닌지 등)
+    전부 통과 시
+    GDbusLifecycleClient::getInstance()->setRCSSessionState_on("RCSDataStatusControlService");
+    MSG_LOW("RCSDataStatusControlServiceBase start",0,0,0);
+    setServiceState(RUNNING_S);
+    makeAndAddEvent(EVENT_REMOTE_DATA_STATUS_ALERT_EXECUTE,0);
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp makeAndAddEvent      00619 .
+
+    eventData, nEvent, pFunc 에 받아온 값 집어 넣고 addEvent
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp handleEvent          00101 .
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp handleEvent          00105 handleEvent : EVENT_REMOTE_
+
+    DATA_STATUS_ALERT_EXECUTE, svcState : 3
+    handleEvent 이번엔 값이 EVENT_REMOTE_DATA_STATUS_ALERT_EXECUTE 니까 executeAlertService()
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp executeAlertService  00531 .
+
+    statusCode = 0, statusReason = "" 초기화, service 의 sendHTTPRequest(statusCode, statusReason)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp sendHTTPRequest      00031 .
+/TeleAppCommon/src/utils/TimerManager.cpp getMakedMsgId        00147 [RCSDataStatusControlService_20210318000514978746]getMakedMsgId
+
+    ServiceBase의 getMakeMsgId 그 안에 TimerManager의 getMakeMsgId 과정을 통해 messageID 에 정재된 값 가져온다.
+    각 틀에 데이터 넣고 GDbusTeleManagerClient::request.
+    result 가 OK 라면 로그 출력.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:operator()               00506 retrysendData() (msgId=RCSDataStatusControlService_202103180005149787460)
+
+    HttpManager::retrySendData(?)
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:handleEventSendDataHTTP  00069 threadtest handleEventSendDataHTTP() start msgID=RCSDataStatusControlService_202103180005149787460
+
+    handleEventSendDataHTTP에 다시 들어옴. start.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:handleEventSendDataHTTP  00162 threadtest handleEventSendDataHTTP() end msgID=RCSDataStatusControlService_202103180005149787460
+
+    end.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpJob.cpp:handleEventRequestHTTP       00085 data->Uri=/tss/datastatus/query,uptime : 9.180
+
+    /tss/datastatus/query,uptime : 9.180 데이터 uri와 uptime을 로그로 출력해주고
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TeleManagerStubImpl.hpp:dump
+
+    MSG_LOW("+++++ DUMP MOF DATA HTTP +++++");
+    MSG_LOW("++++++++++++++++++++++++++++++");
+    MSG_LOW("msgId : %s", messageID.c_str());
+    MSG_LOW("host  : %s", host.c_str());
+    MSG_LOW("action: %s", action.c_str());
+    MSG_LOW("uri   : %s", uri.c_str());
+    MSG_LOW("header: %s", inJsonHeader.c_str());
+    MSG_LOW("body  : %s", inBodyStr.c_str());
+    MSG_LOW("++++++++++++++++++++++++++++++");
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp onCCSRequestFinished 00166 onCCSRequestFinished(responseCode:200)
+    RCSDataStatusControlServiceBase::onCCSRequestFinished
+    makeAndAddEvent에 EVENT_REMOTE_DATA_STATUS_SERVICE_END 준다.
+    stopService = 모든 데이터 초기화, 서비스 상태를 IDLE_S(게으른)상태로 바꿔주고
+    GDbusLifecycleClient::getInstance()->setRCSSessionState_off(?)
+    그외에 예외상황에 대한 예외처리 존재.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp setProductCode       00231 .
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp setProductCode       00239 prod_code is HIQLTY
+
+    onCCSRequestFinished에서 실제로 예외처리 구간에 들어갔는데 왜 들어갔는지(?)
+    setProductCode에선 ProdCode, HResult 등을 초기화 해주고 정합성을 검사한다.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+/TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp handleEvent          00105 handleEvent : EVENT_REMOTE_DATA_STATUS_SERVICE_END, svcState : 3
+
+    그 후 handleEvent에 EVENT_REMOTE_DATA_STATUS_SERVICE_END 다시. 예외처리가 된 상태라서 통과한다.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpJob.cpp:onRequestResult              01355 callback(RCSDataStatusControlService_202103180005149787460, 200, {"Content-Type":"application/json;charset=UTF-8","TID":"o0kJjvXVSB6FBpHcSYb1Gg@v3"}, 197, {"svc_cont_no":"981810747","prod_cd":"HIQLTY","prod_nm":"고음질 스트리밍 데이터 요금제","unit_cd":"MB","data_total":-1,"purchase_date":20210406,"expire_date":99991231,"data_remain":-1})
+
+    HttpJob의 HttpSender::onRequestResult 값을 callback(초기화된 값 아닌가(?))
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpManager.cpp:handleEventRemoveJob     00430 threadtest handleEventRemoveJob() start
+
+    Mutext locker 후 HttpManager 값 해제
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+HttpJob.cpp:operator()                   00092 threadtest handleEventRequestHTTP() end handleEventRemoveJob() msdID=RCSDataStatusControlService_202103180005149787460
+
+    HttpManager::instance().handleEventRemoveJob(data->messageID);
+    MSG_HIGH("threadtest handleEventRequestHTTP() end handleEventRemoveJob() msdID=%s", data->messageID.c_str());
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+TeleManagerStubImpl.hpp:~MofSendDataCCU  00150 ~MofSendDataCCU..RCSDataStatusControlService_202103180005149787460
+
+    TARGET_CCU가 정의되지 않아 회색처리 되어있는데 이쪽으로 들어온다고 출력되었다.(?)
+    MofSendDataCCU 소멸자.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+a 는 string 자신
+
+b string 의 주소

@@ -1,0 +1,3 @@
+1. apnlist.xml 수정사항 반영
+
+2. tmgr region 구현 건 반영

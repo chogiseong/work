@@ -1,0 +1,19 @@
+1. SUDS 2차 수정 오늘 오전 내에 리뷰 요청
+
+SADS 고쳐야할 함수들
+
+getprovisioningstatusattribute
+getTimeStampAttribute
+getAllProvisioningTable
+getProvisioningStatus
+
+request, response teleapp에 선언
+
+onccsrequestfinished는 telemanager에서 그냥 제외.
+
+addcentereventarrived 또한 teleapp에 선언
+
+2. JW1, RS4 상위 버전 빌드 확인
+
+jw1master 0
+rs4master 0

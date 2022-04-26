@@ -1,0 +1,66 @@
+1. 빌드 루틴
+
+    CE1_28 빌드완료
+
+    JW1_master 빌드 중
+
+    RS4_master 빌드 중
+
+
+2. tmdb dlt 로그, DataBuffer 코드 분석
+
+    빅엔디안 = 배열 앞부터 크게 점점 작게
+
+    리틀엔디안 = 배열 앞부터 작게 점점 크게
+
+    엔디안 변환 = 각자 다른 포인터에 저장 후 배열 변환
+
+databuffer
+
+namespace 를 통해 ccos 여러가지 클래스 사용
+
+생성~소멸 선언
+
+getinstance로 싱글톤
+
+Init() : 필요한 인스턴스 초기화, 몇가지는 선언된 enum을 사용해서 초기화(commonEnum)
+
+SendSystemCmd(const char * cmd) : 파일선언, cmd 받아서 popen 후 널보인터일 시 return "" 그 이후엔 잘 모르겠음 질문요망
+
+getConvertEventSring(HANDLE_E_TYPE type) : handle event type 받아서 스트링 배열로 반환
+
+getConvertMainEventSring(MAIN_HANDLE_E_TYPE type) : main handle event type 받아서 스트링 배열로 변환
+
+setPrintRepeatLogMode(const bool bPrintRepeatLog, std::string strLogGroup) : 로그리핏 부분 잘 모르겠음 다음에 다시 한번 볼 것
+
+CheckTimeString(std::string strTime, bool bAcceptNULLVAL) : bAcceptNULLVAL true, time "" 이면 true 반환
+
+                                                            time size 가 Tmtype에 정의된 TIME_STR_COUNT (14) 가 아닐 시 false 잘못된값이라서 그런듯
+
+                                                            TIME_STR_COUNT 으로 변수 하나 만들고 ncount 변수도 만듦 이거 두개로 배열 만들고
+
+                                                            처음부터 끝까지 0~9까지인지 달 첫번쨰는 1인지 등 전부 정합성 검사 해서 return true
+
+                                                            결국 시간검사하려고 만든 함수임
+
+CheckCoord(double dLat, double dLon, COORD_TYPE eType, bool bAcceptNULLVAL) : 위도경도, coord type, bool 받아서 위도경도가 -90 ~ 90 -180 ~ 180 사이인지 등 값 정합성 검사 하는거임
+
+CheckCoord(GPS_COORD tCoord, bool bAcceptNULLVAL) : checkcoord의 오버로딩인데 다른 방식으로(tmtype의 typedef struct)로 받아 정합성검사 돌리는 함수
+
+메인터넌스 함수 세이브, 리스토어, 겟은 다른 앱 참조 해야될 것 같음
+
+getIMATandMTIT(string sJsonString, double & dIMAT,string &sMTIT) : gdbusbodyCANclient에서 getodometer, getdisplayveficlespeed 구조체 tmtype에 저장
+
+getOdometer() :repoin
+
+값 없는게 맞는지
+
+3. alias 자동화 추가
+
+    build12 / build1 + build1
+
+    repoauto / repoin + reposy + repoma + reposy
+
+    gitbr / git branch + git branch --all
+
+    gitch / git checkout

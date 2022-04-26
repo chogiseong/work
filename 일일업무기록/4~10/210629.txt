@@ -1,0 +1,13 @@
+1. ce1 빌드 확인
+
+    실패
+
+2. suds 채우기
+
+    1. 4.6 Software Unit Design / SADS 내부 함수와 1대1 대응이 되어야 하는데 현재 주석이 달려있는 함수는 몇 개 없기떄문에(중복 다수, 내부 거의 부재) SADS 에 언급된 함수들의 주석 작업 시급.
+
+    2. 주석 작업 후 내부함수들을 전부 테이블화 시켜서 4.6 Software Unit Design 에 기입
+
+    3. 3.6 Common Data Structure / structure, enum, macro, parameter 등은 doxygen 성공 후 진행 예정
+
+    4. 양병훈 위원님 말로는 점검자가 소스코드를 직접 본다고 한다. 이 부분은 일단 킵

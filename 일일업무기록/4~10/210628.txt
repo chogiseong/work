@@ -1,0 +1,42 @@
+SADS 진행 상황
+
+    SADS제작 및 기입 후 종료 금일 점검자 점검
+
+    CCUG1-7337
+    [SADS-SWC_TMGR 01]
+    SWC_TMGR은 SWC_TA로부터 데이터를 수신한다.
+
+    CCUG1-7338
+    [SADS-SWC_TMGR 02]
+    SWC_TMGR은 SWC_TA로 데이터를 송신한다.
+
+    CCUG1-7339
+    [SADS-SWC_TMGR 03]
+    SWC_TMGR은 CCIC로부터 데이터를 수신한다.
+
+    CCUG1-7340
+    [SADS-SWC_TMGR 04]
+    SWC_TMGR은 SWC_MSM으로부터 데이터를 송수신한다.
+
+    SWC_TMGR은
+
+    CCUG1-7341
+    [SADS-SWC_MSM 01]
+    SWC_MSM은 DCU로부터 데이터를 수신한다.
+
+    CCUG1-7342
+    [SADS-SWC_MSM 02]
+    SWC_MSM은 SWC_TMGR로부터 데이터를 송수신한다.
+
+    CCUG1-7343
+    [SADS-SWC_MSM 03]
+    SWC_MSM은 SWC_SM으로 데이터를 송신한다.
+
+SADS 전체 완료.
+
+대리님 숙제
+
+data에다가  secV.getString을 넣어서 좌표값 갖고있음
+value는 참조연산자니까 값을 넣으면 밖에서도 바뀌니까 value에 data 집어넣고
+getSecuritydata를 실행한 getprovisioningdata로 돌아가 보면
+secv empty()가 비어있지 않을때 실행되는 value = v.getString()이 있는데

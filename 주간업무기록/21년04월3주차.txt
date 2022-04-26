@@ -1,0 +1,15 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+RCSDataStatusControlService 소스 코드 분석
+MO Provisioning 사양서 분석
+빌드, 디버그 방법 숙지
+RCSFindMyCarService 소스 코드 분석
+RCSDataStatusControlService 로그 흐름 분석
+해외에서 status가 BASIC/SHELL 일 때 GPS 로그 출력하는 이슈 수정
+흐름도, 테이블 수정
+21년 4월 16일(금)부터 21년 4월 22일(목)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.

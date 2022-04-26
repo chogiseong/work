@@ -1,0 +1,26 @@
+◆ getVoLTEMode()
+HBool HModem::getVoLTEMode	(		)	const
+get the mode of supporting voice over LTE on the device
+
+Returns
+HBool true: the device is set to use VoLTE mode
+HBool false: the device is not set to use VoLTE mode
+Sync:
+This function should be returned after the operation is completed.
+Since
+1.5
+
+◆ setVoLTEMode()
+HResult HModem::setVoLTEMode	(	HBool 	bOn	)
+set the mode of whether the device would use voice over LTE or not
+
+Parameters
+[in]	bOn	True : Turn on VoLTE mode of the device
+False : Turn off VoLTE mode of the device
+Returns
+HResult::OK success
+HResult::OK modem comm fail
+Sync:
+This function should be returned after the operation is completed.
+Since
+1.5

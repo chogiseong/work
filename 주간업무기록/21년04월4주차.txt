@@ -1,0 +1,27 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+1. TeleApp Static, Dynamic Architecture 수정
+
+  1.1 - Static, Dynamic relationship table 동기화
+
+  1.2 - Static Architecture 다이어그램 개선
+
+  1.3 - Dynamic Architecture 다이어그램 Draw.io 동기화, 실제 사용 함수 사용 및 개선
+
+  1.4 - Relationship table SRS 기입
+
+2. CE1 2.8 빌드 오류 수정, 머지
+
+3. 해외 향지 GPS 전송 이슈 수정, 머지
+
+4. 머지 방법 , 머지 요청 방법 숙지
+
+5. 사무용품 체크
+
+21년 4월 23일(금)부터 21년 4월 29일(목)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.

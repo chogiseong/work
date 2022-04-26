@@ -1,0 +1,34 @@
+1. ccu 로직 추가.
+
+멤버변수 최대한 쓰지 않는게 좋다.
+함수에 종속되지 않게 각자 개별적으로 만들것.
+
+
+function1
+
+
+
+// SRP
+void function1 () {
+2
+}
+
+void function2 () {
+3
+}
+
+void function3 () {
+4
+}
+
+void function4 () {
+asdasdasd;
+}
+
+
+void updateRegion() {
+    1
+    2
+    3
+    4
+}

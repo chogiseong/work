@@ -1,0 +1,18 @@
+1. CE1 빌드 확인 보고
+
+  CMakelist.txt install 경로추가 머지 (진행중)
+
+2. SWC_TMGR 검토
+
+  InternalUnit relationship table, diagram 제작 (완료)
+
+안녕하십니까!
+인포뱅크 IVI 개발 3팀 조기성입니다!
+
+SWC_TMGR SADS 초안 작성이 완료되었습니다. 리뷰 요청 드리겠습니다. 감사합니다.
+
+조기성 드림.
+
+양병훈위원님께 리뷰 요청 (완료)
+
+3. SWC_MSM 검토

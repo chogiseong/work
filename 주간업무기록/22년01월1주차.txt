@@ -1,0 +1,48 @@
+
+[CCS M/W][MSM]호주 향지 apnlist 추가
+
+Medium	조치
+작업	CCUG1-9356
+[CCS M/W][MSM]Permanent Reject 내수 확대 적용
+
+Medium	조치
+작업	CCUG1-9372
+[CCS M/W][FIDL]FIDL 버전 별 누락 파일 추가
+
+Medium	조치
+작업	CCUG1-9385
+[CCS AP][TMGR]위도, 경도, 고도에 대한 로그 보안 업데이트
+
+Medium	조치
+작업	CCUG1-9396
+[CCS AP][FIDL][CCUG1-9396]Adding P2 FIDL declaration to bb file
+
+Medium	조치
+작업	CCUG1-9407
+[CCS AP][MSM][connectivity][middlemsm]Adding cmakelist build option and apply modifications
+
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+1. xml 호주 향지 apnlist 추가
+
+2. TMGR, MSM FIDL 버전 별 누락 파일 추가
+
+3. TAPP 위도, 경도, 고도에 대한 로그 보안 추가
+
+4. TMGR, MSM 빌드 옵션 추가에 따른 코드 최적화 작업 (unsigned int 등)
+
+5. 2.11 이하 버전 FIDL 분리 및 브랜치 작업 진행 중
+
+6. VoLTE 리스너 생성
+
+  6-1. ccNF 3.1 피처 추가, 테스트 진행 중
+
+7. TeleApp bootReason 복수 값 처리 로직 개발 진행 중
+
+8. FIDL 누락 폴더 추가 진행 중
+
+감사합니다.
+조기성 드림.

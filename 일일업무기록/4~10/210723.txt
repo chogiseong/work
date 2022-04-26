@@ -1,0 +1,7 @@
+1. CE 프로비저닝 추가
+
+    CE option 삭제 후 기존 relationship table에 추가할 것
+
+2. 빌드 테스트
+
+    CE1 master 0

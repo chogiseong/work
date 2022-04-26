@@ -1,0 +1,132 @@
+WakeupReason_ccu GDbusLifecycleClient::convertBootReasonBit(const HUInt32 &data){
+    WakeupReason_ccu firstBootReason = WakeupReason_ccu::INVALID;
+
+    HUInt32 tmpBit = data;
+    mFirstReasonOn = 0;
+    unsigned char bytedata0;
+    unsigned char bytedata4;
+    unsigned char bytedata8;
+    unsigned char bytedata12;
+
+    bytedata0 = ((tmpBit >> 0) & 0xf);
+    MSG_LOW("bytedata0 is %x",bytedata0);
+    if(bytedata0 == 0x1){
+        firstBootReason = WakeupReason_ccu::BOOT_NORMAL;
+        mFirstReasonOn = 0;
+        getSecondBootReasonBit(firstBootReason, mFirstReasonOn);
+        return retval;
+    }
+    else if(bytedata0 == 0x2){
+        firstBootReason = WakeupReason_ccu::BALARM_STATUS;
+        mFirstReasonOn = 0;
+        return retval;
+    }
+    else if(bytedata0 == 0x4){
+        firstBootReason = WakeupReason_ccu::PANIC;
+        mFirstReasonOn = 0;
+        return retval;
+    }
+    else if(bytedata0 == 0x8){
+        firstBootReason = WakeupReason_ccu::BOOT_RRSEATREMAIND_ALARM;
+        mFirstReasonOn = 0;
+        return retval;
+    }
+    else{
+        MSG_LOW("bytedata0 no boot reaon");
+    }
+    bytedata4 = ((tmpBit >> 4) & 0xf);
+    MSG_LOW("bytedata4 is %x",bytedata4);
+    if(bytedata4 == 0x1){
+        firstBootReason = WakeupReason_ccu::DOOR_UNLOCK;
+        mFirstReasonOn = 4;
+        return retval;
+    }
+    else if(bytedata4 == 0x2){
+        firstBootReason = WakeupReason_ccu::BOOT_SHOCK_OCCUR_ALARM;
+        mFirstReasonOn = 4;
+        return retval;
+    }
+    else if(bytedata4 == 0x4){
+        firstBootReason = WakeupReason_ccu::BOOT_DOOR_OPEN;
+        mFirstReasonOn = 4;
+        return retval;
+    }
+    else if(bytedata4 == 0x8){
+        firstBootReason = WakeupReason_ccu::BOOT_CHARGING;
+        mFirstReasonOn = 4;
+        return retval;
+    }
+    else{
+        MSG_LOW("bytedata4 no boot reaon");
+    }
+    bytedata8 = ((tmpBit >> 8) & 0xf);
+    MSG_LOW("bytedata8 is %x",bytedata8);
+    if(bytedata8 == 0x1){
+        firstBootReason = WakeupReason_ccu::BOOT_CHARGINGFAIL;
+        mFirstReasonOn = 8;
+        return retval;
+    }
+    else if(bytedata8 == 0x2){
+        firstBootReason = WakeupReason_ccu::BOOT_BAT_CUT;
+        mFirstReasonOn = 8;
+        return retval;
+    }
+    else if(bytedata8 == 0x4){
+        firstBootReason = WakeupReason_ccu::BOOT_BAT_SOC_ALERT;
+        mFirstReasonOn = 8;
+        return retval;
+    }
+    else if(bytedata8 == 0x8){
+        firstBootReason = WakeupReason_ccu::BOOT_SHOCK_FINISH_ALARM;
+        mFirstReasonOn = 8;
+        return retval;
+    }
+    else{
+        MSG_LOW("bytedata8 no boot reaon");
+    }
+    bytedata12 = ((tmpBit >> 12) & 0xf);
+    MSG_LOW("bytedata12 is %x",bytedata12);
+    if(bytedata12 == 0x1){
+        firstBootReason = WakeupReason_ccu::BOOT_TRUNK_OPEN;
+        mFirstReasonOn = 12;
+        return retval;
+    }
+    else if(bytedata12 == 0x2){
+        firstBootReason = WakeupReason_ccu::BOOT_TAIL_HAZARD_ON;
+        mFirstReasonOn = 12;
+        return retval;
+    }
+    else if(bytedata12 == 0x4){
+        firstBootReason = WakeupReason_ccu::UNKNOWNREASON;
+        mFirstReasonOn = 12;
+        return retval;
+    }
+    else if(bytedata12 == 0x8){
+        firstBootReason = WakeupReason_ccu::BOOT_BMSFAIL;
+        mFirstReasonOn = 12;
+        return retval;
+    }
+    else{
+        MSG_LOW("bytedata12 no boot reaon");
+    }
+    return retval;
+}
+
+WakeupReason_ccu GDbusLifecycleClient::getSecondBootReasonBit(WakeupReason_ccu firstBootReason, mFirstReasonOn){
+    if(mFirstReasonOn == 0)
+    {
+        firstBootReason
+    }
+    else if(mFirstReasonOn == 4)
+    {
+
+    }
+    else if(mFirstReasonOn == 8)
+    {
+
+    }
+    else
+    {
+
+    }
+}

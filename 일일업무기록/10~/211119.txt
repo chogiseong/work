@@ -1,0 +1,27 @@
+목적:
+MSM 에 암호화 적용이 필요하다
+
+암호화 할 내용
+MSISDN, IMEI, USIM, EID
+
+참고사항
+CCU_CE 일때만 아래 함수 들이 동작해야됨.
+
+아래 함수에서 암호화 구현 필요
+void setMSISDNToDB(std::string msisdn);
+std::string getMSISDNFromDB();
+void setIMEIToDB(std::string imei);
+std::string getIMEIFromDB();
+void setUSIMToDB(std::string usim);
+std::string getUSIMFromDB();
+void setEIDToDB(std::string eid);
+std::string getEIDFromDB();
+
+
+
+1. 먼저 TEST 커맨드에서 암호화가 제대로 동작하는지 확인 필요!
+ - 1번 다하면 코드리뷰 받기
+
+2. 그다음 위 함수들에 적용해보기
+
+3. 피쳐 추가.

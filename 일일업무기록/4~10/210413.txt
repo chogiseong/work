@@ -1,0 +1,21 @@
+1. RCSDoorLockUnlockService 코드 리뷰, 로그 분석
+
+2. 윈도우 AD join, 보안 프로그램 설치, 기본 툴 설치(포맷 3번 전부 실패)
+
+3. 모비스 기본 툴 설치, 메신저 설치
+
+4. mgit Zira, BitBucket 계정 활성화
+
+5. 윈도우 AD join(보류), 메신저 등 설정 완료
+
+6. HttpRequest 부분 숙지
+
+7. 사무용품 신청 링크
+
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=D61132
+
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=G26954
+
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=D71540
+
+    http://www.officeplus.com/prod/item/item.jsp?itemCode=D59631

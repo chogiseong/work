@@ -1,0 +1,31 @@
+1. SWC_TMGR 양병훈님 리뷰사항 수정
+
+    SWC_MSM에서 TMGR로 보내는 함수 외 수정 완료
+
+    전체 수정 완료
+
+2. SWC_MSM 초안 작성
+
+    다이어그램 분할 고려
+
+    함수 탐색 고려
+
+3. 체력단련비 제출
+
+4. CE1 빌드 루틴
+
+    4.1 master 빌드
+
+    repo sync 후 변동사항 git checkout --f, git pull 로 최신으로 맞춤
+
+    -c cleanall 전부 하고
+
+    teleapp~middlemsm 까지 전부 빌드 완료
+
+    4.2 2.7빌드
+
+    branch mobis 2.7, autoever 2.7, sonatus 0.25.3 으로 변경 후
+
+    -c cleanall 전부 하고 빌드
+
+    teleapp otavalue 오류

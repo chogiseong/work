@@ -1,0 +1,43 @@
+1. 양병훈 위원님 리뷰 수정사항 반영
+
+2. 사양서 정독하며 코드 구현 확인
+
+3. tmdb dlt 로그 출력 구현하기
+
+      connectivity에  로그 출력 시켜주는 HCCSLOG.h 파일이 있다.
+      HLog.H 라이브러리를 참조하는데
+      tmdb에서는 Hlog.h라이브러리 참조가 안된다.
+      CMakeList부분에서 HUtil hutil을 추가해 줘야할 것 같은데
+      추가하면 hsecure 오류 발생해서 수정사항 되돌렸는데 계속 발생...
+
+
+
+      tmdb DLT 로그 출력 머지
+
+      //[]안에 들어가야할 키워드 여쭤보기
+
+      지라 작성
+
+      [CCS M/W][tmdb]tmdb dlt 로그 출력
+      자체수정
+      [현상]
+      기존 tmdb는 dlt로그가 출력되지 않았다.
+      [원인]
+      Hlog 부재
+      [대책]
+      Hlog 추가 및 로그 출력 확인
+      [테스트 방법]
+      로그확인
+
+      git add .
+      git commit -m "[CCS M/W][Telemanager][MSM][CCUG1-6615]tmdb dlt 로그 출력
+        - 이슈 내용 : 기존 tmdb는 dlt로그가 출력되지 않았다.
+        - 원인 / 대책 : Hlog 부재 / Hlog 추가 및 로그 출력 확인
+        - 변경점 : tmdb
+        - 영향도 : tmdb
+        - 테스트 방법 : 로그확인"
+
+      커밋 시 지라 번호 반드시 붙일 것
+      푸쉬 시 할당된 번호, 자신 아이디, 소스엔 할 필요 없지만 태그 머지 시 _브랜치이름_태그 반드시 붙일 것
+
+      git push ccu HEAD:DEV-CCUG1-6615-DT074224_msm_master

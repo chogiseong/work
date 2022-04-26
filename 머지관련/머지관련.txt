@@ -1,0 +1,138 @@
+============================================================================================================
+
+                                             머지 방법, 머지 양식
+
+============================================================================================================
+
+브랜치 경로 (bitbucket logo click)
+
+branch name
+AVN_PREMIUM6/Mobis.source.apps.telematics.TeleApp
+AVN_PREMIUM6/Mobis.source.apps.telematics.common
+AVN_PREMIUM6/Mobis.source.frameworks.telematics.TeleManager
+CCU_GEN1_Mobis/CCU_GEN1_Mobis.meta_mobis
+CCU_GEN1_Mobis/CCU_GEN1_Mobis.ccnf_connectivity
+CCU_GEN1_Mobis/CCU_GEN1_Mobis.middleware.modemservicemanager
+
+============================================================================================================
+
+지라 작성
+
+[CCS M/W][connectivity/middlemsm]ccnf-connectivity 및 HMiddleware 관련 CMakefile.txt 수정
+자체수정
+[현상]
+ccnf 헤더 install 위치 오류
+[원인]
+ccnf 헤더 install 위치 표기오류
+[대책]
+ccnf 헤더 install 위치 수정
+[테스트 방법]
+CE1 ccnf2.7 빌드 완료
+
+============================================================================================================
+
+    머지 사전 절차
+
+    변경점이 있는 소스가 속해있는 모듈 폴더를 _old 등으로 rename 후 reposync 한다.
+
+    변경점만 beyond compare를 통해 머지
+
+    변경점이 있는 어플리케이션의 상위 파일 (ex: teleapp, msm 등)에서 git diff, git status 로 확인 후 아래 코드 실행
+
+    그 이후
+
+    TeleManager 방법
+
+    telemanager ccu 2.6 브랜치 있지만 예전 버전 머지 하려고 만들어 둔거고 그냥 master 에 머지하고 bitbucket logo click 후
+    할당된 pull request를 클릭, 성기영책임님 입력 후 생성.
+
+    TeleAPP 방법
+
+    TeleApp은 master 브랜치가 아닌 PRD-CCU-dev 브랜치에 리뷰어 김석환책임님을 입력 후 생성하면 된다.
+
+============================================================================================================
+
+리눅스 깃 푸쉬 방법 (머지 방법)
+
+git add .
+git commit -m "[CCS M/W][connectivity/middlemsm][CCUG1-6604]ccnf-connectivity 및 HMiddleware 관련 CMakefile.txt 수정
+  - 이슈 내용 : ccnf 헤더 install 위치 오류
+  - 원인 / 대책 : ccnf 헤더 install 위치 표기오류, ccnf 헤더 install 위치 수정
+  - 변경점 : CMakeList.txt 수정
+  - 영향도 : CCS All
+  - 테스트 방법 : 빌드"
+
+푸쉬 시 할당된 번호, 자신 아이디, 소스엔 할 필요 없지만 태그 머지 시 _브랜치이름_태그 반드시 붙일 것
+
+git push ccu HEAD:DEV-CCUG1-6247-DT074224
+git push ccu HEAD:DEV-CCUG1-6247-DT074224_master_tag
+git push ccu HEAD:DEV-CCUG1-6247-DT074224_ccnf27_tag
+
+두번째 태그머지 (성기영책임님께서 소스 머지만 진행 하셨기 때문에 bb파일 태그 부분만 머지)
+
+git push ccu HEAD:DEV-CCUG1-6247-DT074224_ccnf27_tag_2
+git push ccu HEAD:DEV-CCUG1-6247-DT074224_master_tag_2
+
+CE1 2.7 머지
+210517
+git push ccu HEAD:DEV-CCUG1-6558-DT074224_ccnf27
+
+보급형 premium6 git push 머지
+
+git push premium6 HEAD:refs/heads/DEV-CCUG1-6491-DT074224_tapp_gdbus_build_error
+
+git push ccu HEAD:DEV-CCUG1-6604-DT074224_master
+
+git push ccu HEAD:DEV-CCUG1-6604-DT074224_master_2
+
+git push ccu HEAD:DEV-CCUG1-6604-DT074224_master_3
+
+git push ccu HEAD:DEV-CCUG1-6604-DT074224_master_4
+
+============================================================================================================
+
+소스코드 머지 후 태그도 머지 해야한다.
+
+    TeleManager의 경우 마스터와 현재 버전이 같아 소스코드는 한번 머지해도 상관 없지만
+
+    태그는 마스터, ccnf2.7이 있기 때문에 각각 머지해줘야 한다.
+
+    그 외에도 변경점이 있다면 버전에 따라 머지해야 한다.
+
+버전 및 기타 정보
+
+    버전에 따른 푸쉬 후 변경점이 원래의 브랜치로 바뀌기 때문에 다시 한 번 바꿔줘야 한다.
+    버전을 바꿀 시 git branch 통해 잘 확인하고 머지할 것
+
+    bb 파일이 저장되어 있는 sources/meta-mobis/recipes-telematics
+    기타 정보들도 저장되어 있음.
+
+============================================================================================================
+
+PL님 방법
+
+    External 소스 수정 후 빌드 확인, 새로 소스 다운 후(기존에 있다면 거기에) 머지, 깃 푸쉬, 깃 푸쉬 다음 ccu
+
+책임님 방법
+
+    Git 소스 수정 후 빌드 확인, 보급형 Premium6 소스 다운 후(기존에 있다면 거기에) 머지, 깃 푸쉬, 깃 푸쉬 다음 premium6 HEAD
+
+
+
+
+
+
+
+
+
+===========================================================================================================
+
+머지 요령
+
+
+
+1. daily 로 최신 소스 가져옴
+2. daily 소스와 수정한 소스 비교에서 daily 소스에 반영
+3. daily 소스에서 git add .
+4. daily 소스에서 git commit
+5. daily 소스에서 git push "생성한 브랜치명"

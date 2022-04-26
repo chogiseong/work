@@ -1,0 +1,31 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+1. SADS Static, Dynamic Design 수정
+
+    1-1. SWC_TMGR 최종 리뷰 수정사항 수정 완료
+
+    1-2. SWC_MSM 리뷰 수정사항 적용 완료
+
+    1-3. SWC_MSM Dynamic Design Diagram 분할 진행
+
+    1-4. SWC_TMGR, SWC_MSM SRS 부재
+
+2. 이슈 머지
+
+    2-1. TeleManager, msm, tmdb ccNF 2.6, ccNF 2.7, ccNF 2.8, master 브랜치 태그 머지
+
+3. 기능 구현
+
+    3-1. tmdb DLT Log 출력 기능 구현 진행
+
+4. 빌드 루틴
+
+    4-1. 매주 수요일 각 차종 및 버전 빌드 확인 (젠킨스 적용 고려)
+
+21년 5월 28일(금)부터 21년 6월 4일(금)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.

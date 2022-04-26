@@ -1,0 +1,7 @@
+ap_build 시 (성기영책임님이 주신 커맨드)
+
+./sources/sbas-scripts/ap_build.sh GN7 MASTER master 0.31.0 master KOR C0014 C0004 VA 0E000F 1 C.06 ${Skip_SNT_Ver_Check} ${Skip_Switch_Ver_Check}
+
+setupbuild 시 (김석환책임님이 주신 커맨드)
+
+source sources/sbas-scripts/setupbuild.sh RS4 M ccnf_2.10 0.29.2 ccnf_2.10 KOR B0534 B0512 VA 0A0607

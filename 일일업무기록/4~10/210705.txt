@@ -1,0 +1,11 @@
+1. SUDS 3.6 문서 작성
+
+    ENUM 끝내고 macro 까지 진행하기
+
+2. 빌드루틴
+
+  rs4 master 성공
+
+  jw1 master 
+
+  jw1 29

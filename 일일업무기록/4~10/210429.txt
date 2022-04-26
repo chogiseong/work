@@ -1,0 +1,57 @@
+1. Static, Dynamic 수정
+    ================================================================================================
+    ===========================Static, Dynamic Architecture 대거 수정 사항=============================
+    ================================================================================================
+
+    diagram과 ralationship table 완전 동기화, 대신 relationship 테이블에 선언 필요 없는 것 제거 후 동기화.
+    (is... 경로 반대, request... 경로 맞음, get... 경로 맞음)
+    완료
+
+    diagram상 함수 우측 괄호 포함 변수명 명시
+    완료
+
+    session lock, http request 등 추상적인 명시 전부 relationship table 과 동기화
+    오후
+
+    TMGR, MSM relationship table 동기화
+    옆에 명시만 해놨음
+
+    SRS -> AP SRS -> SW Functional Request -> 3.6 CCS 에서 선언된 SRS 찾아 전부 relationship table에 명시
+    부재 빼고 완료
+
+    relationship table 에 있는 msm 함수 전체 부재
+    일부 완료
+
+    relationship table 에 있는 telemanager 함수 전체 부재
+    일부 완료
+
+    추상적인 SRS 사용 가능
+    부재 빼고 완료
+
+    PL님 리뷰 완료
+
+
+
+진행 상황
+
+    TeleApp 코드 동기화 80%
+
+    addCenterEventArrived
+    onRearSeatOccupancyStateChanged
+    onTPMessagePacketReceived
+    각각 SRS 부재
+    김석환책임님이 SRS 만들려면 말해달라고 하셨음.
+    ->
+    금요일 질문 드릴 것
+
+    TeleManager, MSM 둘 다 PL님이 검수 후 작업 필요.
+    ->
+    질문 드릴 것
+
+    tm, msm 다이어그램, 다이나믹 수정 필요.
+    ->
+    TeleManager draw.io 변환 완료
+
+    etc) TeleApp 테마 동기화 완료
+
+2. 머지

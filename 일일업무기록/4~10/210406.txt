@@ -1,0 +1,8 @@
+1. 기본 개념
+  1.1 - TeleManager는 Mof 라이브러리를 이용한 모뎀과 데이터 송수신을 위한 연계 작업을 수행
+  1.2 - MSM은 DCU보드의 정보 및 관련 연동작업을 위한 동작 설정을 수행
+  1.3 - TeleAPP은 하위 Framework들을 제어, 실제 서비스 제공 app, CCS가 제공하는 모든 서비스 제어
+
+2. Linux
+  2.1 - Git 설정
+  2.2 - repo init, sync를 통한 JW1, CE1, RS4 빌드 완료

@@ -1,0 +1,35 @@
+1. 양병훈 위원님 리뷰 수정
+
+    리뷰 사항 Dynamic Design에 적용 (오타 등)
+
+    ccnf stub SADS Static Design, Dynamic Design에 적용
+
+    SRS 다이어그램 수정
+
+    5차리뷰 요청
+
+    안녕하십니까!
+    IVI 개발 3팀 조기성입니다.
+
+    김석환 책임님과 상의 결과 ccNF Stub을 다시 추가 시키는게 맞다고 생각되어 4차 리뷰 수정사항 수정 후
+    SADS Static Design, Dynamic Design에 추가하였습니다. 리뷰 부탁드리겠습니다.
+
+    감사합니다.
+    조기성 드림.
+
+    2.6.1.5.2 Relationship Table 에 기술된 함수도 SWC_TA 내부 함수이므로 Internal Unit List 에 추가 기술하시고 Function Description 작성 요청 드립니다.
+
+2. CE1 빌드 루틴
+
+    로컬 빌드 에러로 인한 정합성 오류
+    소스 최신화 방법 숙지
+
+3. 사무용품 구매
+
+   플라스틱 랜선 (잘 빠지지 않는 기능성 랜선)
+
+   다이어리, 공책 무관
+
+   각얼음 판
+
+   무선 마우스

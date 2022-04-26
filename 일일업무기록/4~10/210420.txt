@@ -1,0 +1,623 @@
+1. 커넥티비티 라이브러리 경로 및 scp 해야할 시
+
+build_s32v234ccu/tmp/work/aarch64-fsl-linux/ccnf-connectivity-lib/package/usr/lib
+
++ 백업 시
+cp 파일이름 파일이름_backup 등으로 이름 붙여 카피
+
++ 권한 문제 시
+mount -o remount,rw / 권한 마운트
+
++ 로그 주기적으로 출력 시
+iptables -t mangle -D drop 1
+
++ 커넥티비티 라이브러리 버전도 맞춰야 함
+
++ 이슈 해결 툴
+.DLT 파일은 DLT 뷰어로, logfilter.sh 는 터미널에서 ./logFilter.sh 로 열어서 확인
+msm|TeleApp|TeleManager|HCON 이런식으로 탐색 가능
+
+2. GPS값 오류 이슈 해결
+ccNF2.8 namespace
+지역정보변경.xlsx 에 지역 정보 보유, 지역 번호는 표기 시 항상 두 자릿수로 표기.
+HTTP, HTTP+
+MO    MT
+찾아보기
+Common엔 ServiceBase, Kr엔 Service
+지역적으로 따로 구현해야할 부분은 Kr 등 나라 별 다름
+Provisioning Result db 에는
+ProvActive 개통유무 bool
+ProvStatus 4 = enrolled 3, 2 = 개통만 1 = 개통 X 등 값이 있음
+
+URI_RC_FIND_CAR 생성자 해석(람다)
+순수가상함수(virtual ... = 0)
+
+MT는 tid가 반드시 필요하다.
+
+Service는 OnCCSRequestFinished 에 완전종료
+
+appdata/.tele/db 들어가면 데이터베이스 존재.
+service로 갈 시 bool 값으로 활성화, 비활성화 되어 있음.
+
+3. RCSDataStatusControlService 포함 로그
+
+Apr 14 06:52:00 s32v234ccu systemd[1]: Starting com.mobis.teleapp...
+Apr 14 06:52:01 s32v234ccu TeleManager[1371]: [2021-04-14 06:52:01.791] [TMGR] [info] HCCSServer.cpp:notifyAliveNoticeRequest  01842 notifyAliveNoticeRequest strAppName : teleapp
+Apr 14 06:52:00 s32v234ccu systemd[1]: Started com.mobis.teleapp.
+Apr 14 06:52:02 s32v234ccu NodeStateManager[1087]: 2021/04/14 06:52:01.528273      98970 043 ECU1 NSM- HLOG log warn V 3 [NSM: Failed to set application valid. Application was never invalid.  Application:  tele]
+root@s32v234ccu:~# journalctl | grep teleapp
+Apr 14 06:52:00 s32v234ccu systemd[1]: Starting com.mobis.teleapp...
+Apr 14 06:52:01 s32v234ccu TeleManager[1371]: [2021-04-14 06:52:01.791] [TMGR] [info] HCCSServer.cpp:notifyAliveNoticeRequest  01842 notifyAliveNoticeRequest strAppName : teleapp
+Apr 14 06:52:00 s32v234ccu systemd[1]: Started com.mobis.teleapp.
+Apr 14 06:52:02 s32v234ccu NodeStateManager[1087]: 2021/04/14 06:52:01.528273      98970 043 ECU1 NSM- HLOG log warn V 3 [NSM: Failed to set application valid. Application was never invalid.  Application:  tele]
+root@s32v234ccu:~# journalctl | grep TAPP
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.787] [TAPP] [info]  /TeleAppCommon/src/utils/Log.cpp         init                 00172 DLT log success!!!
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.793] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp DataBuffer           00188 Constructor DataBuffer
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.794] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.160000
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.794] [TAPP] [info]  (null)                                   main                 00077 Start TeleApp=======Ver:0.1.0========= 9.160
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.794] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp TeleAppMainHandler   00108 Constructor TeleAppMainHandler
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.823] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00327 executeEventINIT()
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp GDbusMsmClient       00048 GDbusMsmClient()
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01067 regionCode: 01
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01069 convert decimal number convertCode: 1
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01082 returnValue: KOREA
+Apr 14 06:52:00 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getRegion            00445 GENERAL_REGION value:KOREA,m_Region:1
+Apr 14 06:52:01 s32v234ccu dlt-daemon[1086]: [    9.156146]~DLT~ 1086~NOTICE   ~Send log-level to context: CCSM:TAPP [-1 -> 4] [-1 -> 0]
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getVendor            00467 BRAND value:GENESIS
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCUEcoTypeStr 01090 ecoType: 08
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCUEcoTypeStr 01092 convert decimal number convertType: 8
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCUEcoTypeStr 01105 returnValue: EV
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp setEvHevType         00537 CarType value:EV
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.831] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getCarName           00966 ModelData::getCarName()= RS4
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.832] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp DataLoad             01335 load variant config : SUCCESS !!! region : KOREA, )
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.832] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setGPSDetail         03853 setGPSDetail() tGPSDetail.nHead:0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.853] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setGPSDetail         03854 setGPSDetail() altitude:0 latitude:548446311552 l8
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.853] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp runMainLoopGDBus     00763 GDbusMsmClient::runMainLoopGDBus()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.967] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp runMainLoopGDBus     00774 runMainLoopGDBus() g_bus_get_sync() is done sucessfu.
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:00.967] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp runMainLoopGDBus     00782 Gio_init
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.083] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp getLocationMapMatchingMonitor 00319 getLocationMapMatchingMonitor() called
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.095] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03918 getGPSDetail() failed getLocationMapMatchingMonit6
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.095] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03922 mLastCoord empty so set default coord on it
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.095] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03928 bUseDefaultGPS case getDefaultCoord()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.100] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getLastGps           04201 getLastGps() return false case 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.100] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getLastGps           04202 getLastGps() There is NO saved last gps coord
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.105] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03935 getLastGps result : 0, lon : 0.000000, lat : 0.000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.106] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01067 regionCode: 01
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.106] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01069 convert decimal number convertCode: 1
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.108] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01082 returnValue: KOREA
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.108] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getRegion            00445 GENERAL_REGION value:KOREA,m_Region:1
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.109] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03991 get GPS default coord lon : 127.042975, lat : 37.1
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.111] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03994 getGPSDetail lon:127.042975 lat:37.464751 alt:10.0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.111] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp getLocationMapMatchingMonitor 00319 getLocationMapMatchingMonitor() called
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.119] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03918 getGPSDetail() failed getLocationMapMatchingMonit6
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.123] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03994 getGPSDetail lon:127.042975 lat:37.464751 alt:10.0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.123] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp getLocationMapMatchingMonitor 00319 getLocationMapMatchingMonitor() called
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.127] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03918 getGPSDetail() failed getLocationMapMatchingMonit6
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.127] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getGPSDetail         03994 getGPSDetail lon:127.042975 lat:37.464751 alt:10.0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.131] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp initAntennaCheckData 09386 check AntennaCheckState status: 0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.136] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp initAntennaCheckData 09389 default antenna status is exist
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.141] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.148] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getStep              01058 getStep : StepType(1), retrun(1)
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.153] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getCarName           00966 ModelData::getCarName()= RS4
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.153] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getCarName           00966 ModelData::getCarName()= RS4
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.153] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setMaintenanceType   00578 MAINTENANCE_ALERT_TYPE_3
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.154] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01067 regionCode: 01
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.154] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01069 convert decimal number convertCode: 1
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.154] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp convertCCURegionStr  01082 returnValue: KOREA
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.154] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getRegion            00445 GENERAL_REGION value:KOREA,m_Region:1
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/ServiceSupportChker.cpp setSupportChkerLocal 00049 [ServiceSupportChkerLocal_Init] Object created
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/ServiceSupportChker.cpp init                 00032 ServiceSupportChker singleton generation succeeded
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp TeleAppMainTimer     00020 TeleAppMainTimer() called
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp createTimer          00109 createTimer() called
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp setSignal            00068 UNLIMIT sigaction
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.255] [TAPP] [info]  /TeleAppCommon/src/utils/TeleAppMainTimer.cpp setSignal            00074 sigaction mSigNo:35
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.256] [TAPP] [info]  /TeleAppCommon/src/utils/TimerManager.cpp TimerManager         00012 TimerManager
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.256] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp CommonManager        00027 CommonManager()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.256] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp GDbusTeleManagerClient 00052 GDbusTeleManagerClient()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.257] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp createProxy          00219 createProxy()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.257] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp createProxy          00237 Succeded in making a proxy
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.257] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    RCSManager           00014 Constructor RCSManager
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.258] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.620000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.258] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00355 Time Cehck__m_HandleManagerList.addManager(&RCSManager) : 0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.258] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp GDbusHighCanClient   00457 GDbusHighCanClient()
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.258] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp createProxy          00493 createProxy() -
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.270] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    handleEvent          00041 handleEvent(EVENT_HANDLE_INIT)
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.271] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00183 Remote executeEventINIT() start
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.273] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp chargeStatusSync     00556 +++chgStatus+++ is 0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.273] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.640000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.273] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00365 Time GDbusHighCanClient.createProxy : 9.640
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.273] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DiagUnitData.cpp DiagUnitData         00021 Constructor
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.274] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DiagUnitData.cpp Init                 00045 DiagUnitData::Init
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.274] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.275] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.275] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00196 evhevtype is 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.280] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSHornLightServiceBase.cpp RCSHornLightServiceBase 00035 RCSHornLightServiceBase Constructor
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.280] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/hnl
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.287] [TAPP] [error]  /TeleAppCommon/src/utils/DataBuffer/DiagUnitData.cpp Init                 00050 The remote function call failed. (function nam)
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.287] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.288] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp getDisplayVehicleSpeed 00894 GDbusHighCanClient getDisplayVehicleSpeed() fo!
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.289] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00199 [RCSHornLightService_Init] Service thread start
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.289] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSLightOnlyServiceBase.cpp RCSLightOnlyServiceBase 00036 RCSLightOnlyServiceBase Constructor
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.289] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/light
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.293] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp getDisplayVehicleSpeed 00897 res 0,_speed 0.000000,_unit 0
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.293] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00200 [RCSLightOnlyService_Init] Service thread start
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.294] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSStartStopServiceBase.cpp RCSStartStopServiceBase 00034 RCSStartStopServiceBase::RCSStartStopS)
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.294] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSStartStopServiceBase.cpp RCSStartStopServiceBase 00052 RCSStartStopServiceBase Constructor
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.294] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/start
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.294] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.660000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.295] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00368 Time DiagUnitData.Init : 9.660
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.295] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/RemoteData.cpp RemoteData           00022 Constructor RemoteData
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.295] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/RemoteData.cpp Init                 00280 DiagUnitData::Init
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.295] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.660000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.296] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00370 Time Cehck__RemoteData.Init : 9.660
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.296] [TAPP] [info]  /TeleAppCommon/src/utils/TimerManager.cpp handleEventInit      00035 handleEventInit
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.304] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.670000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.304] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00374 Time Cehck__TimerManager.addEvent : 9.670
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.305] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.670000
+Apr 14 06:52:01 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.305] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00378 Time Cehck__RCSManager.addEvent : 9.670
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.305] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp GDbusHHardwireClient 00202 GDbusHHardwireClient()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.313] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/start/off
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.313] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00201 [RCSStartStopService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.314] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/door/on
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.314] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/door/off
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.314] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00202 [RCSDoorLockUnlockService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.315] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSFindMyCarServiceBase.cpp RCSFindMyCarServiceBase 00043 RCSFindMyCarServiceBase Constructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.315] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/vhc/loc
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.322] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/efc
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.327] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00203 [RCSFindMyCarService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.328] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.328] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp RCSVehicleStatusServiceBase 00062 RCSVehicleStatusServiceBase Cor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.328] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/vhc/rept
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.329] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00204 [RCSVehicleStatusService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.329] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSCmmLocServiceBase.cpp RCSCmmLocServiceBase 00038 RCSCmmLocServiceBase Constructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.329] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/cmm/loc
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.330] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp setEventListener     00295 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.335] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp onACCStateChanged    00505 ++++ACC_ON++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.335] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setAccState          06524 Send Event To Mgrs[ACC Change]255
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.335] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    SASManager           00178 Constructor SASManager
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.336] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setAccPowerState     08673 setAccPowerState = 255
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.337] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp onIGN1StateChanged   00525 ++++IGN1_OFF+++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.338] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp onIGN3StateChanged   00537 ++++IGN3_OFF+++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.339] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setIg3State          06732 DataBuffer::setIg3State 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.343] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00205 [RCSCmmLocService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.343] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00212 Remote executeEventINIT()_1 start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.344] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWindowControlService.cpp RCSWindowControlService 00013 RCSWindowControlService KR
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.344] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/wd/open
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.344] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/wd/close
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.344] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWindowControlService.cpp RCSWindowControlService 00017 RCSWindowControlService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.345] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00213 [RCSWindowControlService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.345] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp RCSWinCurtainCtrlSvcBase 00013 RCSWinCurtainCtrlSvcBase called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.346] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp init                 00029 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.346] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWinCurtainCtrlService.cpp RCSWinCurtainCtrlService 00009 RCSWinCurtainCtrlService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.346] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/wd_new
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.347] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00214 [RCSWinCurtainCtrlService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.364] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/tr/open
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.364] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/tr/close
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.366] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSTrunkControlService.cpp RCSTrunkControlService 00016 RCSTrunkControlService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.366] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00215 [RCSTrunkControlService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.367] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/sr/open
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.368] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/sr/close
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.369] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp sendReadyNotiToSubHandler 00095 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.369] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSSunroofControlService.cpp RCSSunroofControlService 00016 RCSSunroofControlService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.369] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00216 [RCSSunroofControlService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.373] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00217 Not add service : RCSFleetService_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.382] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp createProxy          00253 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.384] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp RCSWaitingAlertServiceBase 00026 RCSWaitingAlertServiceBase()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.385] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp RCSWaitingAlertServiceBase 00044 RCSWaitingAlertServiceBase Constr
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.386] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWaitingAlertService.cpp RCSWaitingAlertService 00014 RCSWaitingAlertService constructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.387] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00218 [RCSWaitingAlertService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.388] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSTailAndHazardLightControlServiceBase.cpp RCSTailAndHazardLightControlServiceBase 00015 RCSTaid
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.388] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSTailAndHazardLightControlService.cpp RCSTailAndHazardLightControlService 00010 RCSTailAndHazardLie
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.388] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/lamp/control
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.389] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00219 [RCSTailAndHazardLightControlService_Init] Service thread st
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.389] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp RCSDataStatusControlServiceBase 00015 RCSDataStatusControlSed
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.389] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp RCSDataStatusControlService 00010 RCSDataStatusControlService
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.389] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/tss/datastatus
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.390] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00220 [RCSDataStatusControlService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.390] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_1   00221 Remote executeEventINIT()_1 end
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.390] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00225 Remote executeEventINIT()_2 start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.408] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setAccPowerState     08673 setAccPowerState = 255
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.409] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp accStatusSync        00342 +++accStatus+++ is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.412] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSTailAndHazardLightControlServiceBase.cpp sendReadyNotiToSubHandler 00074 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.412] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.415] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp ignStatusSync        00362 +++ignStatus+++ is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.416] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVChargeService.cpp RCSEVChargeService   00014 RCSEVChargeService+++++++++++++++++++++++++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.416] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/icr
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp sendReadyNotiToSubHandler 00065 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp setIg3State          06732 DataBuffer::setIg3State 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHHardwireClient.cpp ig3StatusSync        00379 +++ig3Status+++ is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.780000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00381 Time Cehck__GDbusHHardwireClient.createProxy : 9.780
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.419] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHClimateClient.cpp GDbusHClimateClient  00016 GDbusHClimateClient()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.421] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00228 [RCSEVChargeService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.422] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp getAlarmTime         01046 getAlarmTime
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.437] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp getAlarmTime         01069 There is NO saved alarm time
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.437] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp getAlarmTime         01070 set default alarm mode, time[10]]
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.444] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp RCSEVChargeCompleteServiceBase 00042 get remain charge time0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.447] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.448] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVChargeCompleteService.cpp RCSEVChargeCompleteService 00014 RCSEVChargeCompleteService+++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.449] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/evc/chargetime
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.449] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00229 [RCSEVChargeCompleteService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.451] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVChargeCancleService.cpp RCSEVChargeCancleService 00014 RCSEVChargeCancleService+++++++++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.451] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/ric/ric/cancel
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.452] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00230 [RCSEVChargeCancleService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.456] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVSmartphoneNotiSvcBase.cpp RCSEVSmartphoneNotiSvcBase 00019 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.459] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHClimateClient.cpp createProxy          00047 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.459] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.820000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.459] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00383 Time GDbusHClimateClient.createProxy : 9.820
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.459] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHSeatClient.cpp GDbusHSeatClient     00014 GDbusHSeatClient()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.461] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVSmartphoneNotiSvc.cpp RCSEVSmartphoneNotiSvc 00012 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.461] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/alarm/beforecomplete
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.461] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/alarm/beforecomplete/config
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.463] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00231 [RCSEVSmartphoneNotiSvc_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.466] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVBatStateAlertService.cpp RCSEVBatStateAlertService 00015 RCSEVBatStateAlertService++++++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.466] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00232 [RCSEVBatStateAlertService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.467] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVChargeDoorService.cpp RCSEVChargeDoorService 00013 RCSEVChargeDoorService KR
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.467] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/chargeportdoor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.473] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVChargeDoorService.cpp RCSEVChargeDoorService 00016 RCSEVChargeDoorService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.473] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00233 [RCSEVChargeDoorService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.474] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.474] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.474] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVClimateService.cpp RCSEVClimateService  00018 RCSEVClimateService+++++++++++++++++++++++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.474] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rc/ihr
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.475] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00236 [RCSEVClimateService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.475] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVClimateCompleteService.cpp RCSEVClimateCompleteService 00015 RCSEVClimateCompleteService++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.476] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00237 [RCSEVClimateCompleteService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.479] [TAPP] [info]  /TeleAppKr/src/RCS/evService/RCSEVClimateCancleService.cpp RCSEVClimateCancleService 00016 RCSEVClimateCancleService++++++++++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.479] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/rih/rih/cancel
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.480] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00238 [RCSEVClimateCancleService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.480] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT_2   00251 Remote executeEventINIT()_2 end
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.480] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    executeEventINIT     00208 Remote executeEventINIT() end
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.480] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVSmartphoneNotiSvcBase.cpp sendReadyNotiToSubHandler 00061 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.485] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    handleEvent          00041 handleEvent(EVENT_POWER_CHANGED_ACC)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.487] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSStartStopServiceBase.cpp checkEventAndPush    00148 handleEvent case 1 : state:1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.487] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp checkEventAndPush    00119 handleEvent case 1 : state: 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.488] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp checkEventAndPush    00104 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.488] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp isNeedEvent          00118 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.488] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp checkEventAndPush    00094 handleEvent case 1 : state:1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.488] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSTailAndHazardLightControlServiceBase.cpp isNeedEvent          00096 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.489] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp isNeedEvent          00087 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.507] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHSeatClient.cpp createProxy          00045 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.507] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.870000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.507] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00385 Time GDbusHSeatClient.createProxy : 9.870
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.508] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp setEventListener     00245 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.532] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.900000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.532] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00394 Time Check__GDbusTeleManagerClient.setEventListener : 9.900
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.532] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHighCanClient.cpp setEventListener     00510 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.553] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.920000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.553] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00397 Time GDbusHighCanClient.setEventListener : 9.920
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.553] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp initLastGps          00069 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.577] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp getLastGps           00419 getLastGps:OK Speed:0, status:1 Satellite:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.577] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp getLastGps           00431 getLastGps():Fail
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.578] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp initLastGps          00075 getLastGps false
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.578] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/HLocationUtils.cpp initLastGps          00079 initLastGps fisnish
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.578] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.940000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.578] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00401 Time HLocationUtils.initLastGps : 9.940
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.578] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHClimateClient.cpp setEventListener     00055 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.592] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.960000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.592] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00403 Time GDbusHClimateClient.setEventListener : 9.960
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.592] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHSeatClient.cpp setEventListener     00053 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.608] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHSeatClient.cpp setEventListener     00059 ++++setEventListener()_GDbusHSeatClient++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.608] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 9.970000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.609] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00405 Time GDbusHSeatClient.setEventListener : 9.970
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.609] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp setVehicleType       01118 setVehicleType :JW1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.609] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp GDbusRaw             00061 GDbusRaw start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.637] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp subscribeCCSignals   00201 JW1_subscribeCCSignals()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.650] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp setEventListener     00107 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.650] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp getHU_LanguageInfo   01109 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.654] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp getHU_LanguageInfo   01114 [getCCSignal] result is not OK : result - 8
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.654] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp createProxy          00097 End of making a proxy
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.655] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getUptime            00735  getUptime : 10.020000
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.655] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00410 Time GDbusRaw::getInstance()->createProxy(); : 10.020
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.655] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusBodyCanClient.cpp GDbusBodyCanClient   00052 CommonBodyCanAPIClient()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.656] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp handleEvent          00051 handleEvent : EVENT_HANDLE_INIT
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.656] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp handleEvent          00061 Execute COMM_HANDLE_E_INIT
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.656] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusBodyCanClient.cpp createProxy          00089 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.656] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusBodyCanClient.cpp createProxy          00090 createInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.657] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp executeEventINIT     00113 Common executeEventINIT()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.662] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    handleEvent          00063 handleEvent(EVENT_POWER_CHANGED_ACC)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.669] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    handleEvent          00063 handleEvent(EVENT_HANDLE_INIT)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.669] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00164 executeEventINIT()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.670] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSService.cpp BSS_Init             00041 BSS_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.670] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSServiceBase.cpp BSSServiceBase       00024 BSSServiceBase start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.672] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    handleEvent          00234 handleEvent =EVENT_POWER_CHANGED_ACC
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.673] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    notifyEvent          00523 Execute notifySASEVENT : EVENT_POWER_CHANGED_ACC
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.674] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    handleEvent          00234 handleEvent =EVENT_HANDLE_INIT
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.675] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00429 SAS executeEventINIT()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.675] [TAPP] [info]  /TeleAppKr/src/SAS/Service/SVNService.cpp SVN_Init             00091 SVN_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.677] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/SVNServiceBase.cpp SVNServiceBase       00033 SVNServiceBase start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.677] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusBodyCanClient.cpp createProxy          00110 TeleLog-->1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.677] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.677] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp GDbusHElectricClient 00018 GDbusHElectricClient()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.679] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00170 [BSS_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.679] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSBlockAlertService.cpp BSSBlockAlertService_Init 00029 BSSBlockAlertService_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.679] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSBlockAlertServiceBase.cpp BSSBlockAlertServiceBase 00010 BSSBlockAlertServiceBase called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.679] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSBlockAlertService.cpp BSSBlockAlertService 00005 BSSBlockAlertService
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.680] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00171 [BSSBlockAlertService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.680] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSUnBlockAlertService.cpp BSSUnBlockAlertService_Init 00029 BSSUnBlockAlertService_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.680] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSUnBlockAlertServiceBase.cpp BSSUnBlockAlertServiceBase 00010 BSSUnBlockAlertServiceBase called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.680] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSUnBlockAlertService.cpp BSSUnBlockAlertService 00005 BSSUnBlockAlertService
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.681] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00172 [BSSUnBlockAlertService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.682] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMSendService.cpp HDMSendService_Init  00041 HDMSendService_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.684] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMSendServiceBase.cpp HDMSendServiceBase   00026 HDMSendServiceBase called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.684] [TAPP] [info]  /TeleAppKr/src/SAS/Service/SVNService.cpp SVNService           00025 SVNService kr start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.685] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    getDoorTrunkEvent    00133 [getDoorTrunkEvent] !!
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.685] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00435 [SVN_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.685] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getDoorTrunk         04693 getDoorTrunk =-1 Type=2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.686] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getTestDoor          06262 getTestDoor = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.686] [TAPP] [info]  /TeleAppKr/src/SAS/Service/ROAStopService.cpp ROAStop_Init         00036 ROAStop_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.686] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/ROAStopServiceBase.cpp ROAStopServiceBase   00010 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.686] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/ROAStopServiceBase.cpp init                 00021 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.686] [TAPP] [info]  /TeleAppKr/src/SAS/Service/ROAStopService.cpp ROAStopService       00019 ROAStopService kr start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.688] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/roa/stop
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.691] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp createProxy          00049 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.691] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getInstance          00096 getInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.692] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp GDbusLifecycleClient 00066 GDbusLifecycleClient start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.692] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp createProxy          00122 createProxy()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.694] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00436 [ROAStop_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.694] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00437 Not add service : PANIC_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.694] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isOpenedDoorTrunk    04985 result is not OK is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.695] [TAPP] [info]  /TeleAppKr/src/SAS/Service/DVRSService.cpp DVRSService          00016 DVRSService contructor
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.695] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00438 [DVRSService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.696] [TAPP] [info]  /TeleAppKr/src/SAS/Service/ROAService.cpp ROA_Init             00033 ROA_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.696] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/ROAServiceBase.cpp ROAServiceBase       00019 ROAServiceBase  start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.696] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00439 [ROA_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.697] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    executeEventINIT     00440 Not add service : IDLE2_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.697] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSBlockAlertServiceBase.cpp sendReadyNotiToSubHandler 00020 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.697] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getDoorTrunk         04693 getDoorTrunk =-1 Type=3
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.697] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getTestDoor          06262 getTestDoor = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.698] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMSendService.cpp HDMSendService       00008 HDMSendService
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.699] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00173 [HDMSendService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.700] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMReceiveService.cpp HDMReceiveService_Init 00029 HDMReceiveService_Init
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.700] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMReceiveServiceBase.cpp HDMReceiveServiceBase 00013 HDMReceiveServiceBase called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.700] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMReceiveService.cpp HDMReceiveService    00005 HDMReceiveService
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.701] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00174 [HDMReceiveService_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.701] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp DigitalKeyTransferSvcBase 00030 constructor called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.701] [TAPP] [info]  /TeleAppKr/src/VRM/Service/DigitalKeyTransferSvc.cpp DigitalKeyTransferSvc 00014 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.701] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusTeleManagerClient.cpp addCenterEventArrived 00663 addUri:/dkc/genesis/mt
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.702] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00175 [DigitalKeyTransferSvc_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.702] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isOpenedDoorTrunk    04985 result is not OK is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.702] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getDoorTrunk         04693 getDoorTrunk =-1 Type=0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.702] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getTestDoor          06262 getTestDoor = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.703] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    executeEventINIT     00178 [DeviceStatusRequest_Init] Service thread start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.706] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp sendReadyNotiToSubHandler 00078 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.710] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isOpenedDoorTrunk    04985 result is not OK is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.710] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getDoorTrunk         04693 getDoorTrunk =-1 Type=1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.710] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getTestDoor          06262 getTestDoor = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.711] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSUnBlockAlertServiceBase.cpp sendReadyNotiToSubHandler 00020 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.713] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isOpenedDoorTrunk    04985 result is not OK is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.713] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getDoorTrunk         04693 getDoorTrunk =-1 Type=4
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.713] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getTestDoor          06262 getTestDoor = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.716] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMSendServiceBase.cpp sendReadyNotiToSubHandler 00058 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.716] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMReceiveServiceBase.cpp sendReadyNotiToSubHandler 00036 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.717] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isOpenedDoorTrunk    04985 result is not OK is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01074 ++++reason++++ is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01078 BOOT_NORMAL_ACC_ON
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp createProxy          00138 End of making a proxy || bootreason : 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp executeEventINIT     00528 TeleLog-->6
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp handleEvent          00173 All Service was Ready. Registe ccos api.
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.747] [TAPP] [info]  /TeleAppCommon/src/TeleAppMainHandler.cpp handleEvent          00193 UserProfileManager->allService.
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp setEventListener     00746 [FOTA] GDbusMsmClient::setEventListener
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/ModelData.cpp getEvHevType         00562 getEvHevType value: 2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp setEventListener     00057 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp handleEvent          00051 handleEvent : EVENT_HANDLE_START_ALL_SERVICE
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/Common/CommonManager.cpp notifyEvent          00187 Execute notifyProvisionState
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.748] [TAPP] [info]  /TeleAppCommon/src/utils/InheritanceBase/ManagerBase.cpp notifySyncIsComplete 00035 [CommonManager]notifySyncIsComplete()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.750] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    handleEvent          00041 handleEvent(EVENT_HANDLE_START_ALL_SERVICE)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.750] [TAPP] [info]  /TeleAppCommon/src/utils/InheritanceBase/ManagerBase.cpp notifySyncIsComplete 00035 [RCSManager]notifySyncIsComplete()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.751] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    handleEvent          00063 handleEvent(EVENT_HANDLE_START_ALL_SERVICE)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.751] [TAPP] [info]  /TeleAppCommon/src/utils/InheritanceBase/ManagerBase.cpp notifySyncIsComplete 00035 [VRMManager]notifySyncIsComplete()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.752] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp onReady              00636 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.752] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp isAccOn              06503 isAccOn is 255
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.752] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleEvent          00130 handleEvent(EVENT_POWER_CHANGED_ACC)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00615 [AccChange]handleAccChnageEvent() onO5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00617 [AccChange]backupAccStatus :256 eAccS5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00624 ACC ON initialVcrmLog
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/RemoteData.cpp initialVcrmLog       00639 initialVcrmLog_0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/RemoteData.cpp initialVcrmLog       00747 initialVcrmLog_end
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00630 [AccChange]isBackupAccStatus :0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00631 status of driveopenDooropen 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSVehicleStatusServiceBase.cpp handleAccChnageEvent 00637 [AccChange]backupAccStatus :255 eAccS5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWinCurtainCtrlService.cpp onReady              00076 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSWaitingAlertService.cpp onReady              00070 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.753] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp onReady              00516 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSTailAndHazardLightControlService.cpp onReady              00103 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSTailAndHazardLightControlService.cpp init                 00026 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSService.cpp onReady              00032 BSSService onReady
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSUnBlockAlertService.cpp onReady              00024 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSUnBlockAlertService.cpp init                 00019 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMSendService.cpp onReady              00026 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.754] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMSendService.cpp init                 00034 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp onReady              00102 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSBlockAlertService.cpp onReady              00024 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSStartStopServiceBase.cpp handleEvent          00159 handleEvent(EVENT_POWER_CHANGED_ACC)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/VRM/Service/BSSBlockAlertService.cpp init                 00019 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSStartStopServiceBase.cpp handleAccChnageEvent 01417 backupAccStatus is 256,eAccStatus 255,get0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMReceiveService.cpp onReady              00024 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/RCS/Service/RCSDataStatusControlService.cpp init                 00026 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppKr/src/VRM/Service/HDMReceiveService.cpp init                 00019 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp onReady              00050 onReady() called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp startUdpSocket       00385 DigitalKeyTransferSvcBase::startUdpSockd
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.755] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp DigitalKeyUdpReceiveThread 00011 DigitalKeyUdpReceiveThread::cons)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.756] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVSmartphoneNotiSvcBase.cpp onReady              00037 onReady() called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.757] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValueDirect 01271 strValue: 0, v.getString(): 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.758] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    handleEvent          00063 handleEvent(EVENT_DKC_UPDATE_STATUS)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.758] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSBlockAlertServiceBase.cpp isNeedEvent          00035 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.758] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/BSSUnBlockAlertServiceBase.cpp isNeedEvent          00035 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.758] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMSendServiceBase.cpp isNeedEvent          00080 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.758] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/HDMReceiveServiceBase.cpp isNeedEvent          00051 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.759] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp checkEventAndPush    00104 HandleRunState::2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.759] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp DigitalKeyUdpSendThread 00011 DigitalKeyUdpSendThread::constructor()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.759] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    handleEvent          00234 handleEvent =EVENT_HANDLE_START_ALL_SERVICE
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.760] [TAPP] [info]  /TeleAppCommon/src/utils/InheritanceBase/ManagerBase.cpp notifySyncIsComplete 00035 [SASManager]notifySyncIsComplete()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.760] [TAPP] [info]  /TeleAppKr/src/SAS/Service/ROAStopService.cpp onReady              00028 ROAStopService onReady
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.760] [TAPP] [info]  /TeleAppKr/src/SAS/Service/DVRSService.cpp onReady              00053 DVRSService onReady
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.760] [TAPP] [info]  /TeleAppKr/src/SAS/Service/SVNService.cpp onReady              00083 SVNService onReady
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.760] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp getVcmsRdyState      01257 ret, getVcmsRdyState : 8 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.761] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp getVcmsRdyState      00782 getVcmsRdyState() is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.761] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp onReady              00063 vcmsReadyValue is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.762] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp handleEvent          00153 svcState:2 handleEvent:EVENT_DKC_UPDATES
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.763] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleEvent          00105 handleEvent(EVENT_POWER_CHANGED_ACC)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.763] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleAccChnageEvent 00362 [AccChange]handleAccChnageEvent() onOf5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.764] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp setEventListener     00063 ++++setEventListener()_GDbusHElectricClient++++
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.764] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHEthNetworkControlClient.cpp GDbusHEthNetworkControlClient 00014 GDbusHEthNetworkControlClien)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.764] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHEthNetworkControlClient.cpp setEventListener     00053 setEventListener() -- NOT USE
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.768] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp onStart              00044 DigitalKeyUdpReceiveThread::onStart()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.768] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp onReady              00037 DigitalKeyUdpReceiveThread::onReady()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.768] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp handleEvent          00074 EVENT_HANDLE_INIT case called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.768] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp startServerSocket    00093 startServerSocket() is called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.769] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp startServerSocket    00113 startServerSocket() server_fd:16
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.769] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp startServerSocket    00126 startServerSocket() waiting connection.
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.769] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp receiveDigitalKeyDataFromIAU 00143 DigitalKeyUdpReceiveThread::red
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.769] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpReceiveThread.cpp receiveDigitalKeyDataFromIAU 00163 DigitalKeyUdpReceiveThread::re.
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.773] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp onStart              00043 DigitalKeyUdpSendThread::onStart()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.773] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp onReady              00036 DigitalKeyUdpSendThread::onReady()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.773] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp handleEvent          00073 EVENT_HANDLE_INIT case called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.773] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp startClientSocket    00091 startClientSocket() is called
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.774] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyUdpSendThread.cpp startClientSocket    00125 startClientSocket() success...
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.777] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValue       01301 getProvDBValue direct tmdb cate : ProvisioningRes0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.777] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp checkAvailableService 00159 checkConditionAndStartService() isReg:0 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.777] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp checkAvailableService 00168 checkAvailableService() skip event. mRun0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.777] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp setEINInfoFromDB     00597 setEINInfoFromDB()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.781] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getPrivacyGatherSetting 10109 getPrivacyGatherSetting() DB read start
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.781] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getPrivacyGatherSetting 10119 no saved privacyGatherSetting
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.781] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getPrivacyGatherSetting 10120 getPrivacyGatherSetting() set default mode, pr0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.781] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getPrivacyGatherSetting 10127 getPrivacyGatherSetting() privacyGatherSetting0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.782] [TAPP] [error]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp setEINInfoFromDB     00605 Skip because no maxNotiCount
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.782] [TAPP] [error]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp setEINInfoFromDB     00613 Skip because no idleDetectionTime
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.782] [TAPP] [error]  /TeleAppCommon/src/VRM/Service/DeviceStatusRequestBase.cpp setEINInfoFromDB     00620 Skip because no idleNotiInterval
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.783] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getInstance          00096 getInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.784] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHEthNetworkControlClient.cpp onNMStateChanged     00078 onNMStateChanged() 4
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.784] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp setEventListener     00155 setEventListener()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.784] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp init                 00190 registerSession()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.788] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValueDirect 01271 strValue: 0, v.getString(): 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.792] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValue       01301 getProvDBValue direct tmdb cate : ProvisioningRes0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.792] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleAccChnageEvent 00371 [AccChange]backupAccStatus :256 eAccSt5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.792] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleAccChnageEvent 00374 [AccChange]handleAccChnageEvent() NOT_0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.792] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleAccChnageEvent 00408 [AccChange]backupAccStatus :255 eAccSt5
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.793] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp handleEvent          00105 handleEvent(EVENT_REMOTE_WAITINGALERT_)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.793] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp checkInitBootReason  00489 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.793] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getBootReasonFromDCU 08726 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.794] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp onSessionStateChanged 00493 onSessionStateChanged : sessionStateName = CCSRunni1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    checkBootReason      00865 SASManager::checkBootReason()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getInstance          00096 getInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01074 ++++reason++++ is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01078 BOOT_NORMAL_ACC_ON
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    checkBootReason      00868 wakeupReason 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    checkBootReason      00879 wakeup by other reason(not BOOTREASON::BALARM_STATUS)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    checkBootReason      00239 VRMManager::checkBootReason()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.795] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getInstance          00096 getInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01074 ++++reason++++ is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01078 BOOT_NORMAL_ACC_ON
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    checkBootReason      00243 wakeupReason 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/VRM/VRMManager.cpp    checkBootReason      00272 wakeup by other reason
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    checkBootReason      00313 RCSManager::checkBootReason()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getInstance          00096 getInstance()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01074 ++++reason++++ is 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp getWakeupReasonFromDBusProperty 01078 BOOT_NORMAL_ACC_ON
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    checkBootReason      00317 BOOT_MASTER wakeupReason 1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    checkBootReason      00322 wakeup by other reason
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    checkBootOnWakeUpSms 00330 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.796] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getBootReasonFromDCU 08726 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.802] [TAPP] [info]  /TeleAppCommon/src/utils/Test/TestMain.cpp run                  00147 start NamedPipe Thread
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.806] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getBootReasonFromDCU 08730 BootReason get success state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.806] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWaitingAlertServiceBase.cpp checkInitBootReason  00499 other boot_Reason don't start waitingAe
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.806] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getBootReasonFromDCU 08730 BootReason get success state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.806] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    checkBootOnWakeUpSms 00339 other boot_Reason don't start checkBootOnWakeUpSms
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.807] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    handleEvent          00234 handleEvent =EVENT_DVRS_BOOT
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.808] [TAPP] [info]  /TeleAppCommon/src/SAS/SASManager.cpp    notifyEvent          00523 Execute notifySASEVENT : EVENT_DVRS_BOOT
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.808] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/DVRSServiceBase.cpp isNeedEvent          00051 [DVRS] isNeedEvent event = 957
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.808] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/DVRSServiceBase.cpp checkEventAndPush    00069 handleEvent case 1 : state:2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.809] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/DVRSServiceBase.cpp handleEvent          00081 handleEvent(EVENT_DVRS_BOOT)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.809] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp getDVRS_Rec_Crash_prk 00998 getDVRS_Rec_Crash_prk : 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.809] [TAPP] [info]  /TeleAppCommon/src/SAS/Service/DVRSServiceBase.cpp bootDvrsCheck        00158 No DvrsCrashEvent is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.811] [TAPP] [info]  /TeleAppCommon/src/RCS/RCSManager.cpp    handleEvent          00041 handleEvent(EVENT_VCRM_SEND)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.811] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValueDirect 01271 strValue: 0, v.getString(): 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSLightOnlyServiceBase.cpp checkEventAndPush    00077 handleEvent case 1 : state:2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp checkEventAndPush    00104 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSWinCurtainCtrlSvcBase.cpp isNeedEvent          00118 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSTailAndHazardLightControlServiceBase.cpp isNeedEvent          00096 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSDataStatusControlServiceBase.cpp isNeedEvent          00087 .
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.812] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp checkEventAndPush    00168 handleEvent case 1 : state:2
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.813] [TAPP] [info]  /TeleAppCommon/src/RCS/Service/RCSLightOnlyServiceBase.cpp handleEvent          00156 handleEvent(EVENT_VCRM_SEND)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.814] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp handleEvent          00072 handleEvent(EVENT_VCRM_SEND)
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.814] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp checkFirstChargestatus 00728 checkFirstChargestatus
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.817] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp getVcmsRdyState      01257 ret, getVcmsRdyState : 8 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.818] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp getVcmsRdyState      00782 getVcmsRdyState() is 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.818] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp checkFirstChargestatus 00750 VCMS_NOT_RDY
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.818] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp isChargingFinished   00078 isChargingFinished()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.821] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusHElectricClient.cpp getIG3RelayMode      00069 getIG3RelayMode()
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.821] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp checkFirstChargestatus 00766 isChargingFinished finish = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.821] [TAPP] [info]  /TeleAppCommon/src/RCS/evService/RCSEVChargeCompleteServiceBase.cpp checkFirstChargestatus 00767 getIG3RelayMode mode = 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.823] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValue       01301 getProvDBValue direct tmdb cate : ProvisioningRes0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.827] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValueDirect 01271 strValue: 0, v.getString(): 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.828] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp setDigitalKeyServiceEnable 00580 availableState:10 privacyGatherSe0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.828] [TAPP] [info]  /TeleAppCommon/src/VRM/Service/DigitalKeyTransferSvcBase.cpp setDigitalKeyServiceEnable 00589 requestDigitalKeyInformAvailable(r
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.829] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusRaw.cpp requestDigitalKeyInformAvailable 01768 requestDigitalKeyInformAvailable : 0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.836] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp getProvDBValue       01301 getProvDBValue direct tmdb cate : ProvisioningRes0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:01.837] [TAPP] [info]  /TeleAppCommon/src/utils/DataBuffer/DataBuffer.cpp operator()           05674 startCheckEngineOnOffStatus
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.212] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp onSessionStateChanged 00493 onSessionStateChanged : sessionStateName = VCRMRunn1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.686] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp onSessionStateChanged 00493 onSessionStateChanged : sessionStateName = OTARunni1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.754] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusLifecycle.cpp onSessionStateChanged 00493 onSessionStateChanged : sessionStateName = CANIDSRu1
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.804] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.804] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:0 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.822] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.822] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:1 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.822] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.822] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:2 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:3 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:4 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.823] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.824] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:5 state:0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.824] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onDataConnectionStateChanged 00573 >>>> onDataConnectionStateChanged... svcGrou0
+Apr 14 06:52:02 s32v234ccu TeleApp[1452]: [2021-04-14 06:52:02.824] [TAPP] [info]  /TeleAppCommon/src/CommonAPI/GDbusMsmClient.cpp onOnlineStateChanged 00579 >>>> onOnlineStateChanged... svcGroup:6 state:0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. RCSFindMyCarService 코드 분석
+
+생성자, 소멸자
+
+sendReadyNotiToSubHandler = EventQThread의 addEvent, 뮤텍스 잠그고 m_q 덱에서 emplace_back, notify())로 스레드 잡아줌
+
+isNeedEvent = 구조체 HANDLE_E_DATA_T == eventData 받아서 type이 해당하는 키워드 중 하나라면 선언했던 BOOL bRet = false;에 true 대입, return bRet
+
+checkEventAndPush = isNeedEvent가 true면 RunStateDefine의 HandleRunState에 runstate 넣고 현재 상태 로그 출력, addEvent
+
+handleEvent = eventtype이 해당 타입이 아니면 getConvertEventSring(?)한다. 맞다면 getSvcState(), eventData에 따라 시작하거나 컨디션체크 하거나 함.
+
+receivedEvent = getSvcState 상태가 RUNNING이고 eventtype당 해당 기능 수행
+
+executeService = executeService로그출력, responseURI 함수 실행, statusCode, Reason에 OK 대입, makeAndAddEvent 실행.
+TARGET_CCU가 정의되어 있다면 GDbusTeleManagerClient::setLastActiveUser(커넥티비티에 setHCCSClient setLastActiveUser)
+*atoi 함수 (문자열을 정수형으로 변환) 사용하여 remoteDriver의 return값 변환
+
+setUser = TARGET_CCU가 정의되어있다면 TARGET_PREMIUM6
+
+executetakePicture = svmstatus가 true 라면 TeleAppMainTimer의 killTimer(사이드미러체크) filepath = "/appdata"
+HResult = ok, DataBuffer에 할당된 takepictureResult 값을 가져옴
+result 에 GDbusBodyCanClient의 경고등 값 받아옴.
+mfstate가 true면 addEvent(EVENT_EXECUTESERVICE_SVM)
+아니면 사이드미러 값 받아오고 setTimer(TELEAPP_MAIN_TIMER_RCS_OUTSIDEMIRRORFOLD5WAIT_CHECK)
+
+executeService_SVM = svmstatus가 true면 TeleAppMainTimer의 killTimer(사이드미러체크)
+statusCode, Reason OK, makeAndAddEvent(EVENT_REMOTE_RFC_SEND_RESPONSE)
+setUSer
+true가 아니라면 MSG_LOW("ignore Side mirror fold state EVENT",0,0,0);
+
+requestsidemirrorunfoldforSVM =
+
+*git diff 로 수정사항 체크 가능 (소스 경로에서))

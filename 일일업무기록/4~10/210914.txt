@@ -1,0 +1,386 @@
+1. PL님 과제 진행
+
+  partialnetwork 건
+
+  순수가상함수 구현 시 {} 뺄 것
+  그냥 선언만 할 경우 붙여도 ㅇㅋ
+  (두번 구현한 것으로 컴파일되어서 redefine)
+  ccnf외부라이브러리에서 받아올 때 namespace 주소 반드시 붙일 것.
+
+  멤버변수 선언 주의할것.
+  여럿이 사용, 스레드 돌면서 데이터 바뀌면 데이터 무결성이 깨질 수 있음.
+
+  return은 ret으로 선언하고 최대한 마지막에 쓰는게 좋다.
+
+  전위 후위 연산자 구별 잘할 것.
+
+  구현 방법
+
+  pnbit 확인 변수와
+  pnbit 바뀐 횟수 count 변수 선언.
+
+  set, unset 함수.
+
+  pnbit 확인하는 변수 checkPnCluster 선언
+  카운트 증가, 감소 함수 선언
+
+  onOffCluster 선언(?)
+
+
+2. 대리님 과제 진행
+
+  teleapp으로 데이터 가져오기
+
+  상속 다운캐스팅 건
+
+  GDB 건
+
+3. 주석 작업 진행
+
+  다음주 금요일 전까지
+
+
+지난주
+
+1. 리스너 분석
+
+onCCUModemStatus()
+
+onWakeUpReceived()
+
+    1-1. 리스너 제공하는 쪽에서 어떤식으로 연결하여 리스너의 기능을 제공하는지.
+
+          onCCUModemStatus
+
+          1-1-1. connectivity는 MsmGDBusClient signalSubscribe, g_dbus_connection_signal_subscribe로 신호를 받음.
+
+          1-1-2. msm은 ModemManagerConsumer-NEtWorkInformationConsumer-MsmGDBusServer notifyCCUModemStatus, g_dbus_connection_emit_signal로 신호를 보냄.
+
+          1-1-3. teleapp은 connectivity의 가상함수에 불려져 databuffer 등에서 값을 줌.
+                  이때 teleapp seteventlistener가 벡터에 저장시키고 onNotifyCCUModemStatus가 호출되었을 때 이터레이터를 통해 onCCUModemStatus를 찾아서 호출하는 것.
+
+          질문. 가장 처음 ModemManagerConsumer가 어디서 신호를 받는지?
+blic:
+    ChannelManager();
+
+public:
+    void mainLoop();
+    void addChannelToVector();
+    void checkEmpty();
+    1-2. TeleApp등 사용하는 쪽에서는 어떻게 연결하는지.
+
+
+
+    1-3. 기능 구현 시 전체적 흐름 이해하고 막힘없이 추가할 수 있는 것을 목표로.
+
+2. 대리님 과제
+
+    2-1. 객체
+
+        모든 값 프린트 또는 모든값 출력
+        save("channeltype", number)
+        save("number", TVchannel, Brodcastname)
+        save("number", Radiochannel, RadioCompanyname)
+        delete(channeltype, number);
+
+        저장시
+        channelId 와 brodcast 는 동일값이 존재하면 안됨.
+        이미 가지고 있다고 cout 으로 출력 필요
+
+        추가사항
+
+        virtual 사용 이유 = 그래야 오버라이딩이 가능해짐. 사용안하면 함수 사용 시 부모함수에서 막힘. virtual은 중간다리 같은 역할
+
+        vector에 객체 담고 파라미터 받아서 객체 생성 후 벡터에 저장하는 방식으로 구현할 것
+
+        파라미터 dynamic_cast 사용해서 타입별로 저장
+
+        print시 vector에서 객체를 꺼낸 후 함수 객체 함수를 호출하여 출력할것
+
+
+    2-2. 디버그모드 break point
+
+        1. 디버그 모드로 TeleApp 빌드.
+            - break 포인트 잡기 예제에 있음.
+            - 메일 참조
+
+        bb파일에 디버그 모드 넣고 빌드까진 완료
+
+        무슨 버전으로 보드에 넣어야 하는지 여쭤볼 필요 있음.
+
+        2. HDMReceiveServiceBase.cpp
+            - 375번 라인 잡기
+
+        3. 잡히는지 확인
+
+
+
+getProvisioningData
+Tapp -> connectivity ->Tmgr
+
+1. Tapp -> GDbusTeleManagerClient::getProvisioningData
+2. ccos::connectivity::ccs::HCCSClient::getProvisioningData
+3. HCCSGDBus::getProvisioningData
+4. g_dbus_connection_call_sync -> HCCSGDBus::getProvisioningData
+5. getProvisioningData
+6. Tmgr
+
+
+
+teleapp 에서 tmgr의 함수를 호출해서 이름가져오기
+
+구현부는
+databuffer 안
+void getCGSName(string &out) {
+   out = "CGS";
+}
+
+
+
+
+queryServerAddr 에서 ip 가 잘리는 문제 발생 해결하기!!!!
+snprintf 해당 함수에서 문제 발생.
+123.456.789.555 => 123.456.789.55
+왜 잘리는가?
+해결방법은?
+힌트는 size 에 있음.
+
+result 만큼 반복하는데 <라서?
+
+initroute에 strSIze-1 되어있음.
+
+#########################################################################################################
+1. PartialNetworkCluster 구현 및 설명
+#########################################################################################################
+
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+PartialNetworkCluster 구현 설명드리겠습니다.
+
+#########################################################################################################
+
+#include <HPartialNetworkControl.h>
+public ccnf::system::network_manager::IHPartialNetworkControlListener
+
+#########################################################################################################
+
+로 HSystemClient.hpp에 HPartialNetworkControl을 추가, 상속받게합니다.
+
+#########################################################################################################
+
+ccnf::system::network_manager::HPartialNetworkControl* mHPartialNetworkControl = nullptr;
+
+#########################################################################################################
+
+HPartialNetworkControl 주소 포인터
+
+#########################################################################################################
+
+mHPartialNetworkControl = ccnf::system::network_manager::HPartialNetworkControl::getInstance();
+
+    if (mHPartialNetworkControl != nullptr)
+    {
+        mHPartialNetworkControl->setEventListener(this);
+
+        std::vector<ccnf::system::network_manager::PN_EVENTS> subscribedevents;
+        subscribedevents.push_back(ccnf::system::network_manager::PN_EVENTS::EXTERNAL_PNBIT_SETTING);
+        subscribedevents.push_back(ccnf::system::network_manager::PN_EVENTS::INTERNAL_PNBIT_SETTING);
+
+        mHPartialNetworkControl->subscribeEvents(subscribedevents);
+    }
+
+#########################################################################################################
+
+subscribeEvents벡터에 pnbit setting을 넣어줍니다.
+등록된 이벤트 리스너를 통해 호출됩니다.
+
+#########################################################################################################
+
+void HSystemClient::increaseCountPnBit()
+{
+    MSG_LOW("PartialNetworkCluster/increaseCountPnBit");
+
+    mPnBitCount++;
+
+    if (mPnBitCount == 1)
+    {
+        setPnCluster();
+    }
+}
+
+void HSystemClient::decreaseCountPnBit()
+{
+    MSG_LOW("PartialNetworkCluster/decreaseCountPnBit");
+
+    mPnBitCount--;
+
+    if (mPnBitCount == 0)
+    {
+        unsetPnCluster();
+    }
+    else if(mPnBitCount < 0 )
+    {
+        mPnBitCount=0;
+    }
+}
+
+#########################################################################################################
+
+mPnBitCount 멤버변수는 pnbit가 올라가는 횟수를 카운팅하는 멤버변수로,
+0으로 선언되어 valid한 곳에서 호출될 시 호출되고 1일시 setPnCluster함수를 호출합니다.
+
+decrease시 카운트를 하나 내리고 -1일때 추가되어 0이되거나 하지 않도록 0이하는 0을 넣게 고정시켜줍니다.
+
+#########################################################################################################
+
+void HSystemClient::setPnCluster()
+{
+    MSG_LOW("PartialNetworkCluster/setPnCluster");
+
+    std::vector<ccnf::system::network_manager::HPnSelectiveSleepECU> pnCluster;
+    pnCluster.push_back(ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_CCIC);
+    ccnf::system::network_manager::PNBitSetterAPP appName = ccnf::system::network_manager::PNBitSetterAPP::CCS;
+    mHPartialNetworkControl->setPnCluster(pnCluster, appName);
+
+    startWaitTimer();
+}
+
+#########################################################################################################
+
+호출된 setPnCluster함수는 appName CCS, pnCluster에 CCU_CCIC 이넘값을 setPnCluster하고 startWaitTimer함수를 호출합니다.
+
+#########################################################################################################
+
+void HSystemClient::startWaitTimer()
+{
+    MSG_LOW("PartialNetworkCluster/startWaitTimer");
+
+    removeTimer(0);
+    timerOne = g_timeout_add_seconds(INTERVAL, timerCallback, GINT_TO_POINTER(POINTER));
+}
+
+#########################################################################################################
+
+돌고있는 타이머 종료 후 g_timeout_add_seconds로 timerCallback을 콜백합니다.
+
+#########################################################################################################
+
+gboolean HSystemClient::timerCallback(gpointer value)
+{
+    MSG_LOW("PartialNetworkCluster/timerCallback");
+
+
+    std::int32_t getValue= GPOINTER_TO_INT(value);
+    MSG_HIGH("PartialNetworkCluster/. getValue: %d",getValue);
+
+    if(getValue == POINTER)
+    {
+        HSystemClient::getInstance().removeTimer(0);
+
+        if(timerOne)
+        {
+
+            if(!HSystemClient::getInstance().isUpdatePNC())
+            {
+
+                if(HSystemClient::getInstance().mRetryCount < 3)
+                {
+                    HSystemClient::getInstance().mRetryCount++;
+                    MSG_LOW("PartialNetworkCluster/timerCallback success");
+
+                    if (HSystemClient::getInstance().mIsUpdatePnBit)
+                    {
+                        HSystemClient::getInstance().setPnCluster();
+                    }
+                    else
+                    {
+                        HSystemClient::getInstance().unsetPnCluster();
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+#########################################################################################################
+
+timerCallback함수는 인터벌 1분 후 호출되며
+호출된 후 removeTimer를통해 타이머 정지 후 수행됩니다.
+
+검증용 맴버변수 mIsUpadte를 return하는 isUpdatePNC가 false일때 (아직 검증되지 않았기때문에 false)
+
+mRetryCount는 타이머 3회를 카운팅하는 멤버변수로, 3번이하까지 증가
+
+set되었는지 확인 후 set되었으면 true값을 가지는 멤버변수 mIsUpadte를 통해
+set, unset 판단.
+
+#########################################################################################################
+
+void HSystemClient::onInternalPnClusterChanged(const std::vector<ccnf::system::network_manager::HPnSelectiveSleepECU>& pnCluster)
+{
+    MSG_LOW("onInternalPnClusterChanged()");
+
+    removeTimer(0);
+
+    if (!checkPnBit(pnCluster))
+    {
+        if(mIsOnPnCluster)
+        {
+            setPnCluster();
+        }
+        else
+        {
+            unsetPnCluster();
+        }
+    }
+
+}
+
+bool HSystemClient::checkPnBit(std::vector<ccnf::system::network_manager::HPnSelectiveSleepECU> pnCluster)
+{
+    MSG_LOW("PartialNetworkCluster/check3TimesPNC");
+
+    bool ret = false;
+
+    MSG_LOW("PartialNetworkCluster/isUpdatePNC retry %d times", mRetryCount);
+
+    for(int i = 0; i < pnCluster.size(); i++)
+    {
+        if(pnCluster[i] == ccnf::system::network_manager::HPnSelectiveSleepECU::CCU_CCIC)
+        {
+            ret = true;
+            break;
+        }
+    }
+
+
+    if(ret)
+    {
+        mIsUpdatePnBit = true;
+    }
+    else
+    {
+        mIsUpdatePnBit = false;
+    }
+
+    return ret;
+}
+
+#########################################################################################################
+
+partialnetwork에서 값이 변하면 호출되는 순수가상함수 onInternalPnClusterChanged 에서는
+벡터에 값이 맞게 들어갔는지 확인후 updatepnbit에 true 해주는 checkpnbit,
+로 확인해서 값이 없으면 set, 값이 있으면 종료시켜준다.
+
+#########################################################################################################
+
+1. 1 -> 0 일때 unset
+2. 0 -> 1 일때 set
+3. set 또는 unset 됐을때 기존 타이머 삭제후 다시 타이머 동작
+4. 리스너가 호출 되면 타이머제거 후 set 할때 사용한 멤버변수 로 on off 판단 하여 값 검증
+5. 값이 이상하면 on off 에 따라서 set 또는 unset 해줌
+6. 타이머가 동작시 기존동작하는 타이머 삭제
+7. 제대로 업데이트가 됐으면(mIsUpadte 가 true) 타이머에서 아무것도 안함.
+8. 제대로 업데이트가 안됐으면 다시 set 을 하도록 동작시킴

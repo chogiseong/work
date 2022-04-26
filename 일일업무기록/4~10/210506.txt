@@ -1,0 +1,143 @@
+1. Static, Dynamic architecture 수정
+
+      양병훈님 피드백
+
+      SADS 상위 문서와의 추적성을 확인하는 과정에서 SRS CCS 페이지에서 Functional Requirements 확인해 보니
+      사양서상에는 SWC_TA에 관한 Functional Requirements만 기술되어 있는 것으로 보인다.
+      SWC_TA에 TMGR, MSM도 포함되어 있다면 SADS와 동일하게 컴포넌트별로 분리해라.
+
+      - 김석환 책임님께 여쭤볼 것 제가 직접 SRS 문서를 수정해도 되는건지, TMGR, MSM 것도 새로 만들면 되는건지 여쭤볼 것
+
+      3개의 SW 컴포넌트 명칭 불일치 및 정적 설계와 동적 설계 간 함수 불일치 항목이 다수 확인된다.
+
+      - 양병훈님께 직접 여쭤볼 것
+
+      SWC_TA에 모듈 정합성 불일치 문제
+
+      - location 에는 getlocation 넣고 system은 뺄 것, 누락된 SRS는 김석환 책임님께 여쭤봐야 함
+
+      SWC_TMGR SRS 다이어그램 외부 컴포넌트 와 입출력 명시, SRS 없음
+
+      SWC_MSM SRS 다이어그램 외부 컴포넌트 와 입출력 명시, SRS 없음
+
+      전화 : 01027234920
+
+      PL님 피드백
+
+      모비스메일로 온 첨부 문서 확인
+      SRS에는 있는데 SADS에 없는 것은 SYSTEM 제거 해도 될 것 같고 Location 같은 경우 ccNF api 를 추가하는 방향으로 가는게 맞는 것 같다.
+      내차찾기 서비스 를 추가하면 될 것 같다.
+
+      - 만약 넣는다면 내차찾기 서비스를 추가할 것
+
+      TMGR 2.6.2.2 흐름도를 보니 location api를 HTTP request/response 아래에 있다.
+      아래 테이블에도 getLocation 있는데 이걸 TeleApp에도 중복으로 추가하는게 맞는 것 같다.
+      흐름도에도 동일하게 넣어라.
+
+      - 현재까지는 TMGR 흐름도는 수정이 되지 않은 상태라서 오늘 끝낼 것,
+
+2. 진행 상황
+
+      SRS 다이어그램 수정 완료.
+
+      SRS 생성, 삭제 보류.
+
+      SWC_TMGR 수정 완료.
+
+      컴포넌트 명칭 불일치 감점사유
+      명칭 틀림, 부재 시 감점사유
+      본인은 코드를 모르기떄문에 눈에띄는것만 제거하면 된다.
+
+Relationship table에 존재하지만 동적설계에 존재하지 않는 함수
+
+      teleapp relationship table
+
+      getAlarmState
+      ispanic
+      isHoodOpened
+      isBulbOpened
+      requestSteeringWheelHeating
+      requestSideMirrorAndRearWindowHeating
+      requesetCurtainControl
+      setHost
+      setServicePath
+      getResponseCode
+
+      telemanager relationship table
+
+      setLocationMapMatchingEventListener
+      getPhoneNumber
+      onNotifyReceiveMessage
+      onNotifyIncoming168HMessage
+      getCallCenterNumberAttribute
+      getSMSCenterNumberAttributed
+      getPrivacyOfflineModeAttribute
+      setSMSCenterNumberAttribute
+
+      msm relationship table
+
+      resetDCU
+      getContext
+      AddContext
+      getStatusAttribute
+      getAccessPointNameAttribute
+      Activate
+      getReceiveMessageAddedEvent
+      getSendMessageResultEvent
+      GetAllReceiveMessages
+      getAirplaneModeAttribute
+      getIMEIAttribute
+      getVoLTEModeAttribute
+      getDataNetRegStatusAttribute
+      getMCCAttribute
+      getSystemBootReasonAttribute
+
+동적설계에 존재하지만 Relationship table에 존재하지 않는 함수
+
+      TeleApp
+
+      addEvent
+      onMTRequestReceived
+      setSignal
+      requestTeleVehicleStatus
+      makeBatteryWarningAlertSignal
+      getFleetInterval
+      makeSVN2LocStatus
+      HEthCCSignalID::DVRS_Rec_Crash_Prk
+      makeLocReport
+      makeRoaRequest
+      makeVehicleStatusInfoBody
+      requestSetTailLamp
+      requestSetHazardLamp
+      checkTailHazardLampState
+      onCloudRequestFinished
+      onVehicleSignalChanged
+      sendData
+      sendMCIVersionToCenter
+      sendHTTPRequest
+      downloadMCIfromCDN
+      sendMCIDataToHDM
+      activateCharging
+      getChargingState
+      activateAirConditioning
+      getBlowerSpeed
+      checkSchedRmtFcnState
+      makeVehicleEVBatWarnNoti
+      requestGN3Control
+      getDrvDistance
+      setAlarmTime
+      checkActualChargeTime
+
+      TeleManager
+
+      getAllProvisioningTable
+      getProvisioningStatusAttribute
+      setProvisioningdata
+      setProvisioningStatus
+      setTimeStamp
+      saveProvisioningMsg
+      getTimeStampAttribute
+
+      MSM
+
+      addEvent

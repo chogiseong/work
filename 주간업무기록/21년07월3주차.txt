@@ -1,0 +1,25 @@
+안녕하십니까.
+IVI 개발 3팀 조기성입니다.
+
+주간업무 보고 드리겠습니다.
+
+1. SUDS 문서 작업 진행
+
+    1-1. SWC_TA, SWC_TMGR, SWC_MSM SUDS 3.6, 4.6 문서 1차 리뷰 수정 완료 2차 리뷰 대기 중 (SUDS ID 작성 김석환 책임님께 문의필요)
+
+2. SADS 문서 작업 진행
+
+    2-1. SADS Static CE1 차종 CCUGeneralProvisioning interface 함수, internal 함수 data flow diagram, relationship table 작성, 리뷰 요청 완료
+
+    2-2. SADS Dynamic CE1 차종 CCUGeneralProvisioning 다이어그램 작성, 리뷰 요청 완료
+
+3. 빌드 현황
+
+    3-1. JW1_29, RS4_master 빌드 완료 확인
+
+4. CANoe 발주, 수취 완료
+
+21년 6월 12일(월)부터 21년 7월 16일(금)까지 업무를 합친 것입니다.
+
+감사합니다.
+조기성 드림.
